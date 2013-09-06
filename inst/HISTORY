@@ -1,0 +1,38 @@
+2008-08-11
+----------
+
+Version 0.1 : First version of package PoweR
+
+2009-09-01
+----------
+
+Version 0.1.1 : 
+
+-> Added some statistics for testing uniformity :
+	-> Characteristic function based test statistic, solely in R, work still in progress
+	-> Lagrange Multiplier statistic LM, in R and C, complete
+	-> Neyman smooth test of order 4, in R and C, complete
+	-> Anderson-Darling statistic, in R and C, for some sample sizes and some levels
+	-> Watson U^2 statistic, in R and C, for some sample sizes and some levels
+-> Added 20 distributions alternative to uniformty in order to perform power tests on the previously listed statistics
+
+-> Added plotpuiss.R function to write power/sample size graphs in external files
+
+2009-09-09
+----------
+
+Version 0.1.2
+
+-> Added testseuils.R function to build P-values and P-disp plots
+   These function are still incomplete
+   Morerover, some already implemented test statistics will need better level definition
+
+2009-09-25
+----------
+
+Version 0.1.3
+
+-> Updated testseuils.R with functions quanttest and pvaltest to build
+   respectively QQ-plots and P-values plot.
+-> Updated statistics definitions in defstats.R with p-values when available and 
+   standard string if not.
