@@ -1,0 +1,20 @@
+citHeader("To cite the PoweR package in publications use:")
+
+citEntry(entry="Article",
+         title = "PoweR",
+         author = personList(as.person("P. Lafaye de Micheaux"), 
+                             as.person("V.A. Tran")
+				),
+	 journal = "not yet published",
+	 publisher = "",
+         year         = 2012,
+         note         = "Software: R Package, PoweR, version 0.1",
+         url          = "http://www.biostatisticien.eu/PoweR/",
+         
+         textVersion = 
+         paste("Lafaye De Micheaux, P. and Tran, V.A. (2012)", 
+              "(Software: R Package, PoweR, version 0.1)"
+	      )
+)
+
+
