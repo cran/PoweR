@@ -58,7 +58,7 @@ extern "C" {
     for (i=0;i<=(n-1);i++) deltachap = deltachap + ychap[i];
     deltachap = deltachap/(double)n;
 
-    statvalue = sqrt((double)n)*((log(deltachap)-log(2.0-log(2.0)-gamma))/(sqrt(2.0*(3.0*R_pow(M_PI,2.0)/4.0-7.0))/(2-log(2.0)-gamma)));
+    statvalue = sqrt((double)n)*((log(deltachap)-log(2.0-log(2.0)-gamma))/(sqrt(2.0*(3.0*R_pow(M_PI,2.0)/4.0-7.0))/(2.0-log(2.0)-gamma)));
 
     statistic[0] = statvalue; // Here is the test statistic value
 

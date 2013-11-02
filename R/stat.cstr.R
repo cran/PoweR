@@ -3,11 +3,12 @@ stat.cstr <- function(stat.index,stat.pars=NULL) {
   if(getRversion() < "3.1") dontCheck <- identity
 
 # We get the default (maximal) number of parameters
-  out <- .C(dontCheck(paste("stat",stat.index,sep="")),0.0,0L,0.0,0L,rep(" ",50),1L,0.0,0L,0.0,0.0,0.0,0L,0L,0L,0.0,nbparams=1L)
+  Cstat.name <- paste("stat",stat.index,sep="")
+  out <- .C(dontCheck(Cstat.name),0.0,0L,0.0,0L,rep(" ",50),1L,0.0,0L,0.0,0.0,0.0,0L,0L,0L,0.0,nbparams=1L)
   nbparams <- out$nbparams
   if (length(stat.pars) > nbparams) stop(paste("Length of 'stat.pars' should be at most",nbparams))
 # We get the default values of the parameters (using the trick of putting the first value of *name to "1"
-  out <- .C(dontCheck(paste("stat",stat.index,sep="")),0.0,0L,0.0,0L,name=c("1",rep(" ",49)),1L,0.0,0L,0.0,0.0,0.0,0L,alter=0L,0L,params=rep(0.0,nbparams),nbparams=as.integer(nbparams))
+  out <- .C(dontCheck(Cstat.name),0.0,0L,0.0,0L,name=c("1",rep(" ",49)),1L,0.0,0L,0.0,0.0,0.0,0L,alter=0L,0L,params=rep(0.0,nbparams),nbparams=as.integer(nbparams))
   if (length(stat.pars) >= 1) stat.pars <- c(stat.pars,out$params[-(1:length(stat.pars))])
   if (is.null(stat.pars)) stat.pars <- out$params[1:nbparams]
   

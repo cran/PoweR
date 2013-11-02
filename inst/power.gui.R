@@ -1365,7 +1365,7 @@ tkgrid.configure(scr,rowspan=4,sticky="nsw")
 
 
 # read the directory "examples" for all possible file names 
-examples <- list.files(paste(path.package("PoweR"),"/examples/",sep=""),pattern = "^.*\\.txt")
+examples <- sub(".txt","",list.files(paste(path.package("PoweR"),"/examples/",sep=""),pattern = "^.*\\.txt"))
 
 
 for (i in (1:length(examples))) {

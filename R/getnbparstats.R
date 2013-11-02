@@ -1,4 +1,6 @@
 getnbparstats <- function(stat.indices=NULL) {
+
+  if(getRversion() < "3.1") dontCheck <- identity
   
   tmp <- names(getDLLRegisteredRoutines("PoweR")[[".C"]])
   ind.stats <- grep("stat",tmp[grep("stat",tmp)])
@@ -10,8 +12,8 @@ getnbparstats <- function(stat.indices=NULL) {
   nbparstats.list <- as.vector(rep(0,lst))
   
   for (i in 1:lst) {
-    name.stat <- paste("stat",stat.indices[i],sep="")
-    nbparstats.list[i] <- (.C(name.stat,0.0,1L,0.0,1L,rep(" ",50),1L,0.0,0L,0.0,0.0,0.0,0L,0L,0L,0.0,nbparamstat=0L,PACKAGE="PoweR"))$nbparamstat
+    Cstat.name <- paste("stat",stat.indices[i],sep="")
+    nbparstats.list[i] <- (.C(dontCheck(Cstat.name),0.0,1L,0.0,1L,rep(" ",50),1L,0.0,0L,0.0,0.0,0.0,0L,0L,0L,0.0,nbparamstat=0L,PACKAGE="PoweR"))$nbparamstat
   }
   
   return(nbparstats.list)

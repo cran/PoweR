@@ -59,7 +59,8 @@ powcomp.fast <- function(law.indices,stat.indices,vectn=c(20,50,100),M=10^3,leve
     for (s in 1:stats.len) {
       if (names(alter)[s] != paste("stat",stat.indices[s],sep="")) stop(paste("Name of 'alter'[[",s,"]] should be equal to 'stat",stat.indices[s],sep=""))
       if (!(alter[[s]] %in% 0:4)) stop(paste("'alter'[[",s,"]] should be in  {0,1,2,3,4}.",sep=""))
-      alter.true <- .C(dontCheck(paste("stat",as.character(stat.indices[s]),sep="")),as.double(0.0),1L,0.05,1L,rep(" ",50),1L,0.0,0L,0.0,0.0,0.0,0L,alter=as.integer(alter[s]),0L,rep(0.0,4),0L,PACKAGE="PoweR")$alter
+      Cstat.name <- paste("stat",as.character(stat.indices[s]),sep="")
+      alter.true <- .C(dontCheck(Cstat.name),as.double(0.0),1L,0.05,1L,rep(" ",50),1L,0.0,0L,0.0,0.0,0.0,0L,alter=as.integer(alter[s]),0L,rep(0.0,4),0L,PACKAGE="PoweR")$alter
       if (alter[[s]] != alter.true) {
         warning(paste("'alter'[[",s,"]] should be set to ",alter.true,". We have done this for you!"),sep="")
         alter[[s]] <- alter.true
