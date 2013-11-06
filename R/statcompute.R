@@ -36,8 +36,9 @@ statcompute <- function(stat.index,data,levels=c(0.05,0.1),critvalL=NULL,critval
 
   usecrit <- 1
   if (is.null(critvalL) && is.null(critvalR)) usecrit <- 0
-  
-  out <- .C(dontCheck(paste("stat",stat.index,sep="")),as.double(data),as.integer(n),as.double(levels),as.integer(nblevels),rep(" ",50),0L,statistic=0.0,pvalcomp=1L,pvalue=0.0,cL=as.double(cL),cR=as.double(cR),as.integer(usecrit),alter=as.integer(alter),decision=as.integer(rep(0,nblevels)),stat.pars=as.double(stat.pars),nbparstat=as.integer(nbparstat),PACKAGE="PoweR")
+
+  Cstat.name <- paste("stat",stat.index,sep="")
+  out <- .C(dontCheck(Cstat.name),as.double(data),as.integer(n),as.double(levels),as.integer(nblevels),rep(" ",50),0L,statistic=0.0,pvalcomp=1L,pvalue=0.0,cL=as.double(cL),cR=as.double(cR),as.integer(usecrit),alter=as.integer(alter),decision=as.integer(rep(0,nblevels)),stat.pars=as.double(stat.pars),nbparstat=as.integer(nbparstat),PACKAGE="PoweR")
 
   if (out$pvalcomp == 0L) out$pvalue <- NA
   

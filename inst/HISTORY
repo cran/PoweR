@@ -36,3 +36,21 @@ Version 0.1.3
    respectively QQ-plots and P-values plot.
 -> Updated statistics definitions in defstats.R with p-values when available and 
    standard string if not.
+
+2013-10-24
+----------
+
+Version 1.0
+
+--> First submission to CRAN
+
+2013-11-02
+----------
+
+Version 1.0.1
+
+-> I added a sub(".txt") call to correct a bug on computation of examples 
+   variable in file power.gui.R that prevented a correct use of Examples tab in the GUI
+-> I added a dontCheck call to prevent a NOTE about a Registration problem in a .C call (e.g., symbol ‘name.law’ in the local frame), 
+   in files getnbparlaws.R, getnbparstats.R and getindex.R. I also modified a few other R files for the same reason.
+-> I corrected a bug in the C++ file stat80.cpp

@@ -28,7 +28,8 @@ many.pval <- function(stat.indices, law.index, n = 100, M = 10^5, N = 100, alter
     for (i in 1:nbstats) {
       xtmp <- rnorm(10)
       # call .C function to obtain a p-value
-      pvaluetmp <- (.C(dontCheck(paste("stat",stat.indices[i],sep="")),as.double(xtmp),as.integer(length(xtmp)),0.05,
+      Cstat.name <- paste("stat",stat.indices[i],sep="")
+      pvaluetmp <- (.C(dontCheck(Cstat.name),as.double(xtmp),as.integer(length(xtmp)),0.05,
                           1L,rep(" ",50),0L,statistic=0.0,pvalcomp=1L,pvalue=0.0,cL=0.0,
                           cR=0.0,0L,alter=3L,decision=0L,
                           paramstat=0.0,nbparamstat=0L,PACKAGE="PoweR"))$pvalue

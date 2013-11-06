@@ -49,7 +49,8 @@ pvalueMC <- function(data, stat.index, null.law.index, M = 10^5, alter, null.law
 	
 	
   # call .C function to obtain one test statistic
-  stattmp <- .C(dontCheck(paste("stat",stat.index,sep="")),as.double(data),as.integer(n),as.double(level),as.integer(nblevel),
+  Cstat.name <- paste("stat",stat.index,sep="")
+  stattmp <- .C(dontCheck(Cstat.name),as.double(data),as.integer(n),as.double(level),as.integer(nblevel),
               rep(" ",50),0L,statistic=0.0,pvalcomp=0L,pvalue=0.0,cL=as.double(cL),cR=as.double(cR),
               as.integer(usecrit),alter=as.integer(alter),decision=as.integer(rep(0,nblevel)),
               paramstat=as.double(stat.pars),nbparamstat=as.integer(nbparstat),PACKAGE="PoweR")
