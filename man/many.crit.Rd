@@ -5,7 +5,8 @@
   several n values, and several level values, for a given distribution}
 \usage{
 many.crit(law.index,stat.indices,M = 10^3,vectn = c(20,50,100),levels = c(0.05,0.1),
-          alter = create.alter(stat.indices),law.pars = NULL,parstats = NULL,model = NULL)
+  alter = create.alter(stat.indices),law.pars = NULL,parstats = NULL,model = NULL,
+  Rlaw=NULL, Rstats = NULL)
 }
 \arguments{
   \item{law.index }{law index as given by function \code{\link{getindex}}. length(\code{law.index})=1}
@@ -33,6 +34,15 @@ many.crit(law.index,stat.indices,M = 10^3,vectn = c(20,50,100),levels = c(0.05,0
     parameters \code{thetavec} and values \code{xvec}) based on these errors, then
     compute and return the residuals from the model. See function
     modele1.R in directory inst/doc/ for an example in multiple linear regression.}
+\item{Rlaw }{If 'law.index' is set to 0 then 'Rlaw' should be a (random generating) function.}
+\item{Rstats}{A list. If a value of 'stat.index' is set to 0, the corresponding component of the list
+  'Rstats' should be an R function that outputs
+    a list with components 'statistic' (value of the test statistic),
+    'pvalue' (pvalue of the test; if not computable should be set to 0), 'decision' (1 if we reject the null,
+    0 otherwise), 'alter' (see above), 'stat.pars' (see above),
+    'pvalcomp' (1L if the pvalue can be computed, 0L otherwise),
+    'nbparstat' (length of stat.pars). If the value of 'stat' is not 0,
+  then the corresponding component of 'Rstats' should be set to 'NULL'.}
 }
 \value{An object of class \code{critvalues}, which is a list where each element of the list contains a matrix 
   for the corresponding statistic. This column matrices are: \eqn{n} values,

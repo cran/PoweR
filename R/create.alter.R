@@ -1,6 +1,6 @@
 create.alter <- function(stat.indices = c(42,51,61), values.alter = NULL) {
 
-  if(getRversion() < "3.1") dontCheck <- identity
+  if(getRversion() < "3.1.0") dontCheck <- identity
   
   if (is.null(stat.indices) || any(is.na(stat.indices))) {
     stop("stat.indices should not contain NULL or NA values.")

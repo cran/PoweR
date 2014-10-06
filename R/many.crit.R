@@ -1,6 +1,20 @@
-many.crit <- function(law.index,stat.indices,M=10^3,vectn=c(20,50,100),levels=c(0.05,0.1),alter=create.alter(stat.indices),law.pars=NULL,parstats=NULL,model=NULL) {
+many.crit <- function(law.index,stat.indices,M=10^3,vectn=c(20,50,100),levels=c(0.05,0.1),alter=create.alter(stat.indices),law.pars=NULL,parstats=NULL,model=NULL,Rlaw=NULL,Rstats=NULL) {
 
-  if(getRversion() < "3.1") dontCheck <- identity
+
+  if (any(stat.indices == 0) & is.null(Rstats)) stop("'Rstats' should be a list whose components are R functions.")
+  if (any(stat.indices == 0)) {
+    if (!is.list(Rstats)) stop("'Rstats' should be a list whose components are R functions.")
+    for (i in 1:length(stat.indices)) if ((stat.indices[i] == 0) & !is.function(Rstats[[i]])) stop(paste("The ",i,"th component of 'Rstats' should be an R function",sep=""))
+  }
+  if (is.null(Rstats)) {
+    Rstats <- as.list(1:length(stat.indices))
+    for (i in 1:length(stat.indices)) Rstats[[i]] <- list(NULL)
+  }
+
+  
+  if (is.function(Rlaw) & (law.index != 0)) stop("You should set 'law.index' to 0 when 'Rlaw' is a (random generating) function.")
+
+  if(getRversion() < "3.1.0") dontCheck <- identity
   
   stats.len <- length(stat.indices)
 
@@ -55,12 +69,12 @@ many.crit <- function(law.index,stat.indices,M=10^3,vectn=c(20,50,100),levels=c(
    for (l in 1:nblevels) {  
      for (n in 1:vectn.len) {
        if (alter[[s]] == 0) { # two.sided test
-         mylist[[s]][n+vectn.len*(l-1),] <- compquant(n=vectn[n],law.index=law.index,stat.index=stat.index,probs=c(levels[l]/2,1-levels[l]/2),M=M,law.pars=law.pars,stat.pars=parstats[[s]],model=model)$quant
+         mylist[[s]][n+vectn.len*(l-1),] <- compquant(n=vectn[n],law.index=law.index,stat.index=stat.index,probs=c(levels[l]/2,1-levels[l]/2),M=M,law.pars=law.pars,stat.pars=parstats[[s]],model=model,Rlaw=Rlaw,Rstat=Rstats[[s]])$quant
        } else if ((alter[[s]] == 1) || (alter[[s]] == 4)) { # less test, or bilateral test that reject H0 only for small values of the test statistic
-         res <- compquant(n=vectn[n],law.index=law.index,stat.index=stat.index,probs=levels[l],M=M,law.pars=law.pars,stat.pars=parstats[[s]],model=model)$quant
+         res <- compquant(n=vectn[n],law.index=law.index,stat.index=stat.index,probs=levels[l],M=M,law.pars=law.pars,stat.pars=parstats[[s]],model=model,Rlaw=Rlaw,Rstat=Rstats[[s]])$quant
          mylist[[s]][n+vectn.len*(l-1),] <- c(res,NA)
        } else if ((alter[[s]] == 2) || (alter[[s]] == 3)) { # greater test, or bilateral test that reject H0 only for large values of the test statistic
-         res <- compquant(n=vectn[n],law.index=law.index,stat.index=stat.index,probs=1-levels[l],M=M,law.pars=law.pars,stat.pars=parstats[[s]],model=model)$quant
+         res <- compquant(n=vectn[n],law.index=law.index,stat.index=stat.index,probs=1-levels[l],M=M,law.pars=law.pars,stat.pars=parstats[[s]],model=model,Rlaw=Rlaw,Rstat=Rstats[[s]])$quant
          mylist[[s]][n+vectn.len*(l-1),] <- c(NA,res)
        }
      }

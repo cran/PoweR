@@ -6,11 +6,13 @@
 \usage{
 powcomp.fast(law.indices,stat.indices,vectn = c(20,50,100),M = 10^3,levels = c(0.05,0.1),
          critval = NULL,alter = create.alter(stat.indices),parlaws = NULL, 
-         parstats = NULL,nbclus = 1,model = NULL,null.law.index = 2,null.law.pars = NULL)
+         parstats = NULL,nbclus = 1,model = NULL,null.law.index = 2,null.law.pars = NULL,
+         Rlaws=NULL, Rstats = NULL)
 }
 \arguments{
   \item{law.indices }{vector of law indices as given by function \code{\link{getindex}}.}
-  \item{stat.indices }{vector of statistic indices as given by function \code{\link{getindex}}.}
+  \item{stat.indices }{vector of statistic indices as given by function \code{\link{getindex}} (some components can be 0 if you want to use your own function for some
+    test statistics; see 'Rstats' argument).}
   \item{vectn }{vector of sample sizes (\eqn{n}) values.}
   \item{M }{number of Monte Carlo repetitions.}
   \item{levels }{vector of significance levels for the test.}
@@ -50,7 +52,18 @@ powcomp.fast(law.indices,stat.indices,vectn = c(20,50,100),M = 10^3,levels = c(0
     regression.}
   \item{null.law.index }{index of the law under the null. Only used, by
     \code{\link{many.crit}} function, if \code{critval} is \code{NULL}.}
-  \item{null.law.pars }{vector of parameters corresponding to \code{null.law.index}.}
+  \item{null.law.pars }{vector of parameters corresponding to
+    \code{null.law.index}.}
+  \item{Rlaws }{When some law indices in 'law.indices' are equal to 0, this means that you will be using some R random generators. In that case, you should provide the names of the random generation functions in the corresponding components of 'Rlaws' list, the other components should be set to NULL.}
+\item{Rstats}{A list. If in a given row of the 'params' matrix, the
+  value of 'stat' is set to 0, the corresponding component of the list
+  'Rstats' should be an R function that outputs
+    a list with components 'statistic' (value of the test statistic),
+    'pvalue' (pvalue of the test; if not computable should be set to 0), 'decision' (1 if we reject the null,
+    0 otherwise), 'alter' (see above), 'stat.pars' (see above),
+    'pvalcomp' (1L if the pvalue can be computed, 0L otherwise),
+    'nbparstat' (length of stat.pars). If the value of 'stat' is not 0,
+  then the corresponding component of 'Rstats' should be set to 'NULL'.}
 }
 \value{A list of class \code{power} whose components are described below:
   \item{M }{number of Monte Carlo repetitions.}

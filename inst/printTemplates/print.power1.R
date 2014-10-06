@@ -18,8 +18,13 @@ print.power1 <- function(x, digits = 3, latex.output = FALSE, ...) {
 
 
   lawnames <- rep("",laws.len)
-  for (i in 1:laws.len) lawnames[i] <- PoweR::law.cstr(x$law.indices[i],(x$parlaws[4*(i-1) + 1:4])[1:x$nbparlaws[i]])$name
-
+  for (i in 1:laws.len) {
+      if (x$law.indices[i] != 0) {
+          lawnames[i] <- PoweR::law.cstr(x$law.indices[i],(x$parlaws[4*(i-1) + 1:4])[1:x$nbparlaws[i]])$name
+      } else {
+          lawnames[i] <- paste(names(x$Rlaws[i]),"(",paste(x$parlaws[4*(i-1) + 1:4][1:(length(formals(x$Rlaws[[i]]))-1)],collapse=","),")",sep="")
+      }
+  }
 
   colnames(res2) <- c("level","n","law",statnames)
   

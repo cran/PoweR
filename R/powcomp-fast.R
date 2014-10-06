@@ -1,6 +1,32 @@
-powcomp.fast <- function(law.indices,stat.indices,vectn=c(20,50,100),M=10^3,levels=c(0.05,0.1),critval=NULL,alter=create.alter(stat.indices),parlaws=NULL,parstats=NULL,nbclus=1,model=NULL,null.law.index=2,null.law.pars=NULL) {
+powcomp.fast <- function(law.indices,stat.indices,vectn=c(20,50,100),M=10^3,levels=c(0.05,0.1),critval=NULL,alter=create.alter(stat.indices),parlaws=NULL,parstats=NULL,nbclus=1,model=NULL,null.law.index=2,null.law.pars=NULL,Rlaws=NULL,Rstats=NULL) {
+
+
+  if (any(stat.indices == 0) & is.null(Rstats)) stop("'Rstats' should be a list whose components are R functions.")
+  if (any(stat.indices == 0)) {
+    if (!is.list(Rstats)) stop("'Rstats' should be a list whose components are R functions.")
+    for (i in 1:length(stat.indices)) if ((stat.indices[i] == 0) & !is.function(Rstats[[i]])) stop(paste("The ",i,"th component of 'Rstats' should be an R function",sep=""))
+  }
+  if(is.null(Rstats)) Rstats <- list(NULL)
+
   
-  if(getRversion() < "3.1") dontCheck <- identity
+    Rcpp <- any(law.indices == 0)
+
+    if (Rcpp) {
+        if (length(Rlaws) != length(law.indices)) stop("When some law indices in 'law.indices' are equal to 0, this means that you will be using some R random generators. In that case, you should provide the names of the random generation functions in the corresponding components of 'Rlaws' list, the other components should be set to NULL.")
+      tmp <- gsub(" ","",paste(text=match.call()$Rlaws))[-1]
+        tmpnames <- tmp
+      for (i in 1:length(law.indices)) {
+          if (!is.null(Rlaws[[i]])) {
+              if (class(Rlaws[[i]]) != "function") stop("Each non-null compoment of the list 'Rlaws' should be a (random generation) R function.")
+              if (law.indices[i] != 0) stop(paste("law.indices[",i,"] should be set to 0.",sep=""))
+          } else {
+              Rlaws[[i]] <- function(){}
+          }
+      }
+  }
+
+  
+  if(getRversion() < "3.1.0") dontCheck <- identity
 
   if (nbclus>1) {
 #    suppressWarnings(parallel.pkg.present <- require(parallel))
@@ -57,13 +83,15 @@ powcomp.fast <- function(law.indices,stat.indices,vectn=c(20,50,100),M=10^3,leve
     if (any(is.na(names(alter)))) stop("'alter' names should all be defined")
     if (length(alter) != length(stat.indices)) stop("'alter' and 'stat.indices' should have the same length")
     for (s in 1:stats.len) {
-      if (names(alter)[s] != paste("stat",stat.indices[s],sep="")) stop(paste("Name of 'alter'[[",s,"]] should be equal to 'stat",stat.indices[s],sep=""))
-      if (!(alter[[s]] %in% 0:4)) stop(paste("'alter'[[",s,"]] should be in  {0,1,2,3,4}.",sep=""))
-      Cstat.name <- paste("stat",as.character(stat.indices[s]),sep="")
-      alter.true <- .C(dontCheck(Cstat.name),as.double(0.0),1L,0.05,1L,rep(" ",50),1L,0.0,0L,0.0,0.0,0.0,0L,alter=as.integer(alter[s]),0L,rep(0.0,4),0L,PACKAGE="PoweR")$alter
-      if (alter[[s]] != alter.true) {
-        warning(paste("'alter'[[",s,"]] should be set to ",alter.true,". We have done this for you!"),sep="")
-        alter[[s]] <- alter.true
+      if (stat.indices[s] != 0) {
+        if (names(alter)[s] != paste("stat",stat.indices[s],sep="")) stop(paste("Name of 'alter'[[",s,"]] should be equal to 'stat",stat.indices[s],sep=""))
+        if (!(alter[[s]] %in% 0:4)) stop(paste("'alter'[[",s,"]] should be in  {0,1,2,3,4}.",sep=""))
+        Cstat.name <- paste("stat",as.character(stat.indices[s]),sep="")
+        alter.true <- .C(dontCheck(Cstat.name),as.double(0.0),1L,0.05,1L,rep(" ",50),1L,0.0,0L,0.0,0.0,0.0,0L,alter=as.integer(alter[s]),0L,rep(0.0,4),0L,PACKAGE="PoweR")$alter
+        if (alter[[s]] != alter.true) {
+          warning(paste("'alter'[[",s,"]] should be set to ",alter.true,". We have done this for you!"),sep="")
+          alter[[s]] <- alter.true
+        }
       }
     }
     alter <- unlist(alter)
@@ -81,24 +109,40 @@ powcomp.fast <- function(law.indices,stat.indices,vectn=c(20,50,100),M=10^3,leve
     if (any(is.na(names(parlaws)))) stop("'parlaws' names should all be defined")
     if (length(parlaws) != length(law.indices)) stop("'parlaws' and 'law.indices' should have the same length")
     for (s in 1:laws.len) {
-      if (names(parlaws)[s] != paste("law",law.indices[s],sep="")) stop(paste("Name of 'parlaws'[[",s,"]] should be equal to 'law",law.indices[s],sep=""))
-      if (length(parlaws[[s]]) > 4) stop(paste("Length of 'parlaws'[[",s,"]] should not exceed 4.",sep=""))
-      if ((length(parlaws[[s]]) > 1) && any(is.na(parlaws[[s]]))) stop(paste("'parlaws'[[",s,"]] cannot contain NA values unless its length is 1.",sep=""))
-      nbparlaws <- c(nbparlaws,length(na.omit(parlaws[[s]])))
-      parlawtmp <- c(parlawtmp,c(parlaws[[s]],rep(0.0,4-nbparlaws[s])))
+        if (law.indices[s] != 0) {
+            if (names(parlaws)[s] != paste("law",law.indices[s],sep="")) stop(paste("Name of 'parlaws'[[",s,"]] should be equal to 'law",law.indices[s],sep=""))
+            if (length(parlaws[[s]]) > 4) stop(paste("Length of 'parlaws'[[",s,"]] should not exceed 4.",sep=""))
+            if ((length(parlaws[[s]]) > 1) && any(is.na(parlaws[[s]]))) stop(paste("'parlaws'[[",s,"]] cannot contain NA values unless its length is 1.",sep=""))
+            nbparlaws <- c(nbparlaws,length(na.omit(parlaws[[s]])))
+            parlawtmp <- c(parlawtmp,c(parlaws[[s]],rep(0.0,4-nbparlaws[s])))
+        } else {
+            if (!all(is.na(parlaws[[s]]))) {
+                npartmp <- length(unlist(formals(eval(parse(text=tmp[s])))[-1]))
+                if (sum(!is.na(parlaws[[s]])) !=  npartmp) stop(paste("The number of law parameters set for ",i,"th component of 'parlaws' should be ",npartmp,sep=""))
+                nbparlaws <- c(nbparlaws,npartmp)
+                parlawtmp <- c(parlawtmp,c(parlaws[[s]],rep(0.0,4-nbparlaws[s])))
+            }
+        }
     }
-  } else {
+} else {
     for (s in 1:laws.len) {
-      tmp <- law.cstr(law.indices[s])
-      nbparlaws <- c(nbparlaws,tmp$nbparams)
-      parlawtmp <- c(parlawtmp,c(tmp$law.pars,rep(0.0,4-nbparlaws[s])))
+        if (law.indices[s] != 0) {
+            tmp <- law.cstr(law.indices[s])
+            nbparlaws <- c(nbparlaws,tmp$nbparams)
+            parlawtmp <- c(parlawtmp,c(tmp$law.pars,rep(0.0,4-nbparlaws[s])))
+        } else {
+            npartmp <- length(unlist(formals(eval(parse(text=tmp[s])))[-1]))
+            nbparlaws <- c(nbparlaws,npartmp)
+            parlawtmp <- c(parlawtmp,c(unlist(formals(eval(parse(text=tmp[s])))[-1]),rep(0.0,4-nbparlaws[s])))
+        }
     }
-  }
+}
   parlaws <- parlawtmp
 
   
-# Management of parstats
-  nbparstats <- getnbparstats(stat.indices)
+# Management of parstats     pas tres bien gere quand stat.indices[s] = 0 .....
+  nbparstats <- rep(NA,length(stat.indices))
+  nbparstats[stat.indices != 0] <- getnbparstats(stat.indices[stat.indices != 0])
   parstatstmp <- c()
   if (!is.null(parstats)) {
     if (!is.list(parstats)) stop("'parstats' should be a list")
@@ -106,13 +150,17 @@ powcomp.fast <- function(law.indices,stat.indices,vectn=c(20,50,100),M=10^3,leve
     if (any(is.na(names(parstats)))) stop("'parstats' names should all be defined")
     if (length(parstats) != length(stat.indices)) stop("'parstats' and 'stat.indices' should have the same length")
     for (s in 1:stats.len) {
-      if (names(parstats)[s] != paste("stat",stat.indices[s],sep="")) stop(paste("Name of 'parstats'[[",s,"]] should be equal to 'stat",stat.indices[s],sep=""))
-      if (!is.na(parstats[[s]]) && (nbparstats[s] == 0)) stop(paste("'parstats[['",s,"]] should be equal to NA",sep=""))
-      if ((nbparstats[s] != 0) && (length(parstats[[s]]) != nbparstats[s])) stop(paste("The length of parstats[[",s,"]] should be ",nbparstats[s],sep=""))
-      parstatstmp <- c(parstatstmp,parstats[[s]])
+      if (stat.indices[s] != 0) {
+        if (names(parstats)[s] != paste("stat",stat.indices[s],sep="")) stop(paste("Name of 'parstats'[[",s,"]] should be equal to 'stat",stat.indices[s],sep=""))
+        if (!is.na(parstats[[s]]) && (nbparstats[s] == 0)) stop(paste("'parstats[['",s,"]] should be equal to NA",sep=""))
+        if ((nbparstats[s] != 0) && (length(parstats[[s]]) != nbparstats[s])) stop(paste("The length of parstats[[",s,"]] should be ",nbparstats[s],sep=""))
+        parstatstmp <- c(parstatstmp,parstats[[s]])
+      }
     }
   } else {
-    for (s in 1:stats.len) parstatstmp <- c(parstatstmp,stat.cstr(stat.indices[s])$stat.pars)
+    for (s in 1:stats.len) {
+      if (stat.indices[s] != 0) {parstatstmp <- c(parstatstmp,stat.cstr(stat.indices[s])$stat.pars)}
+    }
   }
   parstats <- parstatstmp
   parstats[is.na(parstats)] <- 0
@@ -152,32 +200,61 @@ powcomp.fast <- function(law.indices,stat.indices,vectn=c(20,50,100),M=10^3,leve
   decision.len <- stats.len*vectn.len*laws.len*nblevel
   decision <- rep(0,decision.len)
 
-  # a) Using a cluster
-  if (nbclus > 1) { # We start the cluster
+    if (Rcpp | any(stat.indices == 0)) {
+        if (nbclus > 1) { # We start the cluster
     # makeCluster = Create a set of copies of R running in parallel and communicating over sockets or using MPI.
-    cl <- makeCluster(nbclus, type = cluster.type)		
+            cl <- parallel::makeCluster(nbclus, type = cluster.type)		
 #    clusterSetupSPRNG(cl)
                                         
       
-    myfunc <- function(M) {
-      require(PoweR)
-      .C("powcompfast",M=as.integer(M),law.indices=as.integer(law.indices),laws.len=as.integer(laws.len),vectn=as.integer(vectn),vectn.len=as.integer(vectn.len),stat.indices=as.integer(stat.indices),stats.len=as.integer(stats.len),decision=as.integer(decision),decision.len=as.integer(decision.len),levels=as.double(levels),nblevel=as.integer(nblevel),
-         cL=as.double(critvalL),cR=as.double(critvalR),usecrit=as.integer(usecrit),alter=as.integer(alter),nbparlaws=as.integer(nbparlaws),parlaws=as.double(parlaws),nbparstats=as.integer(nbparstats),parstats=as.double(parstats),as.integer(modelnum), funclist, as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np),PACKAGE="PoweR",NAOK=TRUE)
-    }
+            myfunc <- function(M) {
+                require(PoweR)
+                .Call("powcompfastRcpp",M=as.integer(M),law.indices=as.integer(law.indices),laws.len=as.integer(laws.len),vectn=as.integer(vectn),vectn.len=as.integer(vectn.len),stat.indices=as.integer(stat.indices),stats.len=as.integer(stats.len),decision=as.integer(decision),decision.len=as.integer(decision.len),levels=as.double(levels),nblevel=as.integer(nblevel),
+                   cL=as.double(critvalL),cR=as.double(critvalR),usecrit=as.integer(usecrit),alter=as.integer(alter),nbparlaws=as.integer(nbparlaws),parlaws=as.double(parlaws),nbparstats=as.integer(nbparstats),parstats=as.double(parstats),as.integer(modelnum), funclist, as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np),as.list(Rlaws),Rstats,PACKAGE="PoweR",NAOK=TRUE)
+            }
     
-    out <- clusterCall(cl, myfunc, round(M/nbclus)) # M/nbclus iterations are performed on each core
+            out <- parallel::clusterCall(cl, myfunc, round(M/nbclus)) # M/nbclus iterations are performed on each core
           
       # We stop the cluster
-    stopCluster(cl)
+            parallel::stopCluster(cl)
     
-  } else {
+        } else {
 
   #b) or without a cluster
 
-    out <- list(.C("powcompfast",M=as.integer(M),law.indices=as.integer(law.indices),laws.len=as.integer(laws.len),vectn=as.integer(vectn),vectn.len=as.integer(vectn.len),stat.indices=as.integer(stat.indices),stats.len=as.integer(stats.len),decision=as.integer(decision),decision.len=as.integer(decision.len),levels=as.double(levels),nblevel=as.integer(nblevel),
-                  cL=as.double(critvalL),cR=as.double(critvalR),usecrit=as.integer(usecrit),alter=as.integer(alter),nbparlaws=as.integer(nbparlaws),parlaws=as.double(parlaws),nbparstats=as.integer(nbparstats),parstats=as.double(parstats),as.integer(modelnum), funclist, as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np),PACKAGE="PoweR",NAOK=TRUE))
+            out <- list(.Call("powcompfastRcpp",M=as.integer(M),law.indices=as.integer(law.indices),laws.len=as.integer(laws.len),vectn=as.integer(vectn),vectn.len=as.integer(vectn.len),stat.indices=as.integer(stat.indices),stats.len=as.integer(stats.len),decision=as.integer(decision),decision.len=as.integer(decision.len),levels=as.double(levels),nblevel=as.integer(nblevel),
+                           cL=as.double(critvalL),cR=as.double(critvalR),usecrit=as.integer(usecrit),alter=as.integer(alter),nbparlaws=as.integer(nbparlaws),parlaws=as.double(parlaws),nbparstats=as.integer(nbparstats),parstats=as.double(parstats),as.integer(modelnum), funclist, as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np),as.list(Rlaws),Rstats,PACKAGE="PoweR",NAOK=TRUE))
+            
+        }
 
-  }
+    } else {
+  # a) Using a cluster
+        if (nbclus > 1) { # We start the cluster
+    # makeCluster = Create a set of copies of R running in parallel and communicating over sockets or using MPI.
+            cl <- parallel::makeCluster(nbclus, type = cluster.type)		
+#    clusterSetupSPRNG(cl)
+                                        
+      
+            myfunc <- function(M) {
+                require(PoweR)
+                .C("powcompfast",M=as.integer(M),law.indices=as.integer(law.indices),laws.len=as.integer(laws.len),vectn=as.integer(vectn),vectn.len=as.integer(vectn.len),stat.indices=as.integer(stat.indices),stats.len=as.integer(stats.len),decision=as.integer(decision),decision.len=as.integer(decision.len),levels=as.double(levels),nblevel=as.integer(nblevel),
+                   cL=as.double(critvalL),cR=as.double(critvalR),usecrit=as.integer(usecrit),alter=as.integer(alter),nbparlaws=as.integer(nbparlaws),parlaws=as.double(parlaws),nbparstats=as.integer(nbparstats),parstats=as.double(parstats),as.integer(modelnum), funclist, as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np),PACKAGE="PoweR",NAOK=TRUE)
+            }
+    
+            out <- parallel::clusterCall(cl, myfunc, round(M/nbclus)) # M/nbclus iterations are performed on each core
+          
+      # We stop the cluster
+            parallel::stopCluster(cl)
+    
+        } else {
+
+  #b) or without a cluster
+
+            out <- list(.C("powcompfast",M=as.integer(M),law.indices=as.integer(law.indices),laws.len=as.integer(laws.len),vectn=as.integer(vectn),vectn.len=as.integer(vectn.len),stat.indices=as.integer(stat.indices),stats.len=as.integer(stats.len),decision=as.integer(decision),decision.len=as.integer(decision.len),levels=as.double(levels),nblevel=as.integer(nblevel),
+                           cL=as.double(critvalL),cR=as.double(critvalR),usecrit=as.integer(usecrit),alter=as.integer(alter),nbparlaws=as.integer(nbparlaws),parlaws=as.double(parlaws),nbparstats=as.integer(nbparstats),parstats=as.double(parstats),as.integer(modelnum), funclist, as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np),PACKAGE="PoweR",NAOK=TRUE))
+            
+        }
+    }
 
 
     out[[1]] <- out[[1]][c("M","law.indices","vectn","stat.indices","decision","levels","cL","cR","usecrit","alter","nbparlaws","parlaws","nbparstats","parstats")]
@@ -188,7 +265,9 @@ powcomp.fast <- function(law.indices,stat.indices,vectn=c(20,50,100),M=10^3,leve
     }
   }
 
-  out[[1]]$nbclus <- nbclus
+    out[[1]]$nbclus <- nbclus
+    out[[1]]$Rlaws <- Rlaws
+    if (Rcpp) names(out[[1]]$Rlaws) <- tmpnames
   
   k <- 1
   for (i in 1:length(out[[1]]$nbparstats)) {

@@ -4,3 +4,5 @@ useDynLib(PoweR)
 
 # Export all names
 exportPattern("^[^\\.]")
+import(Rcpp)
+import(parallel)

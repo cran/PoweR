@@ -13,11 +13,14 @@ can be done using a Monte-Carlo simulation.
 \usage{
 many.pval(stat.indices, law.index, n = 100, M = 10^5, N = 100,
           alter = create.alter(stat.indices), law.pars = NULL, parstats = NULL,
-          null.dist = 2, method = c("direct", "MC"))
+          null.dist = 2, null.pars = NULL, method = c("direct", "MC"), Rlaw.index = NULL,
+Rnull.dist = NULL, Rstats = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{stat.indices }{vector of test statistic indices as given by function \code{\link{getindex}}.
+  \item{stat.indices }{vector of test statistic indices as given by
+    function \code{\link{getindex}} (some components can be 0 if you want to use your own function for some
+    test statistics; see 'Rstats' argument).
 }
   \item{law.index }{index of the distribution from which to generate
     observations used to compute the values of the test statistics specified with \code{stat.indices}.
@@ -46,7 +49,8 @@ are the indices specified in \code{stat.indices}.
     used only if \code{method} = 'MC'. Integer value (as given by
     function \code{\link{getindex}}) specifying the distribution under
     the null hypothesis.
-}
+  }
+    \item{null.pars }{vector of parameters for the null distribution}
   \item{method }{
     character. Either 'direct' to compute the \eqn{p}-value under the null using
 for example the asymptotic distribution of the test statistic under the
@@ -54,6 +58,17 @@ null. This is not possible for all test statistics; or 'MC' to use a
 Monte-Carlo simulation to approximate the distribution of the test
 statistic under the null (specified by \code{null.dist}).
 }
+\item{Rlaw.index }{If 'law.index' is set to 0 then 'Rlaw.index' should be a (random generating) function.}
+\item{Rnull.dist }{If 'null.dist' is set to 0 then 'Rnull.dist' should be a (random generating) function.}
+\item{Rstats}{A list. If in a given row of the 'params' matrix, the
+  value of 'stat' is set to 0, the corresponding component of the list
+  'Rstats' should be an R function that outputs
+    a list with components 'statistic' (value of the test statistic),
+    'pvalue' (pvalue of the test; if not computable should be set to 0), 'decision' (1 if we reject the null,
+    0 otherwise), 'alter' (see above), 'stat.pars' (see above),
+    'pvalcomp' (1L if the pvalue can be computed, 0L otherwise),
+    'nbparstat' (length of stat.pars). If the value of 'stat' is not 0,
+  then the corresponding component of 'Rstats' should be set to 'NULL'.}
 }
 \value{
 \item{pvals }{the \code{N} x length(\code{stat.indices}) matrix of \eqn{p}-values.}

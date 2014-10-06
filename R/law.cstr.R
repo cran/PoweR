@@ -1,6 +1,6 @@
 law.cstr <- function(law.index,law.pars=NULL) {
 
-  if(getRversion() < "3.1") dontCheck <- identity
+  if(getRversion() < "3.1.0") dontCheck <- identity
 
 # We get the default (maximal) number of parameters and the default values of the parameters
 # We use the trick to put the first element of *name to "1" to also retrieve the default values

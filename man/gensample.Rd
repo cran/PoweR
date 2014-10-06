@@ -7,7 +7,8 @@
 gensample(law.index,n,law.pars = NULL,check = TRUE)
 }
 \arguments{
-  \item{law.index }{law index as given by function \code{\link{getindex}}.}
+  \item{law.index }{law index as given by function
+    \code{\link{getindex}}.}
   \item{n }{number of observations to generate.}
   \item{law.pars }{vector of parameters for the law. The length of this
     parameter should not exceed 4.}

@@ -1,6 +1,6 @@
 getnbparstats <- function(stat.indices=NULL) {
 
-  if(getRversion() < "3.1") dontCheck <- identity
+  if(getRversion() < "3.1.0") dontCheck <- identity
   
   tmp <- names(getDLLRegisteredRoutines("PoweR")[[".C"]])
   ind.stats <- grep("stat",tmp[grep("stat",tmp)])

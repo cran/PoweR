@@ -7,7 +7,8 @@ statcompute(stat.index, data, levels = c(0.05,0.1), critvalL = NULL,
             critvalR = NULL, alter = 0, stat.pars = NULL)
 }
 \arguments{
-  \item{stat.index }{one statistic index as given by function \code{\link{getindex}}.}
+  \item{stat.index }{one statistic index as given by function
+    \code{\link{getindex}}.}
   \item{data }{sample from which to compute the statistic.}
   \item{levels }{vector of desired significance levels for the test.}
   \item{critvalL }{\code{NULL} or vector of left critival values.}
@@ -17,8 +18,9 @@ statcompute(stat.index, data, levels = c(0.05,0.1), critvalL = NULL,
   values of the test statistic, 4: bilateral test that rejects H0 only
   for small values of the test statistic.} 
   \item{stat.pars }{a vector of parameters. 
-    If \code{NULL}, the default parameter values for this statistic wil be used.}
-}
+    If \code{NULL}, the default parameter values for this statistic wil
+    be used.}
+ }
 \value{A list with the test statistic value, the \eqn{p}-value and \code{alter}.
 }
 \references{
@@ -35,5 +37,6 @@ statcompute(21, data, levels = c(0.05,0.1), critvalL = NULL, critvalR = NULL,
             alter = 0,stat.pars = NULL)
 # Identical to:
 shapiro.test(data)
+
 }
 \keyword{htest}

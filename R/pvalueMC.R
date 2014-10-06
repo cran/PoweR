@@ -1,6 +1,6 @@
 pvalueMC <- function(data, stat.index, null.law.index, M = 10^5, alter, null.law.pars = NULL, stat.pars = NULL, list.stat = NULL, method = c("Fisher")) {
 
-  if(getRversion() < "3.1") dontCheck <- identity
+  if(getRversion() < "3.1.0") dontCheck <- identity
 
   method <- match.arg(method)
   
@@ -56,6 +56,7 @@ pvalueMC <- function(data, stat.index, null.law.index, M = 10^5, alter, null.law
               paramstat=as.double(stat.pars),nbparamstat=as.integer(nbparstat),PACKAGE="PoweR")
 
   stat <- stattmp$statistic
+  if (stattmp$alter != alter) warning(paste("'alter' has been set to ",stattmp$alter,sep=""))
   alter <- stattmp$alter				
 
   # calculate the median of list.stat

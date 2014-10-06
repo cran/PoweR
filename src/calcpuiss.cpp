@@ -91,7 +91,7 @@ static char *sfunction;
       
       call_R(sfunction,nargs,arguments,modes,lengths,names,nres,results);
       
-      
+  
       for (i=0;i<=(xlen[0]-1);i++) {
 	
 		x[i] = ((double*)results[0])[i];
@@ -269,7 +269,7 @@ int *modelnum, char** funclist, double *thetavec, double *xvec, int *p, int *np)
     critvalR = new double[1];
     *(level+0) = 0.0;
     *(statistic+0) = 0.0;
-	
+
 	// We set pvalcomp[0] = 0 so the function compquant() doesn't compute p-value each time it is called
 	// if you want to retrieve these p-values, please change pvalue[0] to 0
     pvalue[0] = 0.0;
@@ -309,25 +309,24 @@ int *modelnum, char** funclist, double *thetavec, double *xvec, int *p, int *np)
     setseed = new int[1];
     setseed[0] = 0;
     GetRNGstate();
-
+	      
     getname[0] = 0;	
     for (i=1;i<=*(M+0);i++) {
       
       x = new double[*(n+0)];
       for (j=1;j<=*(n+0);j++) *(x+j-1) = 0.0;
-      
       gensample(*(law+0),n,x,name1,getname,parlaw,nbparlaw,setseed);
       model(modelnum[0],funclist,thetavec,xvec,n,x,p,np);   // on applique le modèle
-     
+    
       statcompute(*(stat+0), x, n, level, nblevel, name2, getname, statistic, pvalcomp,pvalue,critvalL,critvalR,usecrit,alter,decisiontmp,parstat,nbparstat);
-      
+    
       *(statvec+i-1) = *(statistic+0);      
-      
+
       //On libere de la memoire
       delete[] x;
+      	      
       
-    }
-    
+	      }
 
     //On libere de la memoire
     for (i=1;i<=50;i++) {
@@ -614,7 +613,7 @@ double *critvalL, double *critvalR, int *usecrit, int *alter, int *nbparlaw, dou
     int *setseed;
     setseed = new int[1];
     setseed[0] = 1;
-
+    GetRNGstate();
 
     int statindex, *nblevel, *usecrit, *decision;
     nblevel = new int[1];
@@ -703,12 +702,15 @@ double *critvalL, double *critvalR, int *usecrit, int *alter, int *nbparlaw, dou
     delete[] alter;
     delete[] nbparamstat;
 
+    PutRNGstate();
+    return;
+
   }
   
 
 
   // Computation of the p-values matrix using Monte-Carlo
-  void matrixpvalMC(int *n, int *law, int* nbstats, int *M, int *statindices, int *nbparstatvec, double *parstatmultvec, char** funclist, int *N, int *lawindex, int *nbparams, int *altervec, double *parstat, int *nbparstat, double *res) {
+  void matrixpvalMC(int *n, int *lawindex, int* nbstats, int *M, int *statindices, int *nbparstatvec, double *parstatmultvec, char** funclist, int *N, int *nulldist, int *nbparams, int *altervec, double *parstat, int *nbparstat, double *res) {
 
     void compquant(int *n, int *law, int *stat, int *M, double *statvec,// char **lawname, char **statname, 
 int *nbparlaw, double *parlaw, int *nbparstat, double *parstat, int *modelnum, char** funclist, double *thetavec, double *xvec, int *p, int *np);
@@ -786,11 +788,11 @@ int *nbparlaw, double *parlaw, int *nbparstat, double *parstat, int *modelnum, c
 	paramstat = new double[nbparamstat[0]];    
 	for (k=0;k<nbparamstat[0];k++) paramstat[k] = parstatmultvec[cmpt+k];
 	cmpt = cmpt + nbparamstat[0];
-	compquant(n,law,stat,M,statvec,//lawname,statname,
+	compquant(n,lawindex,stat,M,statvec,//lawname,statname,
 		  nbparlaw,parlaw,nbparamstat,paramstat,modelnum,funclist,thetavec,xvec,p,np);
 	delete[] paramstat;
       } else {
-	compquant(n,law,stat,M,statvec,// lawname,statname,
+	compquant(n,lawindex,stat,M,statvec,// lawname,statname,
 		  nbparlaw,parlaw,nbparamstat,(double*)0,modelnum,funclist,thetavec,xvec,p,np);
       }
 
@@ -847,6 +849,7 @@ int *nbparlaw, double *parlaw, int *nbparstat, double *parstat, int *modelnum, c
     int *setseed;
     setseed = new int[1];
     setseed[0] = 1;
+    GetRNGstate();
 
 
     int *nblevel, *usecrit, *decision;
@@ -877,7 +880,7 @@ int *nbparlaw, double *parlaw, int *nbparstat, double *parstat, int *modelnum, c
 
     for (j=0;j<N[0];j++) {
 
-      gensample(lawindex[0],n,x,name,getname,params,nbparams,setseed);  // We retrieve x
+      gensample(nulldist[0],n,x,name,getname,params,nbparams,setseed);  // We retrieve x
 
       cmpt = 0;
       for (i=0;i<nbstats[0];i++) {
@@ -977,6 +980,8 @@ int *nbparlaw, double *parlaw, int *nbparstat, double *parstat, int *modelnum, c
     delete[] liststat;
     delete[] alter;
 
+    PutRNGstate();
+    return;
 
   }
 

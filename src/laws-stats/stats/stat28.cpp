@@ -60,7 +60,7 @@ extern "C" {
       char **name1;
       name1 = new char*[50];
       for (i=0;i<=49;i++) name1[i] =  new char[1];
-      double pval1, pval2, stat, tmp;
+      double pval1, pval2, stat;
       int *getname27, *getname34, *nbparamstat27, *nbparamstat34;
       getname27 = new int[1];
       getname27[0] = 0;

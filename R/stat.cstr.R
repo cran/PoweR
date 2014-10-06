@@ -1,6 +1,6 @@
 stat.cstr <- function(stat.index,stat.pars=NULL) {
 
-  if(getRversion() < "3.1") dontCheck <- identity
+  if(getRversion() < "3.1.0") dontCheck <- identity
 
 # We get the default (maximal) number of parameters
   Cstat.name <- paste("stat",stat.index,sep="")

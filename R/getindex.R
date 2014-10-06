@@ -1,6 +1,6 @@
 getindex <- function(law.indices=NULL,stat.indices=NULL) {
   
-  if(getRversion() < "3.1") dontCheck <- identity
+  if(getRversion() < "3.1.0") dontCheck <- identity
   
   tmp <- names(getDLLRegisteredRoutines("PoweR")[[".C"]])
 

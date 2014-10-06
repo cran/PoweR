@@ -54,3 +54,10 @@ Version 1.0.1
 -> I added a dontCheck call to prevent a NOTE about a Registration problem in a .C call (e.g., symbol ‘name.law’ in the local frame), 
    in files getnbparlaws.R, getnbparstats.R and getindex.R. I also modified a few other R files for the same reason.
 -> I corrected a bug in the C++ file stat80.cpp
+
+2014-07-17
+----------
+
+Version 1.0.2
+
+-> I added a warning in the file pvalueMC.R to warn users for an incorrect choice of the argument 'alter' leading to a reseting of it.

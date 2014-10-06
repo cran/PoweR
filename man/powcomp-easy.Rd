@@ -3,7 +3,7 @@
 \title{Computation of power and level tables for hypothesis tests.}
 \description{Functions for the computation of power and level tables for hypothesis tests, in LaTeX format.}
 \usage{
-powcomp.easy(params,M=10^5,model=NULL)
+powcomp.easy(params,M=10^5,model=NULL,Rlaws=NULL,Rstats=NULL)
 }
 \arguments{
   \item{M }{number of Monte Carlo repetitions to use.}
@@ -16,7 +16,9 @@ powcomp.easy(params,M=10^5,model=NULL)
     
     \code{law} : integer giving the index of the law considered;
     
-    \code{stat} : integer giving the index of the test statistic considered;
+    \code{stat} : integer giving the index of the test statistic
+    considered (can be 0 if you want to use your own function for some
+    test statistic; see 'Rstats' argument);
     
     \code{level} : double, this is the significance level desired;
     
@@ -40,7 +42,22 @@ powcomp.easy(params,M=10^5,model=NULL)
     vector of errors, generate observations from a model (with
     parameters \code{thetavec} and values \code{xvec}) based on these errors, then
     compute and return the residuals from the model. See function
-    modele1.R in directory inst/doc/ for an example in multiple linear regression}
+    modele1.R in directory inst/doc/ for an example in multiple linear
+    regression}
+  \item{Rlaws}{When some law indices in second column of 'params' are
+  equal to 0, this means that you will be using some R random generators
+  not hardcoded in C in the package. In that case, you should provide
+  the names of the random generation functions in the corresponding
+  components of a list; the other components should be set to NULL.}
+\item{Rstats}{A list. If in a given row of the 'params' matrix, the
+  value of 'stat' is set to 0, the corresponding component of the list
+  'Rstats' should be an R function that outputs
+    a list with components 'statistic' (value of the test statistic),
+    'pvalue' (pvalue of the test; if not computable should be set to 0), 'decision' (1 if we reject the null,
+    0 otherwise), 'alter' (see above), 'stat.pars' (see above),
+    'pvalcomp' (1L if the pvalue can be computed, 0L otherwise),
+    'nbparstat' (length of stat.pars). If the value of 'stat' is not 0,
+  then the corresponding component of 'Rstats' should be set to 'NULL'.}
 }
 \details{
   If both \code{cL} and \code{cR} are \code{NA}, no critical values are used
@@ -80,6 +97,10 @@ sim4 <- c(n=100,law=7,stat=80,level=0.10,cL=NA,cR=9.319,alter=3,
           par1=NA,par2=NA,par3=NA,par4=NA,parstat1=1,parstat2=5)
 params <- rbind(sim1,sim2,sim3,sim4)
 powcomp.easy(params,M=10^2)
+sim5 <- c(n=100,law=0,stat=80,level=0.10,cL=NA,cR=9.319,alter=3,
+          par1=NA,par2=NA,par3=NA,par4=NA,parstat1=1,parstat2=5)
+params <- rbind(params,sim5)
+powcomp.easy(params,M=10^2,Rlaws=list(NULL,NULL,NULL,NULL,rnorm))
 }
 \keyword{datagen}
 \keyword{htest}
