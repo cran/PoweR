@@ -1,4 +1,4 @@
-0f7bb1c25ea505dfd690c8d0baa94756 *DESCRIPTION
+6e7844498ff2177d5600e52a38db2452 *DESCRIPTION
 745c70e251e1858a3753bdd95265e54e *INDEX
 d07ddfe25e34d784f36c85aa2cf6d79d *NAMESPACE
 3f23720038e2021baa8b9a51e34a5fac *R/calcFx.R
@@ -122,10 +122,10 @@ a8794a341dd63a77e600e21f3723e50d *man/law0015.UUnif.Rd
 87aec203a476690b81b7838dd32ebb10 *man/law0016.VUnif.Rd
 f5976433b185b2904d3a4640808c9fc2 *man/law0017.JohnsonSU.Rd
 9ee239b18cb1d485b30e37bb86ce5b63 *man/law0018.Tukey.Rd
-06ab744ac84fe0f886f4fab51b2486d1 *man/law0019.LocationCont.Rd
+4bae89e898a2b93efe7799e3f014e622 *man/law0019.LocationCont.Rd
 7a7129a978184f54a73707f62c6fbbd3 *man/law0020.JohnsonSB.Rd
 2113db9bdad88a979e6b3423e28c04c2 *man/law0021.SkewNormal.Rd
-57ce7fe1ea52cb228c8b5441c483fa22 *man/law0022.ScaleCont.Rd
+611911eb5fe5fbaa14c5e35660b9e585 *man/law0022.ScaleCont.Rd
 a8b5e41052e1261d0bcf2079d5c996b4 *man/law0023.GeneralizedPareto.Rd
 fb799b5d451add606397ee391aed1744 *man/law0024.GeneralizedError.Rd
 4751bc938c072765014f801a47a9b68c *man/law0025.Stable.Rd
@@ -134,7 +134,7 @@ fb799b5d451add606397ee391aed1744 *man/law0024.GeneralizedError.Rd
 de7f5ae0b693e81b2f31cd1db748385d *man/law0028.GeneralizedExtValue.Rd
 efbee182dc556a3c978baf0ad5628b0b *man/law0029.GeneralizedArcsine.Rd
 a246388e6a38a98bc38b67dd8a215d5a *man/law0030.FoldedNormal.Rd
-8f42ea025cfc69f27c65ad8b88614e20 *man/law0031.MixtureNormal.Rd
+47d006b883794f791d17b90ef99bc28f *man/law0031.MixtureNormal.Rd
 cf1aa523f794a74936d8abe162efa6b4 *man/law0032.TruncatedNormal.Rd
 2a1012c538a7b8f1fd05ee7c6a573742 *man/law0033.Nout.Rd
 3e1d05172208f9b80206fbf395d11e3b *man/law0034.GeneralizedExpPower.Rd
@@ -241,7 +241,7 @@ b3a98b17ce1420339c6765b52c83da95 *man/stat0082.Zhang2.Rd
 4a92e0aa220d014f12440c41fbd3b929 *man/stat0085.DesgagneMicheauxLeblanc-Lap3.Rd
 d13b26dfa2e01570783c09308c94f605 *man/statcompute.Rd
 95a5e0dc5dbdec9c251c142cb4cad286 *src/Makevars
-b195b21dd778614c9ffb4f2cc7eb005d *src/calcpuiss.cpp
+06ec7f61a78fa1e6f6648cf4e7e32b22 *src/calcpuiss.cpp
 47f55572662f1d4825c5b594ccbbe360 *src/calcpuissRcpp.cpp
 cb7a1156de359f91afd09fdf2644e2dc *src/laws-stats/def-laws-stats.cpp
 e6f56ca9b85e3b5518e6b8e9d03dc688 *src/laws-stats/laws/law1.cpp

@@ -428,6 +428,7 @@ double *critvalL, double *critvalR, int *usecrit, int *alter, int *nbparlaw, dou
 
     int stlen1, stlen2;
 
+    getname[0] = 0;	
     for (i=1;i<=M[0];i++) {
 
       //    k = 0; // indice de la simul

@@ -23,7 +23,7 @@ Goodness-of-fit Tests in R. \emph{Journal of Statistical Software}, \bold{}, --.
 \seealso{See \code{\link{Distributions}} for other standard distributions.
 }
 
-\examples{res <- gensample(22,10000,law.pars=c(8,6))
+\examples{res <- gensample(22,10000,law.pars=c(0.8,6))
 res$law
 res$law.pars
 mean(res$sample)
