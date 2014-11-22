@@ -14,7 +14,13 @@ print.power1 <- function(x, digits = 3, latex.output = FALSE, ...) {
   res2 <- matrix(0,nrow=vectn.len*laws.len*nblevel,ncol=3+stats.len)
 
   statnames <- rep("",stats.len)
-  for (i in 1:stats.len) statnames[i] <- PoweR::stat.cstr(x$stat.indices[i])$name
+  for (i in 1:stats.len) {
+      if (x$stat.indices[i] != 0) {
+          statnames[i] <- PoweR::stat.cstr(x$stat.indices[i])$name
+      } else {
+          statnames[i] <- "stat0"
+      }
+  }
 
 
   lawnames <- rep("",laws.len)
@@ -163,10 +169,14 @@ if (latex.output) {
 
   name <- c()
   for (stat.index in x$stat.indices) {
-    out <- .C(paste("stat", stat.index, sep = ""), 0, 0L, 0, 
-              0L, name = c("1", rep(" ", 49)), 1L, 0, 0L, 0, 0, 0, 0L, 
-              0L, 0L, 0.0, 0)
-    name <- c(name,sub(' +$', '', paste(out$name,collapse=""))) # Remove trailing white spaces
+      if (stat.index != 0) {
+          out <- .C(paste("stat", stat.index, sep = ""), 0, 0L, 0, 
+                    0L, name = c("1", rep(" ", 49)), 1L, 0, 0L, 0, 0, 0, 0L, 
+                    0L, 0L, 0.0, 0)
+          name <- c(name,sub(' +$', '', paste(out$name,collapse=""))) # Remove trailing white spaces
+      } else {
+          name <- "stat0"
+      }
   }
 
   cat("\\begin{table}[ht]\n")

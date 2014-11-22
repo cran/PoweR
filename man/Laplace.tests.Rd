@@ -7,7 +7,7 @@
 \description{List of goodness-of-fit tests for the Laplace distribution.
 }
 
-\details{The statistic tests for the Laplace distribution are names in
+\details{The statistic tests for the Laplace distribution are named in
   the form \code{stat}\eqn{xxxx}.
 
 For the Anderson-Darling statistic see \code{\link{stat0042.AndersonDarling}}.

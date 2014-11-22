@@ -35,14 +35,14 @@ many.crit(law.index,stat.indices,M = 10^3,vectn = c(20,50,100),levels = c(0.05,0
     compute and return the residuals from the model. See function
     modele1.R in directory inst/doc/ for an example in multiple linear regression.}
 \item{Rlaw }{If 'law.index' is set to 0 then 'Rlaw' should be a (random generating) function.}
-\item{Rstats}{A list. If a value of 'stat.index' is set to 0, the corresponding component of the list
-  'Rstats' should be an R function that outputs
-    a list with components 'statistic' (value of the test statistic),
-    'pvalue' (pvalue of the test; if not computable should be set to 0), 'decision' (1 if we reject the null,
-    0 otherwise), 'alter' (see above), 'stat.pars' (see above),
-    'pvalcomp' (1L if the pvalue can be computed, 0L otherwise),
-    'nbparstat' (length of stat.pars). If the value of 'stat' is not 0,
-  then the corresponding component of 'Rstats' should be set to 'NULL'.}
+\item{Rstats}{A list of same length as \code{stat.indices}. If a value of the vector \code{stat.indices} is set to 0, the corresponding component of the list
+  \code{Rstats} should be an R function that outputs
+    a list with components \code{statistic} (value of the test statistic),
+    \code{pvalue} (pvalue of the test; if not computable should be set to 0), \code{decision} (1 if we reject the null,
+    0 otherwise), \code{alter} (see above), \code{stat.pars} (see above),
+    \code{pvalcomp} (1L if the pvalue can be computed, 0L otherwise),
+    \code{nbparstat} (length of stat.pars). If a value of \code{stat.indices} is not 0,
+  then the corresponding component of \code{Rstats} should be set to \code{NULL}.}
 }
 \value{An object of class \code{critvalues}, which is a list where each element of the list contains a matrix 
   for the corresponding statistic. This column matrices are: \eqn{n} values,

@@ -47,7 +47,7 @@ powcomp.fast <- function(law.indices,stat.indices,vectn=c(20,50,100),M=10^3,leve
 # If we provide a single value in critval$statj then it is critvalR
 # If we provide two values in critval$statj then it is c(critvalL,critvalR)  ... IN THAT ORDER!!
   critvalL <- critvalR <- rep(0,vectn.len*stats.len*nblevel)
-  usecrit <- rep(0,vectn.len*stats.len*nblevel)
+  usecrit <- rep(0,vectn.len*stats.len)
   if (is.null(critval)) {
     warning(paste("'critval' has been computed internally using function many.crit() with the value of 'law.index'=",null.law.index," (i.e. ",law.cstr(null.law.index)$name,")",sep=""))
     critval <- many.crit(law.index=null.law.index,stat.indices,M,vectn,levels,alter,null.law.pars,parstats)
@@ -68,7 +68,7 @@ powcomp.fast <- function(law.indices,stat.indices,vectn=c(20,50,100),M=10^3,leve
           vals2 <- vals[vals[,"n"]==vectn[k],-(1:2)]
         }
         if (!is.null(vals2)) {
-          usecrit[k+vectn.len*(l-1)+nblevel*vectn.len*(s-1)] <- 1
+          usecrit[k+vectn.len*(s-1)] <- 1 # J'AI changé ici!! S'il y a un bug, vérifier ici ...
           critvalL[k+vectn.len*(l-1)+nblevel*vectn.len*(s-1)] <- vals2[1]
           critvalR[k+vectn.len*(l-1)+nblevel*vectn.len*(s-1)] <- vals2[2]
         }
@@ -141,7 +141,7 @@ powcomp.fast <- function(law.indices,stat.indices,vectn=c(20,50,100),M=10^3,leve
 
   
 # Management of parstats     pas tres bien gere quand stat.indices[s] = 0 .....
-  nbparstats <- rep(NA,length(stat.indices))
+  nbparstats <- rep(0,length(stat.indices))
   nbparstats[stat.indices != 0] <- getnbparstats(stat.indices[stat.indices != 0])
   parstatstmp <- c()
   if (!is.null(parstats)) {

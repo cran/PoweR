@@ -60,15 +60,14 @@ statistic under the null (specified by \code{null.dist}).
 }
 \item{Rlaw.index }{If 'law.index' is set to 0 then 'Rlaw.index' should be a (random generating) function.}
 \item{Rnull.dist }{If 'null.dist' is set to 0 then 'Rnull.dist' should be a (random generating) function.}
-\item{Rstats}{A list. If in a given row of the 'params' matrix, the
-  value of 'stat' is set to 0, the corresponding component of the list
-  'Rstats' should be an R function that outputs
-    a list with components 'statistic' (value of the test statistic),
-    'pvalue' (pvalue of the test; if not computable should be set to 0), 'decision' (1 if we reject the null,
-    0 otherwise), 'alter' (see above), 'stat.pars' (see above),
-    'pvalcomp' (1L if the pvalue can be computed, 0L otherwise),
-    'nbparstat' (length of stat.pars). If the value of 'stat' is not 0,
-  then the corresponding component of 'Rstats' should be set to 'NULL'.}
+\item{Rstats}{A list of same length as \code{stat.indices}. If a value of the vector \code{stat.indices} is set to 0, the corresponding component of the list
+  \code{Rstats} should be an R function that outputs
+    a list with components \code{statistic} (value of the test statistic),
+    \code{pvalue} (pvalue of the test; if not computable should be set to 0), \code{decision} (1 if we reject the null,
+    0 otherwise), \code{alter} (see above), \code{stat.pars} (see above),
+    \code{pvalcomp} (1L if the pvalue can be computed, 0L otherwise),
+    \code{nbparstat} (length of stat.pars). If a value of \code{stat.indices} is not 0,
+  then the corresponding component of \code{Rstats} should be set to \code{NULL}.}
 }
 \value{
 \item{pvals }{the \code{N} x length(\code{stat.indices}) matrix of \eqn{p}-values.}

@@ -25,14 +25,16 @@ many.crit <- function(law.index,stat.indices,M=10^3,vectn=c(20,50,100),levels=c(
     if (any(is.na(names(alter)))) stop("'alter' names should all be defined")
     if (length(alter) != length(stat.indices)) stop("'alter' and 'stat.indices' should have the same length")
     for (s in 1:stats.len) {
-      if (names(alter)[s] != paste("stat",stat.indices[s],sep="")) stop(paste("Name of 'alter'[[",s,"]] should be equal to 'stat",stat.indices[s],sep=""))
-      if (!(alter[[s]] %in% 0:4)) stop(paste("'alter'[[",s,"]] should be in  {0,1,2,3,4}.",sep=""))
-      Cstat.name <- paste("stat",as.character(stat.indices[s]),sep="")
-      alter.true <- .C(dontCheck(Cstat.name),as.double(0.0),1L,0.05,1L,rep(" ",50),1L,0.0,0L,0.0,0.0,0.0,0L,alter=as.integer(alter[s]),0L,rep(0.0,4),0L,PACKAGE="PoweR")$alter
-      if (alter[[s]] != alter.true) {
-        warning(paste("'alter'[[",s,"]] should be set to ",alter.true,". We have done this for you!"),sep="")
-        alter[[s]] <- alter.true
-      }
+        if (stat.indices[s] != 0) {
+            if (names(alter)[s] != paste("stat",stat.indices[s],sep="")) stop(paste("Name of 'alter'[[",s,"]] should be equal to 'stat",stat.indices[s],sep=""))
+            if (!(alter[[s]] %in% 0:4)) stop(paste("'alter'[[",s,"]] should be in  {0,1,2,3,4}.",sep=""))
+            Cstat.name <- paste("stat",as.character(stat.indices[s]),sep="")
+            alter.true <- .C(dontCheck(Cstat.name),as.double(0.0),1L,0.05,1L,rep(" ",50),1L,0.0,0L,0.0,0.0,0.0,0L,alter=as.integer(alter[s]),0L,rep(0.0,4),0L,PACKAGE="PoweR")$alter
+            if (alter[[s]] != alter.true) {
+                warning(paste("'alter'[[",s,"]] should be set to ",alter.true,". We have done this for you!"),sep="")
+                alter[[s]] <- alter.true
+            }
+        }
     }
     alter <- unlist(alter)
   } else { # alter is NULL
@@ -42,8 +44,9 @@ many.crit <- function(law.index,stat.indices,M=10^3,vectn=c(20,50,100),levels=c(
 
  
 # Management of parstats
- nbparstats <- getnbparstats(stat.indices)
- if (!is.null(parstats)) {
+  nbparstats <- rep(NA,length(stat.indices))
+  nbparstats[stat.indices!=0] <- getnbparstats(stat.indices[stat.indices!=0])
+  if (!is.null(parstats)) {
    if (!is.list(parstats)) stop("'parstats' should be a list")
    if (is.null(names(parstats))) stop("'parstats' should be a named list")
    if (any(is.na(names(parstats)))) stop("'parstats' names should all be defined")

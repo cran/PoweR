@@ -406,7 +406,7 @@ double *critvalL, double *critvalR, int *usecrit, int *alter, int *nbparlaw, dou
 
     int *altertmp, *usecrittmp, *nbparlawtmp, *nbparstattmp;
     altertmp = new int[1];
-    usecrittmp = new int[nblevel[0]];
+    usecrittmp = new int[1];
     nbparlawtmp = new int[1];
 	nbparstattmp = new int[1];
 	
@@ -468,8 +468,8 @@ double *critvalL, double *critvalR, int *usecrit, int *alter, int *nbparlaw, dou
 	    }
 	    stlen1 = stlen1 + nbparstattmp[0];
 	
+	    usecrittmp[0] = usecrit[n+vectnlen[0]*(stat-1)-1];
 	    for (j=1;j<=nblevel[0];j++) {
-	      usecrittmp[j-1] = usecrit[n+nblevel[0]*vectnlen[0]*(stat-1)+vectnlen[0]*(j-1)-1]; 
 	      critvalLtmp[j-1] = critvalL[n+nblevel[0]*vectnlen[0]*(stat-1)+vectnlen[0]*(j-1)-1];
 	      critvalRtmp[j-1] = critvalR[n+nblevel[0]*vectnlen[0]*(stat-1)+vectnlen[0]*(j-1)-1];	  
 	    }

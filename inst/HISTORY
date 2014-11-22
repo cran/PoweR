@@ -61,3 +61,11 @@ Version 1.0.1
 Version 1.0.2
 
 -> I added a warning in the file pvalueMC.R to warn users for an incorrect choice of the argument 'alter' leading to a reseting of it.
+
+2014-11-21
+----------
+
+Version 1.0.4
+
+-> I modified slightly the many.crit.Rd file
+-> I modified the file calcpuissRcpp.cpp

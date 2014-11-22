@@ -48,19 +48,23 @@ compquant <- function(n,law.index,stat.index,probs=NULL,M=10^5,law.pars=NULL,sta
   if (is.null(Rstat)) Rstat <- function(){}
 
   if ((law.index == 0) | (stat.index == 0)) {
- 
+
       out <- .Call("compquantRcpp",n=as.integer(n),law=as.integer(law.index),stat=as.integer(stat.index),M=as.integer(M),statvec=as.double(rep(0,M)),nbparlaw=as.integer(nbparlaw),law.pars=as.double(law.pars),nbparstat=as.integer(nbparstat),stat.pars=as.double(stat.pars),as.integer(modelnum), as.list(funclist), as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np),as.function(Rlaw), as.function(Rstat),PACKAGE="PoweR")
       tmp <- paste(text=match.call()$Rlaw)
       tmp2 <- unlist(formals(eval(parse(text=tmp)))[-1])
       tmp3 <- c(paste(names(tmp2),"=",if (is.null(law.pars.save)) tmp2 else law.pars.save,sep=""))
         lawname <- paste(tmp,"(",paste(tmp3,collapse=","),")",sep="")
       if (is.null(law.pars)) {out$law.pars <- tmp2;out$nbparlaw <- length(out$law.pars)}
+
+      statname <- "stat0"
+
   } else {
       out <- .C("compquant",n=as.integer(n),law=as.integer(law.index),stat=as.integer(stat.index),M=as.integer(M),statvec=as.double(rep(0,M)),nbparlaw=as.integer(nbparlaw),law.pars=as.double(law.pars),nbparstat=as.integer(nbparstat),stat.pars=as.double(stat.pars),as.integer(modelnum), funclist, as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np),PACKAGE="PoweR")
       lawname <- law.cstr(law.index,out$law.pars[1:getnbparlaws(law.index)])$name
+
+      statname <- stat.cstr(stat.index)$name
   }
 
-  statname <- stat.cstr(stat.index)$name
 
 
   return(list(stat=out$statvec,quant=quantile(out$statvec,if (is.null(probs)) c(0.025,0.05,0.1,0.9,0.95,0.975) else probs),lawname=lawname,law.pars=out$law.pars[1:out$nbparlaw],statname=statname,stat.pars=out$stat.pars[1:out$nbparstat]))

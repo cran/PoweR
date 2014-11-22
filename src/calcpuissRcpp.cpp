@@ -52,11 +52,9 @@ RcppExport SEXP gensampleRcpp(SEXP rlawfuncSEXP, SEXP nSEXP, SEXP paramsSEXP , S
     }
 
 
-  SEXP statcomputeRcpp2( Function rstatfunc, SEXP ech, SEXP levels) {
+  SEXP statcomputeRcpp2( Function rstatfunc, SEXP ech, SEXP levels, SEXP usecrit, SEXP critvalL, SEXP critvalR) {
     //	 Rcpp::RNGScope __rngScope;
-
-	 List res = rstatfunc(ech,levels);
-
+    List res = rstatfunc(ech,levels,usecrit,critvalL,critvalR);
 	 return Rcpp::List::create(Rcpp::Named("statistic") = res["statistic"],
 				   Rcpp::Named("pvalue") = res["pvalue"],
 				   Rcpp::Named("decision") = res["decision"], // decision est de longueur nblevel[0]
@@ -69,13 +67,16 @@ RcppExport SEXP gensampleRcpp(SEXP rlawfuncSEXP, SEXP nSEXP, SEXP paramsSEXP , S
 
 
 
-  RcppExport SEXP statcomputeRcpp(SEXP rstatfuncSEXP, SEXP echSEXP, SEXP levelsSEXP) {
+  RcppExport SEXP statcomputeRcpp(SEXP rstatfuncSEXP, SEXP echSEXP, SEXP levelsSEXP, SEXP usecritSEXP, SEXP critvalLSEXP, SEXP critvalRSEXP) {
   BEGIN_RCPP
     //   Rcpp::RNGScope __rngScope; // useful? takes time ... and is used for setting seeds ..
   Function rstatfunc = Rcpp::as<Function >(rstatfuncSEXP);
   NumericVector ech = Rcpp::as<NumericVector >(echSEXP);
   NumericVector levels = Rcpp::as<NumericVector >(levelsSEXP);
-  SEXP __result = statcomputeRcpp2(rstatfunc, ech, levels);
+  IntegerVector usecrit = Rcpp::as<IntegerVector >(usecritSEXP);
+  NumericVector critvalL = Rcpp::as<NumericVector >(critvalLSEXP);
+  NumericVector critvalR = Rcpp::as<NumericVector >(critvalRSEXP);
+  SEXP __result = statcomputeRcpp2(rstatfunc, ech, levels, usecrit, critvalL, critvalR);
   return Rcpp::wrap(__result);
   END_RCPP
     }
@@ -163,7 +164,8 @@ SEXP powcompeasyRcpp2(IntegerVector M, NumericVector params, IntegerVector ncolp
       xlen[0] = n;
 
       Function rlawfunc = Rcpp::as<Function >(Rlaws[row-1]);
-      IntegerVector nSEXP = n; 
+      IntegerVector nSEXP(1);
+      nSEXP[0] = n; 
 
       getname[0] = 0;
       if (law == 0) {
@@ -177,7 +179,11 @@ SEXP powcompeasyRcpp2(IntegerVector M, NumericVector params, IntegerVector ncolp
 	    
 	    if (stat == 0) {
 	      NumericVector levelSEXP = level[0];
-	      List resultstat = statcomputeRcpp2(Rstats[row-1],mysample,levelSEXP);
+	      IntegerVector usecritSEXP(1);
+	      usecritSEXP[0] = usecrit[0];
+	      NumericVector critvalLSEXP = critvalL[0];
+	      NumericVector critvalRSEXP = critvalR[0];
+	      List resultstat = statcomputeRcpp2(Rstats[row-1],mysample,levelSEXP,usecritSEXP,critvalLSEXP,critvalRSEXP);
 	      NumericVector mydecision = resultstat["decision"];
 	      decision[row-1] = decision[row-1] + mydecision[0];
 	    } else {
@@ -198,7 +204,11 @@ SEXP powcompeasyRcpp2(IntegerVector M, NumericVector params, IntegerVector ncolp
 	      NumericVector mysample (xlen[0]);
 	      for (k=1;k<=M[0];k++) mysample[k-1] = x[k-1];
 	      NumericVector levelSEXP = level[0];	      
-	      List resultstat = statcomputeRcpp2(Rstats[row-1],mysample,levelSEXP);
+	      IntegerVector usecritSEXP(1);
+	      usecritSEXP[0] = usecrit[0];
+	      NumericVector critvalLSEXP = critvalL[0];
+	      NumericVector critvalRSEXP = critvalR[0];
+	      List resultstat = statcomputeRcpp2(Rstats[row-1],mysample,levelSEXP,usecritSEXP,critvalLSEXP,critvalRSEXP);
 	      NumericVector mydecision = resultstat["decision"];
 	      decision[row-1] = decision[row-1] + mydecision[0];
 	    } else {
@@ -307,7 +317,7 @@ RcppExport SEXP powcompeasyRcpp(SEXP MSEXP, SEXP paramsSEXP, SEXP ncolparamsSEXP
     pvalcomp = new int[1];
     critvalL = new double[1];
     critvalR = new double[1];
-    level[0] = 0.0;
+    level[0] = 1.0;
     statistic[0] = 0.0;
 	
 	// We set pvalcomp[0] = 0 so the function compquant() doesn't compute p-value each time it is called
@@ -375,12 +385,20 @@ RcppExport SEXP powcompeasyRcpp(SEXP MSEXP, SEXP paramsSEXP, SEXP ncolparamsSEXP
 	//		Rf_PrintValue(resultsample["sample"]);
 
 	   mysample = Rcpp::as<NumericVector >(resultsample["sample"]);
-	   //     Rprintf("5\n ");
+	  //      Rprintf("5\n ");
 	//	model(modelnum[0],funclist,thetavec,xvec,n,x,p,np);   // on applique le modèle
 	if (stat[0] == 0) {    
-
+	  
 	      NumericVector levelSEXP = level[0];
-	      List resultstat = statcomputeRcpp2(Rstat,mysample,levelSEXP);
+
+	      // printf("%f",level[0]);
+
+	      IntegerVector usecritSEXP(1);
+	      usecritSEXP[0] = usecrit[0];
+	      NumericVector critvalLSEXP = critvalL[0];
+	      NumericVector critvalRSEXP = critvalR[0];
+	      List resultstat = statcomputeRcpp2(Rstat,mysample,levelSEXP,usecritSEXP,critvalLSEXP,critvalRSEXP);
+
 	  NumericVector mystatistic = resultstat["statistic"];
 	  statvec[i-1] = mystatistic[0];      
 	} else {  
@@ -411,7 +429,11 @@ RcppExport SEXP powcompeasyRcpp(SEXP MSEXP, SEXP paramsSEXP, SEXP ncolparamsSEXP
 	      NumericVector mysample (ntmp[0]);
 	      for (k=1;k<=n[0];k++)  mysample[k-1] = x[k-1];
 	      NumericVector levelSEXP = level[0];
-	      List resultstat = statcomputeRcpp2(Rstat,mysample,levelSEXP);
+	      IntegerVector usecritSEXP(1);
+	      usecritSEXP[0] = usecrit[0];
+	      NumericVector critvalLSEXP = critvalL[0];
+	      NumericVector critvalRSEXP = critvalR[0];
+	      List resultstat = statcomputeRcpp2(Rstat,mysample,levelSEXP,usecritSEXP,critvalLSEXP,critvalRSEXP);
 	      NumericVector mystatistic = resultstat["statistic"];
 	      statvec[i-1] = mystatistic[0];      
 	} else { 
@@ -513,7 +535,7 @@ RcppExport SEXP compquantRcpp(SEXP nSEXP, SEXP lawSEXP, SEXP statSEXP, SEXP MSEX
 	      pvalcomp[0] = 1;
 
 
-	      int i, k, n, law, stat, j, *xlen, *getname, *nbleveltmp;
+	      int i, ii, k, n, law, stat, j, *xlen, *getname, *nbleveltmp;
 	      double *x, *leveltmp;
 	      nbleveltmp = new int[1];
 	      nbleveltmp[0] = nblevel[0];
@@ -550,7 +572,7 @@ RcppExport SEXP compquantRcpp(SEXP nSEXP, SEXP lawSEXP, SEXP statSEXP, SEXP MSEX
 	      
 	      int *altertmp, *usecrittmp, *nbparlawtmp, *nbparstattmp;
 	      altertmp = new int[1];
-	      usecrittmp = new int[nblevel[0]];
+	      usecrittmp = new int[1];
 	      nbparlawtmp = new int[1];
 	      nbparstattmp = new int[1];
 	      
@@ -588,8 +610,15 @@ RcppExport SEXP compquantRcpp(SEXP nSEXP, SEXP lawSEXP, SEXP statSEXP, SEXP MSEX
 	      NumericVector mysample(xlen[0]);
 	      if (vectlaws[law-1] == 0) {
 	      Function rlawfunc = Rcpp::as<Function >(Rlaws[law-1]);
-	      IntegerVector nn = maxn;
-	      List resultsample = gensampleRcpp2(rlawfunc, nn, parlaw, nbparlaw[0], "");
+	      IntegerVector nn(1);
+	      nn[0] = maxn;
+	      NumericVector parlawbis(4);
+	      parlawbis[0] = parlaw[0+4*(law-1)];
+	      parlawbis[1] = parlaw[1+4*(law-1)];
+	      parlawbis[2] = parlaw[2+4*(law-1)];
+	      parlawbis[3] = parlaw[3+4*(law-1)];
+
+	      List resultsample = gensampleRcpp2(rlawfunc, nn, parlawbis, nbparlaw[law-1], "");
 	      mysample = resultsample["sample"];
 	      for (j=1;j<=maxn;j++) x[j-1] = mysample[j-1];
 	      //	model(modelnum[0],funclist,thetavec,xvec,xlen,x,p,np);   // on applique le modèle
@@ -629,14 +658,24 @@ RcppExport SEXP compquantRcpp(SEXP nSEXP, SEXP lawSEXP, SEXP statSEXP, SEXP MSEX
 	    }
 	      stlen1 = stlen1 + nbparstattmp[0];
 	      
+	      usecrittmp[0] = usecrit[n+vectnlen[0]*(stat-1)-1];
 	      for (j=1;j<=nblevel[0];j++) {
-	      usecrittmp[j-1] = usecrit[n+nblevel[0]*vectnlen[0]*(stat-1)+vectnlen[0]*(j-1)-1]; 
 	      critvalLtmp[j-1] = critvalL[n+nblevel[0]*vectnlen[0]*(stat-1)+vectnlen[0]*(j-1)-1];
 	      critvalRtmp[j-1] = critvalR[n+nblevel[0]*vectnlen[0]*(stat-1)+vectnlen[0]*(j-1)-1];	  
 	    }
 	      
 	      if (vectstats[stat-1] == 0) {
-	      List resultstat = statcomputeRcpp2(Rstats[stat-1],mysample,level);
+		IntegerVector usecritSEXP(1);
+		usecritSEXP[0] = usecrittmp[0];
+	      NumericVector critvalLSEXP(nblevel[0]);
+	      NumericVector critvalRSEXP(nblevel[0]);
+	      NumericVector mysamplebis(xlen[0]);
+	      for (ii=0;ii<=(xlen[0]-1);ii++) mysamplebis[ii] = mysample[ii];
+	      for (ii=0;ii<=(nblevel[0]-1);ii++) {
+		critvalLSEXP[ii] = critvalLtmp[ii];
+		critvalRSEXP[ii] = critvalRtmp[ii];
+	      }
+	      List resultstat = statcomputeRcpp2(Rstats[stat-1],mysamplebis,level,usecritSEXP,critvalLSEXP,critvalRSEXP);
 	      mydecision = resultstat["decision"];
 	    } else {
 	      // decisiontmp est de longueur nblevel[0]
@@ -881,7 +920,11 @@ RcppExport SEXP powcompfastRcpp(SEXP MSEXP, SEXP vectlawsSEXP, SEXP lawslenSEXP,
 	  cmpt = cmpt + nbparamstat[0];
 	  if (statindex == 0) {
 	      NumericVector levelSEXP = level[0];
-	      List resultstat = statcomputeRcpp2(Rstats[i],mysample,levelSEXP);
+	      IntegerVector usecritSEXP(1);
+	      usecritSEXP = usecrit[0];
+	      NumericVector critvalLSEXP = critvalL[0];
+	      NumericVector critvalRSEXP = critvalR[0];
+	      List resultstat = statcomputeRcpp2(Rstats[i],mysample,levelSEXP,usecritSEXP,critvalLSEXP,critvalRSEXP);
 	      pvalue[0] = resultstat["pvalue"];
 	    } else {
 	      statcompute(statindex, x,xlentmp,level,nblevel,name,getname,statistic,pvalcomp,pvalue,critvalL,critvalR,usecrit,alter,decision,paramstat,nbparamstat);
@@ -891,7 +934,11 @@ RcppExport SEXP powcompfastRcpp(SEXP MSEXP, SEXP vectlawsSEXP, SEXP lawslenSEXP,
 
 	      if (statindex == 0) {
 	      NumericVector levelSEXP = level[0];
-	      List resultstat = statcomputeRcpp2(Rstats[i],mysample,levelSEXP);
+	      IntegerVector usecritSEXP(1);
+	      usecritSEXP = usecrit[0];
+	      NumericVector critvalLSEXP = critvalL[0];
+	      NumericVector critvalRSEXP = critvalR[0];
+	      List resultstat = statcomputeRcpp2(Rstats[i],mysample,levelSEXP,usecritSEXP,critvalLSEXP,critvalRSEXP);
 	      pvalue[0] = resultstat["pvalue"];
 	    } else {
 	      statcompute(statindex,x,xlentmp,level,nblevel,name,getname,statistic,pvalcomp,pvalue,critvalL,critvalR,usecrit,alter,decision,(double*)0,nbparamstat);
@@ -1024,7 +1071,8 @@ int *nbparlaw, double *parlaw, int *nbparstat, double *parstat, int *modelnum, c
     modelnum = new int[1];
     modelnum[0] = 1;
 
-    IntegerVector modelnumSEXP = 1;
+    IntegerVector modelnumSEXP(1);
+    modelnumSEXP[0] = 1;
 
     double *thetavec;
     thetavec = new double[1];
@@ -1042,27 +1090,29 @@ int *nbparlaw, double *parlaw, int *nbparstat, double *parstat, int *modelnum, c
     p = new int[1];
     p[0] = 1;
 
-    IntegerVector pSEXP = 1;
+    IntegerVector pSEXP(1);
+    pSEXP[0] = 1;
 
     int *np;
     np = new int[1];
     np[0] = 1;
 
-    IntegerVector npSEXP = 1;
+    IntegerVector npSEXP(1);
+    npSEXP = 1;
 
     double *liststat;
     liststat = new double[M[0]*nbstats[0]];
 
       cmpt = 0;
 
-    IntegerVector statSEXP;
+      IntegerVector statSEXP(1);
     NumericVector statvecSEXP(M[0]);
  
     for (i=0;i<nbstats[0];i++) {
 
       stat[0] = statindices[i];
       Function Rstat = Rstats[i];
-      statSEXP = stat[0];
+      statSEXP[0] = stat[0];
    
       for (j=0;j<M[0];j++) statvecSEXP[j] = 0.0;
 
@@ -1251,7 +1301,11 @@ int *nbparlaw, double *parlaw, int *nbparstat, double *parstat, int *modelnum, c
 	  cmpt = cmpt + nbparamstat[0];
 	  if (statindices[i] == 0) {
 	      NumericVector levelSEXP = level[0];
-	      List resultstat = statcomputeRcpp2(Rstats[i],mysample,levelSEXP);
+	      IntegerVector usecritSEXP(1);
+	      usecritSEXP[0] = usecrit[0];
+	      NumericVector critvalLSEXP = critvalL[0];
+	      NumericVector critvalRSEXP = critvalR[0];
+	      List resultstat = statcomputeRcpp2(Rstats[i],mysample,levelSEXP,usecritSEXP,critvalLSEXP,critvalRSEXP);
 	      statistic[0] = resultstat["statistic"];
 	      pvalue[0] = resultstat["pvalue"];
 	    } else {
@@ -1261,7 +1315,11 @@ int *nbparlaw, double *parlaw, int *nbparstat, double *parstat, int *modelnum, c
 	} else {
 	  if (statindices[i] == 0) {
 	      NumericVector levelSEXP = level[0];
-	      List resultstat = statcomputeRcpp2(Rstats[i],mysample,levelSEXP);
+	      IntegerVector usecritSEXP(1);
+	      usecritSEXP[0] = usecrit[0];
+	      NumericVector critvalLSEXP = critvalL[0];
+	      NumericVector critvalRSEXP = critvalR[0];
+	      List resultstat = statcomputeRcpp2(Rstats[i],mysample,levelSEXP,usecritSEXP,critvalLSEXP,critvalRSEXP);
 	      statistic[0] = resultstat["statistic"];
 	      pvalue[0] = resultstat["pvalue"];
 	    } else {
