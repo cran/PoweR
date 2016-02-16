@@ -6,7 +6,7 @@
 \usage{
 many.crit(law.index,stat.indices,M = 10^3,vectn = c(20,50,100),levels = c(0.05,0.1),
   alter = create.alter(stat.indices),law.pars = NULL,parstats = NULL,model = NULL,
-  Rlaw=NULL, Rstats = NULL)
+  Rlaw=NULL, Rstats = NULL,center=FALSE, scale=FALSE)
 }
 \arguments{
   \item{law.index }{law index as given by function \code{\link{getindex}}. length(\code{law.index})=1}
@@ -43,6 +43,8 @@ many.crit(law.index,stat.indices,M = 10^3,vectn = c(20,50,100),levels = c(0.05,0
     \code{pvalcomp} (1L if the pvalue can be computed, 0L otherwise),
     \code{nbparstat} (length of stat.pars). If a value of \code{stat.indices} is not 0,
   then the corresponding component of \code{Rstats} should be set to \code{NULL}.}
+  \item{center}{Logical. Should we center the data generated}
+  \item{scale}{Logical. Should we center the data generated}
 }
 \value{An object of class \code{critvalues}, which is a list where each element of the list contains a matrix 
   for the corresponding statistic. This column matrices are: \eqn{n} values,
@@ -51,9 +53,9 @@ many.crit(law.index,stat.indices,M = 10^3,vectn = c(20,50,100),levels = c(0.05,0
 \seealso{See \code{\link{print.critvalues}} for a LaTeX output of the
   results of this function.}
 \references{
-Lafaye de Micheaux, P. and Tran, V. A. (2014), PoweR: Reproducible
-Research Tool to ease Monte-Carlo Power Simulation Studies for
-Goodness-of-fit Tests in R. \emph{Journal of Statistical Software}, \bold{}, --. 
+Pierre Lafaye de Micheaux, Viet Anh Tran (2016). PoweR: A
+Reproducible Research Tool to Ease Monte Carlo Power Simulation
+Studies for Studies for Goodness-of-fit Tests in R. \emph{Journal of Statistical Software}, \bold{69(3)}, 1--42. doi:10.18637/jss.v069.i03 
 }
 \author{P. Lafaye de Micheaux, V. A. Tran}
 

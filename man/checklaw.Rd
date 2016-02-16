@@ -5,7 +5,8 @@
   behaves correctly. To perform this operation, one can superimpose the theoretical density on a histogram of the
   generated values.}
 \usage{
-checklaw(law.index,sample.size=50000,law.pars=NULL,density=NULL,trunc=c(-Inf,Inf))
+checklaw(law.index, sample.size = 50000, law.pars = NULL, density =
+NULL, trunc = c(-Inf, Inf), center = FALSE, scale = FALSE)
 }
 \arguments{
   \item{law.index }{index of the desired law, as given by \code{\link{getindex}}.}
@@ -20,30 +21,39 @@ checklaw(law.index,sample.size=50000,law.pars=NULL,density=NULL,trunc=c(-Inf,Inf
     generated sample values. Only those values in between will be kept
     to build the histogram. This can be useful for a distribution
     with extreme values.}
+  \item{center}{Logical. Should we center the data.}
+\item{scale}{Should we scale the data.}
 }
-\value{Nothing but a plot showing histogram and density superimposed.
+\value{Returns invisibly the data generated and make a plot showing histogram and density superimposed.
 }
 \references{
-Lafaye de Micheaux, P. and Tran, V. A. (2014), PoweR: Reproducible
-Research Tool to ease Monte-Carlo Power Simulation Studies for
-Goodness-of-fit Tests in R. \emph{Journal of Statistical Software}, \bold{}, --. 
+Pierre Lafaye de Micheaux, Viet Anh Tran (2016). PoweR: A
+Reproducible Research Tool to Ease Monte Carlo Power Simulation
+Studies for Goodness-of-fit Tests in R. \emph{Journal of Statistical
+Software}, \bold{69(3)}, 1--42. doi:10.18637/jss.v069.i03
 }
 \author{P. Lafaye de Micheaux, V. A. Tran
 }
 \seealso{\code{\link{gensample}}}
 \examples{
-dlaplace1 <- function(x,mu,b) {dexp(abs(x-mu),1/b)/2}
-checklaw(1,density=dlaplace1)
-dlaplace2 <- function(x,pars) {dexp(abs(x-pars[1]),1/pars[2])/2}
-checklaw(1,density=dlaplace2)
+dlaplace1 <- function(x, mu, b) {dexp(abs(x - mu), 1 / b) / 2}
+checklaw(1, density = dlaplace1)
+dlaplace2 <- function(x, pars) {dexp(abs(x - pars[1]), 1 / pars[2]) / 2}
+checklaw(1, density = dlaplace2)
 
 
-checklaw(law.index=2,sample.size=50000,law.pars=c(2,3),density=dnorm)
+checklaw(law.index = 2, sample.size = 50000, law.pars = c(2, 3), density
+= dnorm)
 
 ## We use the 'trunc' argument to display the density in a region where
 ## no extreme values are present.
-checklaw(27,density=dlaw27,trunc=c(-Inf,10))
+checklaw(27, density = dlaw27, trunc = c(-Inf,10))
 
+# This one (Tukey) does not have a closed form expression for
+# the density. But we can use the stats::density() function as
+# follows.
+res <- checklaw(18)
+lines(density(res$sample), col = "blue")
 }
 \keyword{utilities}
 \keyword{distribution}

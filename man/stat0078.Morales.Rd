@@ -20,10 +20,10 @@ There are 3 choices for value of \eqn{\lambda} : \eqn{\lambda} = 0, \eqn{\lambda
 Note that \code{n} is the sample size.
 }
 \references{
-Lafaye de Micheaux, P. and Tran, V. A. (2014), PoweR: Reproducible
-Research Tool to ease Monte-Carlo Power Simulation Studies for
-Goodness-of-fit Tests in R. \emph{Journal of Statistical Software},
-\bold{}, --.
+Pierre Lafaye de Micheaux, Viet Anh Tran (2016). PoweR: A
+Reproducible Research Tool to Ease Monte Carlo Power Simulation
+Studies for Goodness-of-fit Tests in R. \emph{Journal of Statistical Software}, \bold{69(3)}, 1--42. doi:10.18637/jss.v069.i03
+
 
 Morales, D., Pardo, L., Pardo, M. C. and Vajda, I. (2003), Limit laws for disparities of spacings, 
 \emph{Journal of Nonparametric Statistics}, \bold{15}(3), 325--342.

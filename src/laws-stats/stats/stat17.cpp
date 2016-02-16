@@ -36,7 +36,7 @@ extern "C" {
 
     if (n>3) {
 // Computation of the value of the test statistic
-      double pnorm5(double x, double mu, double sigma, int lower_tail, int log_p);
+      double pnorm(double x, double mu, double sigma, int lower_tail, int log_p);
       double statTw, m2=0.0, meanX=0.0, omega, term=0.0;
 
       for (i=0;i<=(n-1);i++) {

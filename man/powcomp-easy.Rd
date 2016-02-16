@@ -3,7 +3,7 @@
 \title{Computation of power and level tables for hypothesis tests.}
 \description{Functions for the computation of power and level tables for hypothesis tests, in LaTeX format.}
 \usage{
-powcomp.easy(params,M=10^5,model=NULL,Rlaws=NULL,Rstats=NULL)
+powcomp.easy(params,M=10^5,model=NULL,Rlaws=NULL,Rstats=NULL,center=FALSE, scale=FALSE)
 }
 \arguments{
   \item{M }{number of Monte Carlo repetitions to use.}
@@ -58,6 +58,8 @@ powcomp.easy(params,M=10^5,model=NULL,Rlaws=NULL,Rstats=NULL)
     'pvalcomp' (1L if the pvalue can be computed, 0L otherwise),
     'nbparstat' (length of stat.pars). If the value of 'stat' is not 0,
   then the corresponding component of 'Rstats' should be set to 'NULL'.}
+  \item{center}{Logical. Should we center the data generated}
+  \item{scale}{Logical. Should we center the data generated}
 }
 \details{
   If both \code{cL} and \code{cR} are \code{NA}, no critical values are used
@@ -79,9 +81,9 @@ powcomp.easy(params,M=10^5,model=NULL,Rlaws=NULL,Rstats=NULL)
   its \code{print} method..
 }
 \references{
-Lafaye de Micheaux, P. and Tran, V. A. (2014), PoweR: Reproducible
-Research Tool to ease Monte-Carlo Power Simulation Studies for
-Goodness-of-fit Tests in R. \emph{Journal of Statistical Software}, \bold{}, --. 
+Pierre Lafaye de Micheaux, Viet Anh Tran (2016). PoweR: A
+Reproducible Research Tool to Ease Monte Carlo Power Simulation
+Studies for Studies for Goodness-of-fit Tests in R. \emph{Journal of Statistical Software}, \bold{69(3)}, 1--42. doi:10.18637/jss.v069.i03 
 }
 \author{P. Lafaye de Micheaux, V. A. Tran}
 

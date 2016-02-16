@@ -38,7 +38,7 @@ extern "C" {
       // Computation of the value of the test statistic
       void R_rsort (double* x, int n);
       void nscor2(double *s, int *n, int *n2);
-      double pnorm(double q, double mean, double sd, int lower_tail, int log_p);
+      //      double pnorm(double q, double mean, double sd, int lower_tail, int log_p);
       double *z, *sp, *a;
       int *M;
       z = new double[n];

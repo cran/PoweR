@@ -40,7 +40,7 @@ extern "C" {
 // Computation of the value of the test statistic
     void R_rsort (double* x, int n);
     double qnorm(double p, double mean, double sd, int lower_tail, int log_p);
-    double pnorm(double q, double mean, double sd, int lower_tail, int log_p);
+    //    double pnorm(double q, double mean, double sd, int lower_tail, int log_p);
     double *xs, *M;
     M = new double[n];
     xs = new double[n];

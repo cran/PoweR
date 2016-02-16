@@ -1,4 +1,4 @@
-many.pval <- function(stat.indices, law.index, n = 100, M = 10^5, N = 100, alter = create.alter(stat.indices), law.pars = NULL, parstats = NULL, null.dist = 2, null.pars = NULL, method = c("direct","MC"), Rlaw.index = NULL, Rnull.dist = NULL, Rstats = NULL) {
+many.pval <- function(stat.indices, law.index, n = 100, M = 10^5, N = 100, alter = create.alter(stat.indices), law.pars = NULL, parstats = NULL, null.dist = 2, null.pars = NULL, method = c("direct","MC"), Rlaw.index = NULL, Rnull.dist = NULL, Rstats = NULL, center=FALSE, scale = FALSE) {
 
 
   if (any(stat.indices == 0) & is.null(Rstats)) stop("'Rstats' should be a list whose components are R functions.")
@@ -68,13 +68,15 @@ many.pval <- function(stat.indices, law.index, n = 100, M = 10^5, N = 100, alter
                                  nbparams=as.integer(length(law.pars)),as.double(law.pars),as.integer(stat.indices),
                                  as.integer(nbstats),as.integer(unlist(alter)),as.double(unlist(parstats)),
                                  as.integer(nbparstatsvec),res=as.double(rep(0.0,N*nbstats)),Rlaw.index=Rlaw.index,Rstats,
+                                    as.integer(center), as.integer(scale),
                                  PACKAGE="PoweR"),nrow=N,ncol=nbstats)
 
     } else {
         matrix.pval <- matrix(.C("matrixpval",as.integer(N),as.integer(law.index),as.integer(n),
                                  nbparams=as.integer(length(law.pars)),as.double(law.pars),as.integer(stat.indices),
                                  as.integer(nbstats),as.integer(unlist(alter)),as.double(unlist(parstats)),
-                                 as.integer(nbparstatsvec),res=as.double(rep(0.0,N*nbstats)),DUP=TRUE, # Before, there was DUP=FALSE. I hope I do not introduce a problem here!!!
+                                 as.integer(nbparstatsvec),res=as.double(rep(0.0,N*nbstats)),as.integer(center),
+                                 as.integer(scale),DUP=TRUE, # Before, there was DUP=FALSE. I hope I do not introduce a problem here!!!
                                  PACKAGE="PoweR")$res,nrow=N,ncol=nbstats)
     }
 }
@@ -90,14 +92,15 @@ many.pval <- function(stat.indices, law.index, n = 100, M = 10^5, N = 100, alter
                                       as.integer(M),as.integer(stat.indices),as.integer(nbparstatsvec),as.double(unlist(parstats)),
                                       funclist=list(function(){}),as.integer(N),null.dist=as.integer(null.dist),
                                       nbparams=as.integer(length(law.pars)),as.integer(unlist(alter)),as.double(unlist(parstats)),
-                                      as.integer(nbparstatsvec),res=as.double(rep(0,N*nbstats)),Rlaw.index=Rlaw.index,Rnull.dist=Rnull.dist,Rstats,PACKAGE="PoweR"),nrow=N,ncol=nbstats)
+                                      as.integer(nbparstatsvec),res=as.double(rep(0,N*nbstats)),Rlaw.index=Rlaw.index,Rnull.dist=Rnull.dist,Rstats,
+                                      as.integer(center), as.integer(scale), PACKAGE="PoweR"),nrow=N,ncol=nbstats)
           
       } else {
           matrix.pval <- matrix(.C("matrixpvalMC",as.integer(n),law.index=as.integer(law.index),as.integer(nbstats),
                                    as.integer(M),as.integer(stat.indices),as.integer(nbparstatsvec),as.double(unlist(parstats)),
                                    funclist=list(function(){}),as.integer(N),null.dist=as.integer(null.dist),
                                    nbparams=as.integer(length(law.pars)),as.integer(unlist(alter)),as.double(unlist(parstats)),
-                                   as.integer(nbparstatsvec),res=as.double(rep(0,N*nbstats)),PACKAGE="PoweR")$res,nrow=N,ncol=nbstats)
+                                   as.integer(nbparstatsvec),res=as.double(rep(0,N*nbstats)),as.integer(center),as.integer(scale),PACKAGE="PoweR")$res,nrow=N,ncol=nbstats)
       }
   }
   

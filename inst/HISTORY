@@ -69,3 +69,20 @@ Version 1.0.4
 
 -> I modified slightly the many.crit.Rd file
 -> I modified the file calcpuissRcpp.cpp
+
+2015-08-17
+----------
+
+Version 1.0.5
+
+-> I modified files stat37.cpp, stat38.cpp, stat39.cpp to add the test statistics of my new article with A. Desgagne
+-> I corrected file stat32.cpp (Martinez-Iglewicz)
+-> I corrected file stat31.cpp (Epps-Pulley that should reject for small values of the test statistic)
+-> I corrected an incorrect use of the function is.loaded() to check if some packages are loaded
+-> I modified the file stat16.cpp (use the new version of mc_C_d from robustbase package, and also change the way I call it).
+-> I corrected the value of M present in the output (of powcomp.fast()) when using several cores (nbclus > 1). This had side effect on the display of the tables of power.
+-> I modified a lot of (R and C++) files to enable the centering/scaling of the data generated, in several functions
+-> I modified file powcomp-fast.R (problem with parstat)
+-> I replaced (in the cpp files) all the calls to pnorm or pnorm5 into Rf_pnorm5
+-> I modified the file register.cpp
+-> I modified the C function powcompfast to enable computation of quantiles through the compquant argument. This function will be called by the many.crit R function

@@ -38,15 +38,14 @@ extern "C" {
 // Computation of the value of the test statistic
       void R_rsort (double* x, int n);
       double pchisq(double q, double df, int lower_tail, int log_p);
-      double *xtmp, *aux1, *aux2, *z;
+      double *xtmp, *aux1, *z, z2;
       xtmp = new double[n];
       aux1 = new double[n];
-      aux2 = new double[n];
       z = new double[n];
       double statIn, M, A, Sb2, term1=0.0, term2=0.0, term3=0.0;
 
 
-      for (i=0;i<=(n-1);i++) {
+      for (i=0;i<n;i++) {
 	    xtmp[i] = x[i];
 	  }
       
@@ -57,39 +56,50 @@ extern "C" {
 	    M = xtmp[n/2]; // sample median
 	  }
 
-      for (i=0;i<=(n-1);i++) {
-		aux1[i] = x[i] - M;
-		xtmp[i] = fabs(aux1[i]);
+      for (i=0;i<n;i++) {
+	aux1[i] = x[i] - M;
+	xtmp[i] = fabs(aux1[i]);
       }
 
       R_rsort(xtmp,n); // We sort the data
       if ((n%2) == 0) {
-	    A = (xtmp[n/2]+xtmp[n/2-1])/2.0; 
-	  } else {
-	    A = xtmp[n/2]; // sample median
-	  }
-
-
-      for (i=0;i<=(n-1);i++) {
-		z[i] = aux1[i]/(9.0*A);
-		if (fabs(z[i])>=1.0) z[i] = 0.0;
-		aux2[i] = 1.0 - R_pow(z[i],2.0);
+	A = (xtmp[n/2]+xtmp[n/2-1])/2.0; 
+      } else {
+	A = xtmp[n/2]; // sample median
       }
 
+      A = 9.0 * A;
 
-      for (i=0;i<=(n-1);i++) {
-
-		term1 = term1 + R_pow(aux1[i],2.0)*R_pow(aux2[i],4.0);
-		
-		term2 = term2 + aux2[i]*(1.0 - 5.0*R_pow(z[i],2.0));
-
-		term3 = term3 + R_pow(aux1[i],2.0);
-		
+      for (i=0;i<n;i++) {
+	z[i] = aux1[i] / A;
+	if (fabs(z[i]) < 1.0) {
+	  z2 = R_pow(z[i], 2.0);
+	  term1 = term1 + R_pow(aux1[i], 2.0) * R_pow(1.0 - z2, 4.0);
+	  term2 = term2 + (1.0 - z2) * (1.0 - 5.0 * z2);		
+	}
+	term3 = term3 + R_pow(aux1[i], 2.0);
       }
+      // Problem here!! term2 might be equal to 0 (implying a division by 0 afterwards)
+      // The test statistic is not well defined in this paper (neither in others I looked at)
+      // BUT
+      /*
+J'ai regardé cet estimateur. Les zi, si k=1, sont des données centrées réduites. Avec ce petit code, ça permet de voir comment le z se comporte. Ici je pose k=1 et la moitié de l'échantillon (pour n pair) a |z|<1. Si on pose k=9 comme ils font, alors c'est presque la totalité de l'échantillon qui a |z|<1. Le cas où tous les |z| sont >= 1 est impossible je crois.
 
-      Sb2 = ((double)n)*term1/R_pow(term2,2.0);
+n <- 8
+k <- 1
+a <- NULL
+for (i in 1:100){
+  x <- rnorm(n)
+  z1 <- x-median(x);
+  z <- z1/median(abs(z1));
+  a <- c(a,sum(abs(z/k)<1));
+}
+sort(a)
+       */
 
-      statIn = (term3/((double)(n-1)))/Sb2;
+      Sb2 = ((double)n) * term1 / R_pow(term2, 2.0);
+
+      statIn = (term3 / ((double)(n - 1))) / Sb2;
       
       statistic[0] = statIn; // Here is the test statistic value
 
@@ -110,7 +120,6 @@ if (pvalcomp[0] == 1) {
  // If applicable, we free the unused array of pointers
       delete[] xtmp;
       delete[] aux1;
-      delete[] aux2;
       delete[] z;
     }
     

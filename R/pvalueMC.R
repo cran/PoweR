@@ -1,4 +1,4 @@
-pvalueMC <- function(data, stat.index, null.law.index, M = 10^5, alter, null.law.pars = NULL, stat.pars = NULL, list.stat = NULL, method = c("Fisher")) {
+pvalueMC <- function(data, stat.index, null.law.index, M = 10^5, alter, null.law.pars = NULL, stat.pars = NULL, list.stat = NULL, method = c("Fisher"), center=FALSE, scale=FALSE) {
 
   if(getRversion() < "3.1.0") dontCheck <- identity
 
@@ -42,7 +42,7 @@ pvalueMC <- function(data, stat.index, null.law.index, M = 10^5, alter, null.law
                      M=as.integer(M),statvec=as.double(res),
                      nbparlaw=as.integer(nbparlaw),null.law.pars=as.double(null.law.pars),
                      nbparstat=as.integer(nbparstat),stat.pars=as.double(stat.pars),as.integer(modelnum), 
-                     funclist, as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np),PACKAGE="PoweR"))$statvec    
+                     funclist, as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np),as.integer(center),as.integer(scale),PACKAGE="PoweR"))$statvec    
   } else {    
     if (length(list.stat) != M) stop("Length of vector 'list.stat' is not equal to M.")   
   }

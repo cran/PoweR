@@ -36,7 +36,7 @@ extern "C" {
 
     if (n>3) {
 // Computation of the value of the test statistic
-    double pnorm(double q, double mean, double sd, int lower_tail, int log_p);
+//    double pnorm(double q, double mean, double sd, int lower_tail, int log_p);
     double dnorm4(double x, double mu, double sigma, int give_log);
     double *z, *H0, *H1, *H2, *H3, *H4, *H5, *H6, *H7, *H8, *vectoraux2;
     z = new double[n];
@@ -96,9 +96,9 @@ extern "C" {
 
     }
     
-    statTKl = fabs(-dnorm4(z[0],0.0,1.0,0)*H3tilde +(pnorm(z[0],0.0,1.0,1,0)-z[0]*dnorm4(z[0],0.0,1.0,0))*H4tilde - dnorm4(z[0],0.0,1.0,0)*vectoraux2[0]);
+    statTKl = fabs(-dnorm4(z[0],0.0,1.0,0)*H3tilde +(Rf_pnorm5(z[0],0.0,1.0,1,0)-z[0]*dnorm4(z[0],0.0,1.0,0))*H4tilde - dnorm4(z[0],0.0,1.0,0)*vectoraux2[0]);
     for (i=1;i<=(n-1);i++) {
-      tmp = fabs(-dnorm4(z[i],0.0,1.0,0)*H3tilde +(pnorm(z[i],0.0,1.0,1,0)-z[i]*dnorm4(z[i],0.0,1.0,0))*H4tilde - dnorm4(z[i],0.0,1.0,0)*vectoraux2[i]);
+      tmp = fabs(-dnorm4(z[i],0.0,1.0,0)*H3tilde +(Rf_pnorm5(z[i],0.0,1.0,1,0)-z[i]*dnorm4(z[i],0.0,1.0,0))*H4tilde - dnorm4(z[i],0.0,1.0,0)*vectoraux2[i]);
       if (statTKl < tmp) statTKl = tmp;
     }
     statistic[0] = statTKl; // Here is the test statistic value

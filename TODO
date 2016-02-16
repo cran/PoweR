@@ -20,3 +20,6 @@ check gives error
 
 Pour corriger cela, regarder le fichier suppressForeignCheck.pdf ou 
 faire un help(suppressForeignCheck.pdf,file_type="pdf") dans R-devel
+
+Il y a un problème dans la doc de la law0038.AssymetricPowerDistribution. La densité devrait faire intervenir theta et phi. Probablement, (1/phi) * f((x-theta)/phi).
+

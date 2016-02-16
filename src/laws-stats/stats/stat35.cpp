@@ -36,7 +36,7 @@ extern "C" {
     if (n>3) {
 // Computation of the value of the test statistic
     double qnorm(double p, double mean, double sd, int lower_tail, int log_p);
-    double pnorm5(double x, double mu, double sigma, int lower_tail, int log_p);
+    //    double pnorm(double x, double mu, double sigma, int lower_tail, int log_p);
     double *ychap;
     ychap = new double[n];
     double gamma=0.577215664901533, muchap=0.0, sigchap, sigchap2=0.0, deltachap=0.0, statvalue;

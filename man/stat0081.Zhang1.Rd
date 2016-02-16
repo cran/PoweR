@@ -13,10 +13,10 @@
 - to compute its power by calling function \code{\link{powcomp.fast}} or \code{\link{powcomp.easy}}.
 }
 \references{
-Lafaye de Micheaux, P. and Tran, V. A. (2014), PoweR: Reproducible
-Research Tool to ease Monte-Carlo Power Simulation Studies for
-Goodness-of-fit Tests in R. \emph{Journal of Statistical Software},
-\bold{}, --.
+Pierre Lafaye de Micheaux, Viet Anh Tran (2016). PoweR: A
+Reproducible Research Tool to Ease Monte Carlo Power Simulation
+Studies for Goodness-of-fit Tests in R. \emph{Journal of Statistical Software}, \bold{69(3)}, 1--42. doi:10.18637/jss.v069.i03
+
 
 Zhang, J. (2002), Powerful goodness-of-fit tests based on the likelihood ratio, 
 \emph{Journal of the Royal Statistical Society Series B}, \bold{64}, 281--294.

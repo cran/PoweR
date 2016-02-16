@@ -4,7 +4,8 @@
 \description{Functions for the computation of the quantile values only for one test statistic at a time and also one n value.}
 \usage{
 compquant(n,law.index,stat.index,probs=NULL,M=10^5,law.pars=NULL,
-          stat.pars=NULL,model=NULL,Rlaw=NULL,Rstat=NULL)
+          stat.pars=NULL,model=NULL,Rlaw=NULL,Rstat=NULL,
+center=FALSE, scale=FALSE)
 }
 \arguments{
   \item{n }{number of observations for each sample to be generated; length(\code{n})=1. This can also be set to 0 if you want to use
@@ -40,14 +41,17 @@ compquant(n,law.index,stat.index,probs=NULL,M=10^5,law.pars=NULL,
     0 otherwise), 'alter' (see above), 'stat.pars' (see above),
     'pvalcomp' (1L if the pvalue can be computed, 0L otherwise),
     'nbparstat' (length of stat.pars).}
+  \item{center}{Logical. Should we center the data generated}
+  \item{scale}{Logical. Should we center the data generated}
 }
 \value{A list with \code{M} statistic values and also some quantiles (with
   levels 0.025,0.05,0.1,0.9,0.95,0.975), as well as the name of the law and the name of the test statistic used (just to be sure!).
 }
 \references{
-Lafaye de Micheaux, P. and Tran, V. A. (2014), PoweR: Reproducible
-Research Tool to ease Monte-Carlo Power Simulation Studies for
-Goodness-of-fit Tests in R. \emph{Journal of Statistical Software}, \bold{}, --. 
+Pierre Lafaye de Micheaux, Viet Anh Tran (2016). PoweR: A
+Reproducible Research Tool to Ease Monte Carlo Power Simulation
+Studies for Goodness-of-fit Tests in R. \emph{Journal of Statistical
+Software}, \bold{69(3)}, 1--42. doi:10.18637/jss.v069.i03
 }
 \author{P. Lafaye de Micheaux, V. A. Tran}
 

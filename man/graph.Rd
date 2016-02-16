@@ -10,7 +10,8 @@ size-power curves plot.
 \usage{
 graph(matrix.pval, xi = c(seq(0.001, 0.009, by = 0.001),
       seq(0.01, 0.985, by = 0.005), seq(0.99, 0.999, by = 0.001)),
-      type = c("pvalue.plot", "pvalue.discrepancy", "size.power"))
+      type = c("pvalue.plot", "pvalue.discrepancy", "size.power"),
+      center = FALSE, scale = FALSE)
 }
 \arguments{
   \item{matrix.pval }{
@@ -23,14 +24,17 @@ the \eqn{p}-values.
   \item{type }{
 character. Indicate the type of plot desired.
 }
+  \item{center}{Logical. Should we center the data generated}
+  \item{scale}{Logical. Should we center the data generated}
 }
 \details{
 See Section 2.3 in Lafaye de Micheaux, P. and Tran, V. A. (2014).
 }
 \references{
-Lafaye de Micheaux, P. and Tran, V. A. (2014), PoweR: Reproducible
-Research Tool to ease Monte-Carlo Power Simulation Studies for
-Goodness-of-fit Tests in R. \emph{Journal of Statistical Software}, \bold{}, --. 
+Pierre Lafaye de Micheaux, Viet Anh Tran (2016). PoweR: A
+Reproducible Research Tool to Ease Monte Carlo Power Simulation
+Studies for Goodness-of-fit Tests in R. \emph{Journal of Statistical
+Software}, \bold{69(3)}, 1--42. doi:10.18637/jss.v069.i03
 }
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{

@@ -9,7 +9,8 @@ value from a sample of observations.
 }
 \usage{
 pvalueMC(data, stat.index, null.law.index, M = 10^5, alter, null.law.pars = NULL,
-         stat.pars = NULL, list.stat = NULL, method = c("Fisher"))
+         stat.pars = NULL, list.stat = NULL, method = c("Fisher"),
+         center = FALSE, scale = FALSE)
 }
 \arguments{
   \item{data }{sample of observations.}
@@ -29,12 +30,14 @@ pvalueMC(data, stat.index, null.law.index, M = 10^5, alter, null.law.pars = NULL
 provided. If \code{NULL}, these values will be computed.}
   \item{method }{method to use for the computation of the \eqn{p}-value. Only 'Fisher' method
 is available for the moment.}
+  \item{center}{Logical. Should we center the data generated}
+  \item{scale}{Logical. Should we center the data generated}
 }
 \value{The Monte-Carlo p-value of the test.}
 \references{
-Lafaye de Micheaux, P. and Tran, V. A. (2014), PoweR: Reproducible
-Research Tool to ease Monte-Carlo Power Simulation Studies for
-Goodness-of-fit Tests in R. \emph{Journal of Statistical Software}, \bold{}, --. 
+Pierre Lafaye de Micheaux, Viet Anh Tran (2016). PoweR: A
+Reproducible Research Tool to Ease Monte Carlo Power Simulation
+Studies for Studies for Goodness-of-fit Tests in R. \emph{Journal of Statistical Software}, \bold{69(3)}, 1--42. doi:10.18637/jss.v069.i03 
 }
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{statcompute}}.}

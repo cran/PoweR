@@ -1,10 +1,10 @@
 static const R_CMethodDef cMethods[] = {
-  {"calcpuiss",    (DL_FUNC) &powcompeasy,  13},
-  {"calccrit",     (DL_FUNC) &compquant,    17},
-  {"calp2",        (DL_FUNC) &powcompfast,  27},
+  //  {"calcpuiss",    (DL_FUNC) &powcompeasy,  15},
+  {"calccrit",     (DL_FUNC) &compquant,    19},
+  {"calp2",        (DL_FUNC) &powcompfast,  28},
   {"calfx",        (DL_FUNC) &calccfx,       5},
-  {"matrixpval",   (DL_FUNC) &matrixpval,   11},
-  {"matrixpvalMC", (DL_FUNC) &matrixpvalMC, 15},
+  {"matrixpval",   (DL_FUNC) &matrixpval,   13},
+  {"matrixpvalMC", (DL_FUNC) &matrixpvalMC, 17},
   // HERE WE PUT THE lawj NAMES
   {"law1",   (DL_FUNC) &law1,  7},
   {"law2",   (DL_FUNC) &law2,  7},
@@ -44,6 +44,7 @@ static const R_CMethodDef cMethods[] = {
   {"law36",  (DL_FUNC) &law36, 7},
   {"law37",  (DL_FUNC) &law37, 7},
   {"law38",  (DL_FUNC) &law38, 7},
+  {"law39",  (DL_FUNC) &law39, 7},
   // HERE WE PUT THE statj NAMES
   {"stat1",  (DL_FUNC) &stat1,  16},
   {"stat2",  (DL_FUNC) &stat2,  16},
@@ -130,6 +131,11 @@ static const R_CMethodDef cMethods[] = {
   {"stat83", (DL_FUNC) &stat83, 16},
   {"stat84", (DL_FUNC) &stat84, 16},
   {"stat85", (DL_FUNC) &stat85, 16},
+  {"stat86", (DL_FUNC) &stat86, 16},
+  {"stat87", (DL_FUNC) &stat87, 16},
+  {"stat88", (DL_FUNC) &stat88, 16},
+  {"stat89", (DL_FUNC) &stat89, 16},
+  {"stat90", (DL_FUNC) &stat90, 16},
   {NULL}
 };
 

@@ -37,7 +37,7 @@ extern "C" {
     if (n>3) {
 // Computation of the value of the test statistic
     void R_rsort (double* x, int n);
-    double pnorm(double q, double mean, double sd, int lower_tail, int log_p);
+    //    double pnorm(double q, double mean, double sd, int lower_tail, int log_p);
     double pbeta(double x, double pin, double qin, int lower_tail, int log_p);
     double *Phiz;
     Phiz = new double[n];
@@ -48,7 +48,7 @@ extern "C" {
     for (i=0;i<=(n-1);i++) varX = varX + R_pow(x[i],2.0);
     varX = ((double)n)*(varX/(double)n - R_pow(meanX,2.0))/(double)(n-1); 
     sdX = sqrt(varX);
-    for (i=0;i<=(n-1);i++) Phiz[i] = pnorm((x[i]-meanX)/sdX,0.0,1.0,1,0);
+    for (i=0;i<=(n-1);i++) Phiz[i] = Rf_pnorm5((x[i]-meanX)/sdX,0.0,1.0,1,0);
     R_rsort (Phiz,n); // We sort the data
     for (i=1;i<=n;i++) Phiz[i-1] = pbeta(Phiz[i-1],(double)i,(double)(n-i+1),1,0);
     R_rsort (Phiz,n); // We sort the data

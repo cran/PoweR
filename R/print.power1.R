@@ -53,7 +53,7 @@ print.power1 <- function(x, digits = 3, latex.output = FALSE, ...) {
   }
 
   
-# On rajoute les noms des stats avec les valeurs des paramètres dans la colonne "law" de la sortie (en arrondissant à rnd chiffres après la virgule)  
+# On rajoute les noms des stats avec les valeurs des parametres dans la colonne "law" de la sortie (en arrondissant a rnd chiffres apres la virgule)  
   res2 <- as.data.frame(res2)
   for (law in 1:laws.len) {
     

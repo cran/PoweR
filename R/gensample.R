@@ -1,8 +1,8 @@
-gensample <- function(law.index, n, law.pars = NULL, check = TRUE) {
+gensample <- function(law.index, n, law.pars = NULL, check = TRUE, center = FALSE, scale = FALSE) {
 
     if (class(law.index) == "function") {
 
-        return(.Call("gensampleRcpp",law.index,n,if (is.null(law.pars)) 0 else law.pars,nbparlaw=length(law.pars),as.character(match.call()[2]),PACKAGE="PoweR"))
+        return(.Call("gensampleRcpp",law.index,n,if (is.null(law.pars)) 0 else law.pars,nbparlaw=length(law.pars),as.character(match.call()[2]),as.integer(center), as.integer(scale),PACKAGE="PoweR"))
 
     } else {
     
@@ -27,6 +27,9 @@ gensample <- function(law.index, n, law.pars = NULL, check = TRUE) {
         
         out <- .C(dontCheck(Claw.name),as.integer(n),x=rep(0.0,n),rep(" ",50),0L,
                   law.pars=as.double(law.pars),nbparlaw=as.integer(nbparlaw),1L,PACKAGE="PoweR")
+
+        if (center) out$x <- out$x - mean(out$x)
+        if (scale) out$x <- out$x / sd(out$x)
         
         return(list(sample=out$x,law=law.name,law.pars=out$law.pars[1:out$nbparlaw]))
     }

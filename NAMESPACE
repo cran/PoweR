@@ -1,8 +1,19 @@
 useDynLib(PoweR)
-# Default NAMESPACE created by R
-# Remove the previous line if you edit this file
 
 # Export all names
 exportPattern("^[^\\.]")
 import(Rcpp)
 import(parallel)
+S3method(plot, discrepancy)
+S3method(plot, pvalue)
+S3method(plot, sizepower)
+S3method(print, index)
+S3method(print, critvalues)
+S3method(print, critvalues1)
+S3method(print, power)
+S3method(print, power1)
+
+importFrom("graphics", "hist", "legend", "lines", "plot", "points",
+           "text")
+importFrom("stats", "median", "na.omit", "quantile", "rnorm", "sd")
+importFrom("utils", "help")

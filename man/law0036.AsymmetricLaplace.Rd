@@ -10,9 +10,9 @@ This generator is called by function \code{\link{gensample}} to create random va
 \details{If \code{mu}, \code{b} or \code{k} are not specified they assume the default values of 0, 1 and 2, respectively.
 }
 \references{
-Lafaye de Micheaux, P. and Tran, V. A. (2014), PoweR: Reproducible
-Research Tool to ease Monte-Carlo Power Simulation Studies for
-Goodness-of-fit Tests in R. \emph{Journal of Statistical Software}, \bold{}, --. 
+Pierre Lafaye de Micheaux, Viet Anh Tran (2016). PoweR: A
+Reproducible Research Tool to Ease Monte Carlo Power Simulation
+Studies for Studies for Goodness-of-fit Tests in R. \emph{Journal of Statistical Software}, \bold{69(3)}, 1--42. doi:10.18637/jss.v069.i03 
 }
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See package \code{VGAM}. See \code{\link{Distributions}} for other standard distributions.

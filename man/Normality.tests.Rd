@@ -80,11 +80,11 @@ For the 1st Desgagne-Micheaux-Leblanc statistic see \code{\link{stat0035.Desgagn
 
 For the 2nd Desgagne-Micheaux-Leblanc statistic see \code{\link{stat0036.DesgagneMicheauxLeblanc-P2}}.
 
-For the 3rd Desgagne-Micheaux-Leblanc statistic see \code{\link{stat0037.DesgagneMicheauxLeblanc-P3}}.
+For the S Desgagne-Micheaux statistic see \code{\link{stat0037.DesgagneMicheaux-S}}.
 
-For the 4th Desgagne-Micheaux-Leblanc statistic see \code{\link{stat0038.DesgagneMicheauxLeblanc-P4}}.
+For the C Desgagne-Micheaux statistic see \code{\link{stat0038.DesgagneMicheaux-C}}.
 
-For the 5th Desgagne-Micheaux-Leblanc statistic see \code{\link{stat0039.DesgagneMicheauxLeblanc-P5}}.
+For the new CS Desgagne-Micheaux statistic see \code{\link{stat0039.DesgagneMicheaux-CS}}.
 
 For the Desgagne-Micheaux-Leblanc statistic see \code{\link{stat0040.DesgagneMicheauxLeblanc-Rn}}.
 
@@ -92,9 +92,9 @@ For the Spiegelhalter statistic see \code{\link{stat0041.Spiegelhalter}}.
 }
 
 \references{
-Lafaye de Micheaux, P. and Tran, V. A. (2014), PoweR: Reproducible
-Research Tool to ease Monte-Carlo Power Simulation Studies for
-Goodness-of-fit Tests in R. \emph{Journal of Statistical Software}, \bold{}, --. 
+Pierre Lafaye de Micheaux, Viet Anh Tran (2016). PoweR: A
+Reproducible Research Tool to Ease Monte Carlo Power Simulation
+Studies for Studies for Goodness-of-fit Tests in R. \emph{Journal of Statistical Software}, \bold{69(3)}, 1--42. doi:10.18637/jss.v069.i03 
 }
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Laplace.tests}} for goodness-of-fit tests for

@@ -37,7 +37,7 @@ extern "C" {
     if (n>3) {
 // Computation of the value of the test statistic
       void R_rsort (double* x, int n);
-      double pnorm(double q, double mean, double sd, int lower_tail, int log_p);      
+      //      double pnorm(double q, double mean, double sd, int lower_tail, int log_p);      
       double *xtmp;
       xtmp = new double[n];
       double statRsJ, varX=0.0, meanX=0.0, Jn=0.0, M, tmp, sdX, pi;

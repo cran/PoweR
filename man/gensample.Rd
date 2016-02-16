@@ -4,7 +4,7 @@
 \title{Generate random samples from a law added in the package.}
 \description{Generate random samples from a law added in the package as a C function.}
 \usage{
-gensample(law.index,n,law.pars = NULL,check = TRUE)
+gensample(law.index,n,law.pars = NULL,check = TRUE, center=FALSE, scale=FALSE)
 }
 \arguments{
   \item{law.index }{law index as given by function
@@ -15,12 +15,15 @@ gensample(law.index,n,law.pars = NULL,check = TRUE)
   \item{check }{logical. If \code{TRUE}, we check if \code{law.index} belongs to 
     the list of laws. If \code{FALSE}, we pass on this verification, this will
 	reduce the simulation time.}
+  \item{center}{Logical. Should we center the data generated}
+  \item{scale}{Logical. Should we center the data generated}
 }
 \value{A list containing the random sample and the vector of parameters used for the chosen law.}
 \references{
-Lafaye de Micheaux, P. and Tran, V. A. (2014), PoweR: Reproducible
-Research Tool to ease Monte-Carlo Power Simulation Studies for
-Goodness-of-fit Tests in R. \emph{Journal of Statistical Software}, \bold{}, --. 
+Pierre Lafaye de Micheaux, Viet Anh Tran (2016). PoweR: A
+Reproducible Research Tool to Ease Monte Carlo Power Simulation
+Studies for Goodness-of-fit Tests in R. \emph{Journal of Statistical
+Software}, \bold{69(3)}, 1--42. doi:10.18637/jss.v069.i03
 }
 
 \author{P. Lafaye de Micheaux, V. A. Tran}

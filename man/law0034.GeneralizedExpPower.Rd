@@ -16,10 +16,10 @@ The Generalized Exponential Power distribution has density:
 for \eqn{x \ge z_0}, and the density equals to \eqn{p(x;\gamma,\delta,\alpha,\beta,z_0)} for \eqn{x < z_0}.
 }
 \references{
-Lafaye de Micheaux, P. and Tran, V. A. (2014), PoweR: Reproducible
-Research Tool to ease Monte-Carlo Power Simulation Studies for
-Goodness-of-fit Tests in R. \emph{Journal of Statistical Software},
-\bold{}, --.
+Pierre Lafaye de Micheaux, Viet Anh Tran (2016). PoweR: A
+Reproducible Research Tool to Ease Monte Carlo Power Simulation
+Studies for Goodness-of-fit Tests in R. \emph{Journal of Statistical Software}, \bold{69(3)}, 1--42. doi:10.18637/jss.v069.i03
+
 
 Desgagne, A., Lafaye de Micheaux, P. and Leblanc, A. (2013), 
 Test of Normality Against Generalized Exponential Power Alternatives,

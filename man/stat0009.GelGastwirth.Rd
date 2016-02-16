@@ -14,10 +14,10 @@
 }
 
 \references{
-Lafaye de Micheaux, P. and Tran, V. A. (2014), PoweR: Reproducible
-Research Tool to ease Monte-Carlo Power Simulation Studies for
-Goodness-of-fit Tests in R. \emph{Journal of Statistical Software},
-\bold{}, --.
+Pierre Lafaye de Micheaux, Viet Anh Tran (2016). PoweR: A
+Reproducible Research Tool to Ease Monte Carlo Power Simulation
+Studies for Goodness-of-fit Tests in R. \emph{Journal of Statistical Software}, \bold{69(3)}, 1--42. doi:10.18637/jss.v069.i03
+
 
 Gel, Y. and Gastwirth, J.L. (2008), The Robust Jarque-Bera Test of Normality, 
 \emph{Economics Letters}, \bold{99}(1), 30--32.

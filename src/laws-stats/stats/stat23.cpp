@@ -38,7 +38,7 @@ extern "C" {
     if (n>3) {
 // Computation of the value of the test statistic
     void R_rsort (double* x, int n);
-    double pnorm(double q, double mean, double sd, int lower_tail, int log_p);
+    //    double pnorm(double q, double mean, double sd, int lower_tail, int log_p);
     double qnorm(double p, double mean, double sd, int lower_tail, int log_p);
     double dnorm4(double x, double mu, double sigma, int give_log);
     double *mi, *fi, *xs, *aux1, *aux2, *aux3, *aux4, *aistar, *ai;

@@ -15,6 +15,7 @@ create.alter <- function(stat.indices = c(42,51,61), values.alter = NULL) {
     stat.index <- stat.indices[i]
     value.alter <- values.alter[i]
 
+    stat.name <- "tmp" # To remove a NOTE at R CMD check
     stat.name <- paste("stat",as.character(stat.index),sep="")
 
     if (is.null(value.alter) || is.na(value.alter)) {

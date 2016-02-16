@@ -33,22 +33,22 @@ extern "C" {
       return;
     }
 
-    if (n>3) {
+    if (n > 3) {
 // Computation of the value of the test statistic
     void R_rsort (double* x, int n);
-    double pnorm(double q, double mean, double sd, int lower_tail, int log_p);
+    //    double pnorm(double q, double mean, double sd, int lower_tail, int log_p);
     double *p;
     p = new double[n];
     double varX=0.0, meanX=0.0, sdX, pval, tmp, Dplus, Dminus, statKS, Kd, KK;
     int nd;
 
 
-    for (i=0;i<=(n-1);i++) meanX = meanX + x[i];
-    meanX =meanX/(double)n;
+    for (i = 0; i < n; i++) meanX = meanX + x[i];
+    meanX =meanX / (double)n;
     for (i=0;i<=(n-1);i++) varX = varX + R_pow(x[i],2.0);
     varX = ((double)n)*(varX/(double)n - R_pow(meanX,2.0))/(double)(n-1); 
     sdX = sqrt(varX);
-    for (i=0;i<=(n-1);i++) p[i] = pnorm((x[i]-meanX)/sdX,0.0,1.0,1,0);
+    for (i=0;i<=(n-1);i++) p[i] = Rf_pnorm5((x[i]-meanX)/sdX,0.0,1.0,1,0);
     R_rsort (p,n); // We sort the data
     Dplus = 1.0/(double)n - p[0];
     Dminus = p[0];
@@ -77,7 +77,7 @@ if (pvalcomp[0] == 1) {
 }
 
 // We take the decision to reject or not to reject the null hypothesis H0
-    for (i=0;i<=(nblevel[0]-1);i++) {
+    for (i = 0; i < nblevel[0]; i++) {
     if (usecrit[0] == 1) { // We use the provided critical values
 	if (statistic[0] > critvalR[i]) decision[i] = 1; else decision[i] = 0; // two.sided (but in this case only one possible critical value)
       } else {

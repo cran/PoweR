@@ -1,4 +1,4 @@
-many.crit <- function(law.index,stat.indices,M=10^3,vectn=c(20,50,100),levels=c(0.05,0.1),alter=create.alter(stat.indices),law.pars=NULL,parstats=NULL,model=NULL,Rlaw=NULL,Rstats=NULL) {
+many.crit <- function(law.index, stat.indices, M = 10 ^ 3, vectn = c(20, 50, 100), levels = c(0.05, 0.1), alter = create.alter(stat.indices), law.pars = NULL, parstats = NULL, model = NULL, Rlaw = NULL, Rstats = NULL, center = FALSE, scale = FALSE) {
 
 
   if (any(stat.indices == 0) & is.null(Rstats)) stop("'Rstats' should be a list whose components are R functions.")
@@ -11,6 +11,8 @@ many.crit <- function(law.index,stat.indices,M=10^3,vectn=c(20,50,100),levels=c(
     for (i in 1:length(stat.indices)) Rstats[[i]] <- list(NULL)
   }
 
+
+  Rcpp <- any(law.index == 0)
   
   if (is.function(Rlaw) & (law.index != 0)) stop("You should set 'law.index' to 0 when 'Rlaw' is a (random generating) function.")
 
@@ -21,7 +23,7 @@ many.crit <- function(law.index,stat.indices,M=10^3,vectn=c(20,50,100),levels=c(
 # Management of alter
   if (!is.null(alter)) {
     if (!is.list(alter)) stop("'alter' should be a list")
-    if (is.null(names(alter))) stop("'parstats' should be a named list")
+    if (is.null(names(alter))) stop("'alter' should be a named list")
     if (any(is.na(names(alter)))) stop("'alter' names should all be defined")
     if (length(alter) != length(stat.indices)) stop("'alter' and 'stat.indices' should have the same length")
     for (s in 1:stats.len) {
@@ -44,23 +46,76 @@ many.crit <- function(law.index,stat.indices,M=10^3,vectn=c(20,50,100),levels=c(
 
  
 # Management of parstats
-  nbparstats <- rep(NA,length(stat.indices))
-  nbparstats[stat.indices!=0] <- getnbparstats(stat.indices[stat.indices!=0])
+  nbparstats <- rep(NA, length(stat.indices))
+  nbparstats[stat.indices != 0] <- getnbparstats(stat.indices[stat.indices != 0])
+  parstatstmp <- c()
   if (!is.null(parstats)) {
    if (!is.list(parstats)) stop("'parstats' should be a list")
    if (is.null(names(parstats))) stop("'parstats' should be a named list")
    if (any(is.na(names(parstats)))) stop("'parstats' names should all be defined")
    if (length(parstats) != length(stat.indices)) stop("'parstats' and 'stat.indices' should have the same length")
    for (s in 1:stats.len) {
-     if (names(parstats)[s] != paste("stat",stat.indices[s],sep="")) stop(paste("Name of 'parstats'[[",s,"]] should be equal to 'stat",stat.indices[s],sep=""))
-     if (!is.na(parstats[[s]]) && (nbparstats[s] == 0)) stop(paste("'parstats[['",s,"]] should be equal to NA",sep=""))
-     if ((nbparstats[s] != 0) && (length(parstats[[s]]) != nbparstats[s])) stop(paste("The length of parstats[[",s,"]] should be ",nbparstats[s],sep=""))
+       if (stat.indices[s] != 0) {
+           if (names(parstats)[s] != paste("stat",stat.indices[s],sep="")) stop(paste("Name of 'parstats'[[",s,"]] should be equal to 'stat",stat.indices[s],sep=""))
+           if (!is.na(parstats[[s]]) && (nbparstats[s] == 0)) stop(paste("'parstats[['",s,"]] should be equal to NA",sep=""))
+           if ((nbparstats[s] != 0) && (length(parstats[[s]]) != nbparstats[s])) stop(paste("The length of parstats[[",s,"]] should be ",nbparstats[s],sep=""))
+           parstatstmp <- c(parstatstmp, parstats[[s]])
+       }
    }
- }
+} else {
+    for (s in 1:stats.len) {
+        if (stat.indices[s] != 0) {parstatstmp <- c(parstatstmp, stat.cstr(stat.indices[s])$stat.pars)}
+    }
+}
+#  parstats <- parstatstmp
+#  parstats[is.na(parstats)] <- 0
+   parstatstmp <- parstatstmp[!is.na(parstatstmp)]
+  
 
  
- nblevels <- length(levels)
- vectn.len <- length(vectn)
+  nblevels <- length(levels)
+  vectn.len <- length(vectn)
+
+######################################
+# debut modif ....
+
+  stats.len <- length(stat.indices)
+  decision.len <- stats.len * vectn.len * nblevels
+  decision <- rep(0L, decision.len)
+  critvalL <- rep(0.0, M * vectn.len * stats.len)
+  nbparlaws <- length(law.pars)
+
+  if (is.null(law.pars)) {
+      tmp2 <- law.cstr(law.index)$law.pars
+      law.pars <- c(tmp2, rep(0.0, 4 - length(tmp2)))
+  }
+
+  
+  thetavec <- 0
+  xvec <- 0
+  p <- length(thetavec)
+  np <- length(xvec)
+
+  if (Rcpp | any(stat.indices == 0)) {
+      out <- .Call("powcompfastRcpp", M = as.integer(M), law.index = as.integer(law.index), laws.len = 1L, vectn = as.integer(vectn), vectn.len = as.integer(vectn.len),
+                   stat.indices = as.integer(stat.indices), stats.len = as.integer(stats.len), decision = as.integer(decision), decision.len = as.integer(decision.len),
+                   levels = as.double(levels), nblevels = as.integer(nblevels), cL = as.double(critvalL), cR = as.double(0.0), usecrit = 0L, alter = as.integer(alter),
+                   nbparlaws = as.integer(nbparlaws), parlaws = as.double(law.pars), nbparstats = as.integer(nbparstats), parstats = as.double(parstatstmp),
+                   modelnum = 1L, funclist = list(function(){}), as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np),
+                   as.list(Rlaw), Rstats, as.integer(center), as.integer(scale), compquant = 1L, PACKAGE="PoweR",NAOK=TRUE)$cL
+  } else {
+        
+      out <- .C("powcompfast", M = as.integer(M), law.index = as.integer(law.index), laws.len = 1L, vectn = as.integer(vectn), vectn.len = as.integer(vectn.len),
+                stat.indices = as.integer(stat.indices), stats.len = as.integer(stats.len), decision = as.integer(decision), decision.len = as.integer(decision.len),
+                levels = as.double(levels), nblevels = as.integer(nblevels), cL = as.double(critvalL), cR = as.double(0.0), usecrit = 0L, alter = as.integer(alter),
+                nbparlaws = as.integer(nbparlaws), parlaws = as.double(law.pars), nbparstats = as.integer(nbparstats), parstats = as.double(parstatstmp),
+                modelnum = 1L, funclist = list(function(){}), as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np),
+                as.integer(center), as.integer(scale), compquant= 1L, PACKAGE = "PoweR", NAOK = TRUE)$cL
+
+  }
+#####################################
+
+  
  mylist <- as.list(c())
  for (s in 1:stats.len) {
  
@@ -72,13 +127,23 @@ many.crit <- function(law.index,stat.indices,M=10^3,vectn=c(20,50,100),levels=c(
    for (l in 1:nblevels) {  
      for (n in 1:vectn.len) {
        if (alter[[s]] == 0) { # two.sided test
-         mylist[[s]][n+vectn.len*(l-1),] <- compquant(n=vectn[n],law.index=law.index,stat.index=stat.index,probs=c(levels[l]/2,1-levels[l]/2),M=M,law.pars=law.pars,stat.pars=parstats[[s]],model=model,Rlaw=Rlaw,Rstat=Rstats[[s]])$quant
+
+           res <- quantile(out[(s - 1) * M * vectn.len + (n - 1) * M + (1:M)], probs = c(levels[l] / 2, 1 - levels[l] / 2))
+           mylist[[s]][n + vectn.len * (l - 1), ] <- res
+           
+             # mylist[[s]][n + vectn.len * (l - 1), ] <- compquant(n=vectn[n],law.index=law.index,stat.index=stat.index,probs=c(levels[l]/2,1-levels[l]/2),M=M,law.pars=law.pars,stat.pars=parstats[[s]],model=model,Rlaw=Rlaw,Rstat=Rstats[[s]],center=center,scale=scale)$quant
        } else if ((alter[[s]] == 1) || (alter[[s]] == 4)) { # less test, or bilateral test that reject H0 only for small values of the test statistic
-         res <- compquant(n=vectn[n],law.index=law.index,stat.index=stat.index,probs=levels[l],M=M,law.pars=law.pars,stat.pars=parstats[[s]],model=model,Rlaw=Rlaw,Rstat=Rstats[[s]])$quant
-         mylist[[s]][n+vectn.len*(l-1),] <- c(res,NA)
+
+           res <- quantile(out[(s - 1) * M * vectn.len + (n - 1) * M + (1:M)], probs = levels[l])
+          
+#         res <- compquant(n=vectn[n],law.index=law.index,stat.index=stat.index,probs=levels[l],M=M,law.pars=law.pars,stat.pars=parstats[[s]],model=model,Rlaw=Rlaw,Rstat=Rstats[[s]],center=center,scale=scale)$quant
+         mylist[[s]][n + vectn.len * (l - 1), ] <- c(res,NA)
        } else if ((alter[[s]] == 2) || (alter[[s]] == 3)) { # greater test, or bilateral test that reject H0 only for large values of the test statistic
-         res <- compquant(n=vectn[n],law.index=law.index,stat.index=stat.index,probs=1-levels[l],M=M,law.pars=law.pars,stat.pars=parstats[[s]],model=model,Rlaw=Rlaw,Rstat=Rstats[[s]])$quant
-         mylist[[s]][n+vectn.len*(l-1),] <- c(NA,res)
+
+           res <- quantile(out[(s - 1) * M * vectn.len + (n - 1) * M + (1:M)], probs = 1 - levels[l])
+           
+#         res <- compquant(n=vectn[n],law.index=law.index,stat.index=stat.index,probs=1-levels[l],M=M,law.pars=law.pars,stat.pars=parstats[[s]],model=model,Rlaw=Rlaw,Rstat=Rstats[[s]],center=center,scale=scale)$quant
+         mylist[[s]][n + vectn.len * (l - 1), ] <- c(NA,res)
        }
      }
    }
@@ -91,7 +156,7 @@ many.crit <- function(law.index,stat.indices,M=10^3,vectn=c(20,50,100),levels=c(
 
    names(mylist)[s] <- statname
    
- }
+}
 
  list.names.replicated <- names(mylist)[table(names(mylist)) > 1]
  

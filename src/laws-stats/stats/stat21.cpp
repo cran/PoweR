@@ -110,7 +110,7 @@ if (pvalcomp[0] == 1) {
   // Other needed functions 
 
 #ifndef min
-# define min(a, b)		((a) > (b) ? (b) : (a))
+# define mymin(a, b)		((a) > (b) ? (b) : (a))
 #endif
 
 static double poly(const double *, int, double);
@@ -257,7 +257,7 @@ swilk(int *init,/* logical: is a[] already initialized ? */
 	sx += xi;
 	++i;
 	if (i != j)
-	    sa += sign(i - j) * a[min(i,j)];
+	    sa += sign(i - j) * a[mymin(i,j)];
 	xx = xi;
     }
     if (*n > 5000) {
@@ -273,7 +273,7 @@ swilk(int *init,/* logical: is a[] already initialized ? */
     j = *n - 1;
     for (i = 0; i < *n1; ++i, --j) {
 	if (i != j)
-	    asa = sign(i - j) * a[1+min(i,j)] - sa;
+	    asa = sign(i - j) * a[1+mymin(i,j)] - sa;
 	else
 	    asa = -sa;
 	xsx = x[i] / range - sx;
@@ -351,7 +351,7 @@ L70:
 	m += zbar * s;
 	s *= zsd;
     }
-    *pw = pnorm((double) y, (double)m, (double)s, 0/* upper tail */, 0);
+    *pw = Rf_pnorm5((double) y, (double)m, (double)s, 0/* upper tail */, 0);
     /*  = alnorm_(dble((Y - M)/S), 1); */
 
     return;

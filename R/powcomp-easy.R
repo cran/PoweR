@@ -1,4 +1,4 @@
-powcomp.easy <- function(params,M=10^5,model=NULL,Rlaws=NULL,Rstats=NULL) {
+powcomp.easy <- function(params,M=10^5,model=NULL,Rlaws=NULL,Rstats=NULL,center=FALSE,scale=FALSE) {
 
   if (is.vector(params)) params <- t(as.matrix(params)) else params <- as.matrix(params) # params n'a qu'une ligne
   nsim <- nrow(params)
@@ -113,11 +113,11 @@ powcomp.easy <- function(params,M=10^5,model=NULL,Rlaws=NULL,Rstats=NULL) {
 
   if (Rcpp | any(params[,"stat"] == 0)) {
       out <- .Call("powcompeasyRcpp",as.integer(M),params=as.double(as.vector(t(params))),as.integer(ncol(params)),decision=as.integer(decision),as.integer(decision.len),
-                   as.integer(modelnum),as.list(funclist), as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np),as.list(Rlaws),Rstats,NAOK=TRUE,PACKAGE="PoweR")
+                   as.integer(modelnum),as.list(funclist), as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np),as.list(Rlaws),Rstats,as.integer(center), as.integer(scale),NAOK=TRUE,PACKAGE="PoweR")
   } else {
   # call function powcompeasy in C  
       out <- .C("powcompeasy",as.integer(M),params=as.double(as.vector(t(params))),as.integer(ncol(params)),decision=as.integer(decision),as.integer(decision.len),
-                as.integer(modelnum), funclist, as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np),NAOK=TRUE,PACKAGE="PoweR")
+                as.integer(modelnum), funclist, as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np), as.integer(center), as.integer(scale), NAOK=TRUE,PACKAGE="PoweR")
   }
   
   decision <- out$decision/M

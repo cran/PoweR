@@ -37,7 +37,7 @@ extern "C" {
     if (n>3) {
 // Computation of the value of the test statistic
     void R_rsort(double* x, int n);
-    double pnorm5(double x, double mu, double sigma, int lower_tail, int log_p);
+    //    double pnorm(double x, double mu, double sigma, int lower_tail, int log_p);
     double digamma(double x);	// digamma function in R extensions
     double *Y;
     Y = new double[n];   	

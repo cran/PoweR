@@ -36,7 +36,7 @@ extern "C" {
     if (n>3) {
 // Computation of the value of the test statistic
     void R_rsort (double* x, int n);
-    double pnorm(double q, double mean, double sd, int lower_tail, int log_p);
+    //    double pnorm(double q, double mean, double sd, int lower_tail, int log_p);
     double *ADa;
     ADa = new double[n];
     double statAD, varX=0.0, sdX, meanX=0.0, sumAD=0.0, pval;
@@ -47,7 +47,7 @@ extern "C" {
     for (i=0;i<=(n-1);i++) varX = varX + R_pow(x[i],2.0);
     varX = ((double)n)*(varX/(double)n - R_pow(meanX,2.0))/(double)(n-1); 
     sdX = sqrt(varX);
-    for (i=0;i<=(n-1);i++) ADa[i] = pnorm((x[i]-meanX)/sdX,0.0,1.0,1,0);
+    for (i=0;i<=(n-1);i++) ADa[i] = Rf_pnorm5((x[i]-meanX)/sdX,0.0,1.0,1,0);
     R_rsort (ADa,n); // We sort the data
     for (i=1;i<=n;i++) sumAD = sumAD + (2.0*(double)i-1.0)*log(ADa[i-1]) + (2.0*(double)n + 1.0-2.0*(double)i)*log(1.0-ADa[i-1]);
     statAD = -((double)n + sumAD/(double)n);

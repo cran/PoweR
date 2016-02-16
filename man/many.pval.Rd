@@ -14,7 +14,7 @@ can be done using a Monte-Carlo simulation.
 many.pval(stat.indices, law.index, n = 100, M = 10^5, N = 100,
           alter = create.alter(stat.indices), law.pars = NULL, parstats = NULL,
           null.dist = 2, null.pars = NULL, method = c("direct", "MC"), Rlaw.index = NULL,
-Rnull.dist = NULL, Rstats = NULL)
+Rnull.dist = NULL, Rstats = NULL, center=FALSE, scale=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -68,6 +68,8 @@ statistic under the null (specified by \code{null.dist}).
     \code{pvalcomp} (1L if the pvalue can be computed, 0L otherwise),
     \code{nbparstat} (length of stat.pars). If a value of \code{stat.indices} is not 0,
   then the corresponding component of \code{Rstats} should be set to \code{NULL}.}
+  \item{center}{Logical. Should we center the data generated}
+  \item{scale}{Logical. Should we center the data generated}
 }
 \value{
 \item{pvals }{the \code{N} x length(\code{stat.indices}) matrix of \eqn{p}-values.}
@@ -80,9 +82,9 @@ statistic under the null (specified by \code{null.dist}).
 \item{method }{same as input.}
 }
 \references{
-Lafaye de Micheaux, P. and Tran, V. A. (2014), PoweR: Reproducible
-Research Tool to ease Monte-Carlo Power Simulation Studies for
-Goodness-of-fit Tests in R. \emph{Journal of Statistical Software}, \bold{}, --. 
+Pierre Lafaye de Micheaux, Viet Anh Tran (2016). PoweR: A
+Reproducible Research Tool to Ease Monte Carlo Power Simulation
+Studies for Studies for Goodness-of-fit Tests in R. \emph{Journal of Statistical Software}, \bold{69(3)}, 1--42. doi:10.18637/jss.v069.i03 
 }
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{
