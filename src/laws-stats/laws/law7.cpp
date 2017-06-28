@@ -8,7 +8,7 @@ extern "C" {
 
   void law7 (int *xlen, double *x, char **name, int *getname, double *params, int *nbparams, int *setseed) {
 
-    int i, j=0, n=xlen[0];
+    int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {
 // Here, INDICATE the name of the distribution:
       const char *nom = "$Uniform(a,b)$";
@@ -52,14 +52,14 @@ extern "C" {
 // If necessary, we check if some parameter values are out of parameter space
     if (a > b) {
       warning("a should not be > b in law7!\n");
-      for (i=0;i<n;i++) x[i] = R_NaN;
+      for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }
 
 // Generation of the random values
     if (setseed[0] == 1) GetRNGstate();   
-    double runif(double a, double b);
-    for (i=0;i<n;i++) x[i] = runif(a,b);
+    double Rf_runif(double a, double b);
+    for (i = 0; i < n; i++) x[i] = Rf_runif(a,b);
   if (setseed[0] == 1) PutRNGstate();
 
 // If applicable, we free the unused array of pointers. Then we return.

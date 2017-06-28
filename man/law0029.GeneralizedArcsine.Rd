@@ -12,7 +12,7 @@ This generator is called by function \code{\link{gensample}} to create random va
 
 The Generalized Arcsine distribution with parameter \code{alpha = }\eqn{\alpha} has density:
 \deqn{ \frac{\sin(\pi\alpha)}{\pi}x^{-\alpha}(1-x)^{\alpha-1} }{ 
-       f(x) = sin(\pi\alpha)/\pi x^(-\alpha) (1 - x)^(\alpha - 1) }
+       f(x) = sin(\pi*\alpha)/\pi x^(-\alpha) (1 - x)^(\alpha - 1) }
 for \eqn{0 < \alpha < 1}.
 }
 

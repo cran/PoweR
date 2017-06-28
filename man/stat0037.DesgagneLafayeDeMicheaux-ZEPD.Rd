@@ -1,10 +1,10 @@
-\name{stat0040.DesgagneMicheauxLeblanc-Rn}
-\alias{stat0040.DesgagneMicheauxLeblanc-Rn}
-\alias{stat0040}
+\name{stat0037.DesgagneLafayeDeMicheaux-ZEPD}
+\alias{stat0037.DesgagneLafayeDeMicheaux-ZEPD}
+\alias{stat0037}
 
-\title{The Desgagne-Micheaux-Leblanc test for normality}
+\title{The \eqn{Z_{EPD}} test for normality}
 
-\description{The Desgagne-Micheaux-Leblanc test \code{R_n} for normality is used
+\description{The Desgagne-LafayeDeMicheaux \code{Z_{EPD}} test for normality is used
 
 - to compute its statistic and p-value by calling function \code{\link{statcompute}};
 
@@ -18,11 +18,12 @@ Pierre Lafaye de Micheaux, Viet Anh Tran (2016). PoweR: A
 Reproducible Research Tool to Ease Monte Carlo Power Simulation
 Studies for Goodness-of-fit Tests in R. \emph{Journal of Statistical Software}, \bold{69(3)}, 1--42. doi:10.18637/jss.v069.i03
 
-
-Desgagne, A., Lafaye de Micheaux, P. and Leblanc, A. (2013), Test of Normality Against Generalized Exponential Power Alternatives, 
-\emph{Communications in Statistics - Theory and Methods}, \bold{42}, 164--190.
+Desgagne, A. and Lafaye de Micheaux, P.  (2017), A Powerful and
+Interpretable Alternative to the Jarque-Bera Test of Normality Based on
+2nd-Power Skewness and Kurtosis, using the Rao's score test on the APD
+family, \emph{Journal of Applied Statistics}, .
 }
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
-\keyword{statistic, test, normality, Desgagne-Micheaux-Leblanc}
+\keyword{statistic, test, normality, Desgagne-LafayeDeMicheaux-ZEPD}

@@ -1,6 +1,6 @@
 \name{law0023.GeneralizedPareto}
 \alias{law0023.GeneralizedPareto}
-\alias{law023}
+\alias{law0023}
 
 \title{The Generalized Pareto Distribution}
 

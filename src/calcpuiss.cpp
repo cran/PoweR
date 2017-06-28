@@ -26,7 +26,7 @@ static char *sfunction;
     int i, n = xlen[0];
     double meanX = 0.0, varX = 0.0, sdX;
 
-    (*lawfunc[law-1])(xlen,x,name,getname,params,nbparams,setseed);
+    (*lawfunc[law-1])(xlen, x, name, getname, params, nbparams, setseed);
 
     if (scale[0] == 1) {
       for (i = 0; i <= (n - 1); i++) meanX = meanX + x[i];
@@ -141,7 +141,7 @@ static char *sfunction;
   
   // Computation of the power of the test statistic
   void powcompeasy(int *M, double *params, int *ncolparams, int *decision, int *decisionlen, //char **lawnames, char **statnames, 
-int *modelnum, char** funclist, double *thetavec, double *xvec, int *p, int *np, int *center, int *scale) {
+		   int *modelnum, char** funclist, double *thetavec, double *xvec, int *p, int *np, int *center, int *scale) {
     
     int gensample(int law, int *xlen, double *x, char **name1, int *getname, double *params, int *nbparams, int *setseed, int *center, int *scale);
     void statcompute(int stat, double *x, int *xlen, double *level, int *nblevel, char **name2, int *getname, double *statistic, 
@@ -153,8 +153,8 @@ int *modelnum, char** funclist, double *thetavec, double *xvec, int *p, int *np,
     statistic = new double[1];
     pvalue = new double[1];
     pvalcomp = new int[1];
-    *(statistic+0) = 0.0;
-    *(pvalue+0) = 0.0;
+    statistic[0] = 0.0;
+    pvalue[0] = 0.0;
     pvalcomp[0] = 1;
     
     int i, row, n, law, stat, j, *xlen, *alter, *usecrit, *getname;
@@ -174,39 +174,39 @@ int *modelnum, char** funclist, double *thetavec, double *xvec, int *p, int *np,
     decisiontmp[0] = 0;
     nblevel = new int[1];
     nblevel[0] = 1;
-
+    
     int *setseed;
     setseed = new int[1];
     setseed[0] = 0;
     GetRNGstate();
     
-    for (row=1;row<=decisionlen[0];row++) { // numéro de ligne de params considérée comme une matrice
-
+    for (row = 1; row <= decisionlen[0]; row++) { // numéro de ligne de params considérée comme une matrice
+      
       // lecture des valeurs des différentes colonnes de params sur la ligne row
-      n = (int)params[(ncolparams[0])*(row-1)+0];
-      law = (int)params[(ncolparams[0])*(row-1)+1];
-      stat = (int)params[(ncolparams[0])*(row-1)+2];
+      n = (int)params[(ncolparams[0]) * (row - 1) + 0];
+      law = (int)params[(ncolparams[0]) * (row - 1) + 1];
+      stat = (int)params[(ncolparams[0]) * (row - 1) + 2];
       level = new double[1];
-      level[0] = params[(ncolparams[0])*(row-1)+3];
+      level[0] = params[(ncolparams[0]) * (row - 1) + 3];
       critvalL = new double[1];
-      critvalL[0] = params[(ncolparams[0])*(row-1)+4];
+      critvalL[0] = params[(ncolparams[0]) * (row - 1) + 4];
       critvalR = new double[1];
-      critvalR[0] = params[(ncolparams[0])*(row-1)+5];
+      critvalR[0] = params[(ncolparams[0]) * (row - 1) + 5];
       alter = new int[1];
-      alter[0] = (int)params[(ncolparams[0])*(row-1)+6];
+      alter[0] = (int)params[(ncolparams[0]) * (row - 1) + 6];
       usecrit = new int[1];
-      usecrit[0] = (int)params[(ncolparams[0])*(row-1)+7];
+      usecrit[0] = (int)params[(ncolparams[0]) * (row - 1) + 7];
       nbparlaw = new int[1];
-      nbparlaw[0] = (int)params[(ncolparams[0])*(row-1)+8];
+      nbparlaw[0] = (int)params[(ncolparams[0]) * (row - 1) + 8];
       parlaw = new double[4];   // j'ai considéré que 4 paramètres étaient suffisants pour chaque loi. Si jamais on propose une loi à 5 paramètres, il faudra modifier le code
-      parlaw[0] = params[(ncolparams[0])*(row-1)+9];
-      parlaw[1] = params[(ncolparams[0])*(row-1)+10];
-      parlaw[2] = params[(ncolparams[0])*(row-1)+11];
-      parlaw[3] = params[(ncolparams[0])*(row-1)+12];
+      parlaw[0] = params[(ncolparams[0]) * (row - 1) + 9];
+      parlaw[1] = params[(ncolparams[0]) * (row - 1) + 10];
+      parlaw[2] = params[(ncolparams[0]) * (row - 1) + 11];
+      parlaw[3] = params[(ncolparams[0]) * (row - 1) + 12];
       nbparstat = new int[1];
-      nbparstat[0] = (int)params[(ncolparams[0])*(row-1)+13];
+      nbparstat[0] = (int)params[(ncolparams[0]) * (row - 1) + 13];
       parstat = new double[nbparstat[0]];  
-      for (i=0;i<nbparstat[0];i++) parstat[i] = params[(ncolparams[0])*(row-1)+ 14 + i];
+      for (i = 0; i < nbparstat[0]; i++) parstat[i] = params[(ncolparams[0]) * (row - 1) + 14 + i];
 
       x = new double[n];
       for (j = 0; j < n; j++) x[j] = 0.0;
@@ -214,26 +214,26 @@ int *modelnum, char** funclist, double *thetavec, double *xvec, int *p, int *np,
       xlen[0] = n;
 
       getname[0] = 0;
-     if (M[0]>1) {
-	for (i=1;i<=*(M+0);i++) { // on part la simul, sans refaire la 1ere iteration!
+      if (M[0] > 1) {
+	for (i = 1; i <= M[0]; i++) { // on part la simul, sans refaire la 1ere iteration!
 	  
-	  gensample(law,xlen,x,name1,getname,parlaw,nbparlaw,setseed,center,scale); // on génère l'échantillon
-	  model(modelnum[0],funclist,thetavec,xvec,xlen,x,p,np);  // on applique le modèle
- 
-	  statcompute(stat, x, xlen, level, nblevel, name2, getname, statistic,pvalcomp,pvalue,critvalL,critvalR,usecrit,alter,decisiontmp,parstat,nbparstat);
-	  *(decision+row-1) = *(decision+row-1) + decisiontmp[0];
+	  gensample(law, xlen, x, name1, getname, parlaw, nbparlaw, setseed, center, scale); // on génère l'échantillon
+	  model(modelnum[0], funclist, thetavec, xvec, xlen, x, p, np);  // on applique le modèle
+	  
+	  statcompute(stat, x, xlen, level, nblevel, name2, getname, statistic, pvalcomp, pvalue, critvalL, critvalR, usecrit, alter, decisiontmp, parstat, nbparstat);
+	  decision[row-1] = decision[row-1] + decisiontmp[0];
 	  
 	}
       }
 
      // We retrieve the default values of parameter laws and parameter stats used 
-      params[(ncolparams[0])*(row-1)+8]  = (int)nbparlaw[0];
-      params[(ncolparams[0])*(row-1)+9]  = parlaw[0];
-      params[(ncolparams[0])*(row-1)+10] = parlaw[1];
-      params[(ncolparams[0])*(row-1)+11] = parlaw[2];
-      params[(ncolparams[0])*(row-1)+12] = parlaw[3];
-      params[(ncolparams[0])*(row-1)+13] = (int)nbparstat[0];
-      for (i=0;i<nbparstat[0];i++) params[(ncolparams[0])*(row-1)+ 14 + i] = parstat[i];
+      params[(ncolparams[0]) * (row - 1) + 8]  = (int)nbparlaw[0];
+      params[(ncolparams[0]) * (row - 1) + 9]  = parlaw[0];
+      params[(ncolparams[0]) * (row - 1) + 10] = parlaw[1];
+      params[(ncolparams[0]) * (row - 1) + 11] = parlaw[2];
+      params[(ncolparams[0]) * (row - 1) + 12] = parlaw[3];
+      params[(ncolparams[0]) * (row - 1) + 13] = (int)nbparstat[0];
+      for (i = 0; i < nbparstat[0]; i++) params[(ncolparams[0]) * (row - 1) + 14 + i] = parstat[i];
     
       //On libere de la memoire
       delete[] x;
@@ -268,11 +268,11 @@ int *modelnum, char** funclist, double *thetavec, double *xvec, int *p, int *np,
 
     PutRNGstate();
     return;
-
+    
   }
 
   // computation of all the statistic values in order to obtain the critical values
-  void compquant(int *n, int *law, int *stat, int *M, double *statvec, //char **lawname, char **statname, 
+  void compquantc(int *n, int *law, int *stat, int *M, double *statvec, //char **lawname, char **statname, 
 		 int *nbparlaw, double *parlaw, int *nbparstat, double *parstat, int *modelnum, char** funclist, double *thetavec, double *xvec, int *p, int *np, int *center, int *scale) {
 
     int gensample(int law, int *xlen, double *x, char **name1, int *getname, double *params, int *nbparams, int *setseed, int *center, int *scale);
@@ -566,7 +566,7 @@ int *modelnum, char** funclist, double *thetavec, double *xvec, int *p, int *np,
   
   
   // Function calcFx() version C++
-  void calccfx(double *pvals, int *pvalslen, double *xi, int *xilen, double *fx) {
+  void calcfx(double *pvals, int *pvalslen, double *xi, int *xilen, double *fx) {
   
 	int i, j;
 	int tmp;
@@ -750,7 +750,7 @@ int *modelnum, char** funclist, double *thetavec, double *xvec, int *p, int *np,
   // Computation of the p-values matrix using Monte-Carlo
   void matrixpvalMC(int *n, int *lawindex, int* nbstats, int *M, int *statindices, int *nbparstatvec, double *parstatmultvec, char** funclist, int *N, int *nulldist, int *nbparams, int *altervec, double *parstat, int *nbparstat, double *res, int *center, int *scale) {
 
-    void compquant(int *n, int *law, int *stat, int *M, double *statvec,// char **lawname, char **statname, 
+    void compquantc(int *n, int *law, int *stat, int *M, double *statvec,// char **lawname, char **statname, 
 int *nbparlaw, double *parlaw, int *nbparstat, double *parstat, int *modelnum, char** funclist, double *thetavec, double *xvec, int *p, int *np, int *center, int *scale);
     int gensample(int law, int *xlen, double *x, char **name, int *getname, double *params, int *nbparams, int *setseed, int *center, int *scale);
 
@@ -826,11 +826,11 @@ int *nbparlaw, double *parlaw, int *nbparstat, double *parstat, int *modelnum, c
 	paramstat = new double[nbparamstat[0]];    
 	for (k=0;k<nbparamstat[0];k++) paramstat[k] = parstatmultvec[cmpt+k];
 	cmpt = cmpt + nbparamstat[0];
-	compquant(n,lawindex,stat,M,statvec,//lawname,statname,
+	compquantc(n,lawindex,stat,M,statvec,//lawname,statname,
 		  nbparlaw,parlaw,nbparamstat,paramstat,modelnum,funclist,thetavec,xvec,p,np,center,scale);
 	delete[] paramstat;
       } else {
-	compquant(n,lawindex,stat,M,statvec,// lawname,statname,
+	compquantc(n,lawindex,stat,M,statvec,// lawname,statname,
 		  nbparlaw,parlaw,nbparamstat,(double*)0,modelnum,funclist,thetavec,xvec,p,np,center,scale);
       }
 
@@ -1023,18 +1023,11 @@ int *nbparlaw, double *parlaw, int *nbparstat, double *parstat, int *modelnum, c
 
   }
 
-
+#include "Rcpp/calcpuissRcpp.cpp"
 
   
 #include "laws-stats/register.cpp"
 
-  void R_init_PoweR(DllInfo *info) {
-    /* Register the .C routines.
-       No .Call(), .Fortran() or .External() routines,
-       so pass those arrays as NULL.
-    */
-    R_registerRoutines(info,cMethods, NULL,NULL, NULL);
-  }
 
 }
 

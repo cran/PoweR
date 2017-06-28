@@ -9,7 +9,7 @@ extern "C" {
 
   void law39 (int *xlen, double *x, char **name, int *getname, double *params, int *nbparams, int *setseed) {
     
-    int i, j=0, n=xlen[0];
+    int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {
 // Here, INDICATE the name of the distribution:
       const char *nom = "$modAPD(mu,sigma,theta1,theta2)$";
@@ -28,7 +28,7 @@ extern "C" {
 		name[j][0] = nom[j];
 		j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50; i++) name[i][0] = space[0];
       return;
     }
 
@@ -78,24 +78,24 @@ extern "C" {
     }
 
 // If necessary, we check if some parameter values are out of parameter space
-    if (sigma <= 0 || theta1 <= 0 || theta1 >= 1 || theta2 <= 0) {
+    if (sigma <= 0.0 || theta1 <= 0.0 || theta1 >= 1.0 || theta2 <= 0.0) {
       warning("theta2 and sigma should be > 0 and you must take 0 < theta1 < 1 in law39!\n");
-      for (i=0;i<n;i++) x[i] = R_NaN;
+      for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }
 
 // Generation of the random values
     if (setseed[0] == 1) GetRNGstate();   
-    double runif(double a, double b);
-    double rgamma(double shape, double scale);
-    double invtheta2 = 1.0/theta2;
-    double twopowinvtheta2 = R_pow(2.0,invtheta2);
-    double delta = (2.0*R_pow(theta1,theta2)*R_pow(1.0-theta1,theta2))/(R_pow(theta1,theta2)+R_pow(1-theta1,theta2));
-    for (i=0;i<n;i++) {
-      if (runif(0.0,1.0) <= theta1) {
-	x[i] = mu + sigma * twopowinvtheta2 * (-theta1 * R_pow(rgamma(invtheta2,1.0)/delta,invtheta2)); // Petit doute si le 2 devrait etre au debut: 2 * (theta + phi ...)
+    double Rf_runif(double a, double b);
+    double Rf_rgamma(double shape, double scale);
+    double invtheta2 = 1.0 / theta2;
+    double twopowinvtheta2 = R_pow(2.0, invtheta2);
+    double delta = (2.0 * R_pow(theta1, theta2) * R_pow(1.0 - theta1, theta2)) / (R_pow(theta1, theta2) + R_pow(1.0 - theta1, theta2));
+    for (i = 0; i < n; i++) {
+      if (Rf_runif(0.0, 1.0) <= theta1) {
+	x[i] = mu + sigma * twopowinvtheta2 * (-theta1 * R_pow(Rf_rgamma(invtheta2, 1.0) / delta, invtheta2)); // Petit doute si le 2 devrait etre au debut: 2 * (theta + phi ...)
       } else {
-	x[i] = mu + sigma * twopowinvtheta2 * ((1.0-theta1) * R_pow(rgamma(invtheta2,1.0)/delta,invtheta2)); // Petit doute si le 2 devrait etre au debut: 2 * (theta + phi ...)
+	x[i] = mu + sigma * twopowinvtheta2 * ((1.0 - theta1) * R_pow(Rf_rgamma(invtheta2, 1.0) / delta, invtheta2)); // Petit doute si le 2 devrait etre au debut: 2 * (theta + phi ...)
       }
     }
     if (setseed[0] == 1) PutRNGstate();

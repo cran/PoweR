@@ -10,7 +10,7 @@ extern "C" {
 
   void law37 (int *xlen, double *x, char **name, int *getname, double *params, int *nbparams, int *setseed) {
 
-    int i, j=0, n=xlen[0];
+    int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {
 // Here, INDICATE the name of the distribution:
    const char *nom = "$NIG(\\alpha,\\beta,\\delta,\\mu)$";
@@ -29,7 +29,7 @@ extern "C" {
 	name[j][0] = nom[j];
 	j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50; i++) name[i][0] = space[0];
       return;
     }
      
@@ -79,16 +79,16 @@ extern "C" {
     }
 
 // If necessary, we check if some parameter values are out of parameter space
-    if (alpha <= 0 || delta < 0 || beta < -alpha || beta > alpha) {
+    if (alpha <= 0.0 || delta < 0.0 || beta < -alpha || beta > alpha) {
       warning("correct values of the parameters are: alpha > 0 && delta >= 0 && beta in (-alpha,alpha) in law37!\n");
-      for (i=0;i<n;i++) x[i] = R_NaN;
+      for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }
 
 // Generation of the random values
     if (setseed[0] == 1) GetRNGstate(); 	
-    double runif(double a, double b);
-    double rnorm(double a, double b);
+    double Rf_runif(double a, double b);
+    double Rf_rnorm(double a, double b);
     double z1(double v, double d, double g);
     double z2(double v, double d, double g);
     double pz1(double v, double d, double g);
@@ -102,7 +102,7 @@ extern "C" {
     S = new double [n];
     double gamma;
     // Settings:
-    gamma = sqrt(alpha*alpha - beta*beta);
+    gamma = sqrt(alpha * alpha - beta * beta);
     // GAMMA:
     if (gamma == 0) {
         // GAMMA = 0:
@@ -113,10 +113,10 @@ extern "C" {
       }
     } else {
         // GAMMA > 0:
-      for (i=0;i<n;i++) {
-	U[i] = runif(0.0,1.0);
-	V[i] = R_pow(rnorm(0.0,1.0),2.0);
-	S[i] = U[i] - pz1(V[i],delta,gamma);
+      for (i = 0; i < n; i++) {
+	U[i] = Rf_runif(0.0, 1.0);
+	V[i] = R_pow(Rf_rnorm(0.0, 1.0), 2.0);
+	S[i] = U[i] - pz1(V[i], delta, gamma);
 	if (S[i] < 0) {
 	  S[i] = 1.0;
 	} else {
@@ -128,8 +128,8 @@ extern "C" {
 	    }
 	  }
 	}
-	Z[i] = z1(V[i],delta,gamma)*S[i] + z2(V[i],delta,gamma)*(1.0-S[i]);
-	x[i] = mu + beta*Z[i] + sqrt(Z[i])*rnorm(0.0,1.0);
+	Z[i] = z1(V[i], delta, gamma) * S[i] + z2(V[i], delta, gamma) * (1.0 - S[i]);
+	x[i] = mu + beta * Z[i] + sqrt(Z[i]) * Rf_rnorm(0.0, 1.0);
       }
     }
     if (setseed[0] == 1) PutRNGstate();

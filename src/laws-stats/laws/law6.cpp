@@ -8,7 +8,7 @@ extern "C" {
 
   void law6 (int *xlen, double *x, char **name, int *getname, double *params, int *nbparams, int *setseed) {
     
-    int i, j=0, n=xlen[0];
+    int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {
 // Here, INDICATE the name of the distribution:
       const char *nom = "$Beta(a,b)$";
@@ -25,7 +25,7 @@ extern "C" {
 	name[j][0] = nom[j];
 	j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50;i++) name[i][0] = space[0];
       return;
     }
     
@@ -50,16 +50,16 @@ extern "C" {
     }
 
 // If necessary, we check if some parameter values are out of parameter space
-    if (a <= 0 || b <= 0) {
+    if (a <= 0.0 || b <= 0.0) {
       warning("a and b should be > 0 in law6!\n");
-      for (i=0;i<n;i++) x[i] = R_NaN;
+      for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }
 
 // Generation of the random values
     if (setseed[0] == 1) GetRNGstate();   
-    double rbeta(double a, double b);
-    for (i=0;i<n;i++) x[i] = rbeta(a,b);
+    double Rf_rbeta(double a, double b);
+    for (i = 0; i < n; i++) x[i] = Rf_rbeta(a,b);
     if (setseed[0] == 1) PutRNGstate();
 
 // If applicable, we free the unused array of pointers. Then we return.

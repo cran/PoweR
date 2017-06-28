@@ -12,7 +12,7 @@ extern "C" {
 
   void law36 (int *xlen, double *x, char **name, int *getname, double *params, int *nbparams, int *setseed) {
 
-    int i, j=0, n=xlen[0];
+    int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {
 // Here, INDICATE the name of the distribution:
     const char *nom = "$ALaplace(\\mu,b,k)$";
@@ -30,7 +30,7 @@ extern "C" {
 	name[j][0] = nom[j];
         j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50; i++) name[i][0] = space[0];
       return;
     }
 
@@ -66,17 +66,17 @@ extern "C" {
     }
 
 // If necessary, we check if some parameter values are out of parameter space
-    if (b < 0 || k<=0) {
+    if (b < 0.0 || k <= 0.0) {
       warning("b should be >=0 and k should be >0 in law36!\n");
-      for (i=0;i<n;i++) x[i] = R_NaN;
+      for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }
 
 // Generation of the random values
     if (setseed[0] == 1) GetRNGstate();   
-    double runif(double a, double b);  
-    for (i=0;i<n;i++) {
-      x[i] = mu + b * log(R_pow(runif(0.0,1.0),k) / R_pow(runif(0.0,1.0),1.0/k)) / sqrt(2.0);
+    double Rf_runif(double a, double b);  
+    for (i = 0; i < n; i++) {
+      x[i] = mu + b * log(R_pow(Rf_runif(0.0, 1.0), k) / R_pow(Rf_runif(0.0, 1.0), 1.0 / k)) / sqrt(2.0);
     }
     if (setseed[0] == 1) PutRNGstate();		
     

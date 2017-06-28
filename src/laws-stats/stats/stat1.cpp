@@ -1,5 +1,5 @@
 // Title: Statistique de test de Lilliefors (Kolmogorov-Smirnov) 
-// Ref. (book or article): Voir le package nortest et l'article Lilliefors, H. (June 1967), "On the Kolmogorov-Smirnov test for normality with mean and variance unknown", Journal of the American Statistical Association, Vol. 62. pp. 399-402.
+// Ref. (book or article): See nortest package and also Lilliefors, H. (June 1967), "On the Kolmogorov-Smirnov test for normality with mean and variance unknown", Journal of the American Statistical Association, Vol. 62. pp. 399-402.
 
 #include <R.h>
 #include "Rmath.h"
@@ -13,7 +13,7 @@ extern "C" {
 // 4: bilateral test that rejects H0 only for small values of the test statistic
     alter[0] = 3;
 
-    int i, j=0, n=xlen[0];
+    int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {
 // Here, INDICATE the name of your statistic
       const char *nom = "$K-S$";
@@ -29,7 +29,7 @@ extern "C" {
 	name[j][0] = nom[j];
 	j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50; i++) name[i][0] = space[0];
       return;
     }
 
@@ -39,32 +39,32 @@ extern "C" {
     //    double pnorm(double q, double mean, double sd, int lower_tail, int log_p);
     double *p;
     p = new double[n];
-    double varX=0.0, meanX=0.0, sdX, pval, tmp, Dplus, Dminus, statKS, Kd, KK;
+    double varX = 0.0, meanX = 0.0, sdX, pval, tmp, Dplus, Dminus, statKS, Kd, KK;
     int nd;
 
 
     for (i = 0; i < n; i++) meanX = meanX + x[i];
-    meanX =meanX / (double)n;
-    for (i=0;i<=(n-1);i++) varX = varX + R_pow(x[i],2.0);
-    varX = ((double)n)*(varX/(double)n - R_pow(meanX,2.0))/(double)(n-1); 
+    meanX = meanX / (double)n;
+    for (i = 0; i < n; i++) varX = varX + R_pow(x[i], 2.0);
+    varX = ((double)n) * (varX / (double)n - R_pow(meanX, 2.0)) / (double)(n - 1); 
     sdX = sqrt(varX);
-    for (i=0;i<=(n-1);i++) p[i] = Rf_pnorm5((x[i]-meanX)/sdX,0.0,1.0,1,0);
-    R_rsort (p,n); // We sort the data
-    Dplus = 1.0/(double)n - p[0];
+    for (i = 0; i < n; i++) p[i] = Rf_pnorm5((x[i] - meanX) / sdX, 0.0, 1.0, 1, 0);
+    R_rsort (p, n); // We sort the data
+    Dplus = 1.0 / (double)n - p[0];
     Dminus = p[0];
-    for (i=1;i<=(n-1);i++) {
-      tmp = (double)(i+1)/(double)n - p[i];
+    for (i = 1; i < n; i++) {
+      tmp = (double)(i + 1) / (double)n - p[i];
       if (tmp > Dplus) Dplus = tmp;
-      tmp = p[i] - ((double)i)/(double)n;
+      tmp = p[i] - ((double)i) / (double)n;
       if (tmp > Dminus) Dminus = tmp;
     }
     statKS = Dplus;
     if (Dminus > statKS) statKS = Dminus;
-    if (n<=100) {
+    if (n <= 100) {
       Kd = statKS;
       nd = n;
     } else {
-      Kd = statKS*R_pow(((double)n)/100.0,0.49);
+      Kd = statKS * R_pow(((double)n) / 100.0, 0.49);
       nd = 100;
     }
 

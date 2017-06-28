@@ -1,1 +1,1 @@
-pvalue[0] = pchisq(statDH,2.0,0,0);
+pvalue[0] = Rf_pchisq(statDH, 2.0, 0, 0);

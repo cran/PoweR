@@ -4,8 +4,10 @@
 
 
 require(tcltk)      			# Load the TclTk package
-tclRequire("Iwidgets")			# needed for tabbed notebook 
-tclRequire("BWidget")			# needed for drop down combo boxes 
+out <- tclRequire("Iwidgets")			# needed for tabbed notebook
+if (is.logical(out) && !out) print("You should install Tcl package 'Iwidgets', e.g. using: sudo apt-get install iwidgets4") 
+out <- tclRequire("BWidget")			# needed for drop down combo boxes 
+if (is.logical(out) && !out) print("You should install Tcl package 'BWidget', e.g. using: sudo apt-get install bwidget") 
 # tclRequire("Tktable")			# needed for create tables
 
 power.gui <- tktoplevel()		# Create a new toplevel window
@@ -15,8 +17,8 @@ tkpack(tab.nb <- tkwidget(power.gui, "iwidgets::tabnotebook"))		# tab.nb = tabno
 
 
 # fonts
-fontHeading <- tkfont.create(family="times",size=18,weight="bold")
-fontTextLabel <- tkfont.create(family="times",size=14,weight="bold")
+fontHeading <- tkfont.create(family = "times", size = 18, weight = "bold")
+fontTextLabel <- tkfont.create(family = "times", size = 14, weight = "bold")
 
 
 #-------------------------------------------------------------------#
@@ -77,7 +79,7 @@ help.package <- function() {
   
   # 2nd solution 
   
-  eval(parse(text=paste("help(package=\"PoweR\")\n")))
+  eval(parse(text = paste("help(package=\"PoweR\")\n")))
   
 }
 # end of HELP.PACKAGE function			
@@ -109,23 +111,23 @@ tkadd(mb, "cascade", label = "Help", menu = m.help)
 
 ### configure size of tab.nb
 tkconfigure(tab.nb,                         
-            tabpos="n",
+            tabpos = "n",
             # width=665,
 			# height=670,
-            width=800,
-			height=600,
-			angle=0,
-            bevelamount=2,
-            gap=2,
-            margin=2,
-            tabborders=0,
-            tabbackground="gray",
-            background="lightgray",
-            backdrop="white")
+            width = 800,
+            height = 600,
+            angle = 0,
+            bevelamount = 2,
+            gap = 2,
+            margin = 2,
+            tabborders = 0,
+            tabbackground = "gray",
+            background = "lightgray",
+            backdrop = "white")
 			
 			
 ### list name of tabs			
-nm <- c("Generate sample","Compute statistic","Critical values","Compute power","Examples")
+nm <- c("Generate sample", "Compute statistic", "Critical values", "Compute power", "Examples")
 
 
 
@@ -134,11 +136,11 @@ nm <- c("Generate sample","Compute statistic","Critical values","Compute power",
 #---------------------------------#
 
 
-tbn1 <- tclvalue(tkadd(tab.nb, label=nm[1]))
+tbn1 <- tclvalue(tkadd(tab.nb, label = nm[1]))
 tkpack(tbw1 <- .Tk.newwin(tbn1))
 tkpack(fr1 <- tkframe(tbw1))
-tkpack(lb1 <- tklabel(fr1, text=paste("Generate random samples from a law added in the package \n"), font=fontHeading))
-ID <- paste(tab.nb$ID, evalq(num.subwin <- num.subwin+1, tab.nb$env), sep=".")
+tkpack(lb1 <- tklabel(fr1, text = paste("Generate random samples from a law added in the package \n"), font = fontHeading))
+ID <- paste(tab.nb$ID, tab.nb$env$num.subwin <- tab.nb$env$num.subwin + 1, sep = ".")
 win <- .Tk.newwin(ID)
 assign(ID, tbw1, envir = tab.nb$env)
 assign("parent", tab.nb, envir = tbw1$env)
@@ -178,69 +180,69 @@ reset <- function() {
 
 }
  
-reset.but <- tkbutton(left.fr, text="Reset", command=reset)
+reset.but <- tkbutton(left.fr, text = "Reset", command = reset)
 
 
 # function SUBMIT and SUBMIT BUTTON	   
 submit <- function() {
 
   # delete/clear txt before inserting new lines
-  tkdelete(txt,"0.0","end")   
+  tkdelete(txt, "0.0", "end")   
   
   # read data from input
-  tkinsert(txt,"end",paste("law.index <-",tclvalue(law.index),"\n",sep=" "))
+  tkinsert(txt, "end", paste("law.index <-", tclvalue(law.index), "\n", sep = " "))
   
-  tkinsert(txt,"end",paste("n <-",tclvalue(n),"\n",sep=" "))
+  tkinsert(txt, "end", paste("n <-", tclvalue(n), "\n", sep = " "))
   
   if (tclvalue(parlaw) == "NULL") {
-    tkinsert(txt,"end",paste("law.pars <- NULL","\n",sep=" "))
+    tkinsert(txt, "end", paste("law.pars <- NULL", "\n", sep = " "))
   } else {
-    tkinsert(txt,"end",paste("law.pars <- c(",tclvalue(parlaw),") \n",sep=""))
+    tkinsert(txt, "end", paste("law.pars <- c(", tclvalue(parlaw), ") \n", sep = ""))
   } 
   
-  tkinsert(txt,"end",paste("gensample(law.index,n,law.pars) \n\n"))
+  tkinsert(txt, "end", paste("gensample(law.index, n, law.pars) \n\n"))
 
 }
 
-submit.but <- tkbutton(left.fr, text="Submit", command=submit)
+submit.but <- tkbutton(left.fr, text = "Submit", command = submit)
   
   
 # Law index, n, parlaw1, parlaw2, parlaw3, parlaw4 entries
 f11 <- tkframe(left.fr)
-tkpack(tklabel(f11,text='law index',width=10),side='left',pady=c(60,10))
-tkpack(tkentry(f11,width=20,textvariable=law.index),side='left',padx=c(0,0),pady=c(60,10))
-tkpack(info11.but <- tkbutton(f11, text="?", command=function() {
-	tkmessageBox(message="Law index as given by function getindex(). length(law)=1 \n
+tkpack(tklabel(f11,text = 'law index', width = 10), side = 'left', pady = c(60, 10))
+tkpack(tkentry(f11, width = 20, textvariable = law.index), side = 'left', padx = c(0, 0), pady = c(60, 10))
+tkpack(info11.but <- tkbutton(f11, text = "?", command = function() {
+	tkmessageBox(message = "Law index as given by function getindex(). length(law)=1 \n
 Example : law.index <- 2 \n
 Should write in box : 2") })
-	,side='left',padx=c(5,0), pady=c(60,10))
+	, side = 'left', padx = c(5, 0), pady = c(60, 10))
 
 	
 f12 <- tkframe(left.fr)
-tkpack(tklabel(f12,text='sample size',width=10),side='left',pady=c(20,10))
-tkpack(tkentry(f12,width=20,textvariable=n),side='left',padx=c(0,0),pady=c(20,10))
-tkpack(info12.but <- tkbutton(f12, text="?", command=function() {
-	tkmessageBox(message="Number of observations to generate \n
+tkpack(tklabel(f12, text = 'sample size', width = 10), side = 'left', pady = c(20, 10))
+tkpack(tkentry(f12, width = 20, textvariable = n), side = 'left', padx = c(0, 0), pady = c(20, 10))
+tkpack(info12.but <- tkbutton(f12, text = "?", command = function() {
+	tkmessageBox(message = "Number of observations to generate \n
 Example : n <- 1000 \n
 Should write in box : 1000") })
-	,side='left',padx=c(5,0), pady=c(20,10))
+	, side = 'left', padx = c(5, 0), pady = c(20, 10))
 	
 
 f13 <- tkframe(left.fr)
-tkpack(tklabel(f13,text='law.pars',width=10),side='left',pady=c(20,10))
-tkpack(tkentry(f13,width=20,textvariable=parlaw),side='left',padx=c(0,0),pady=c(20,10))
-tkpack(info13.but <- tkbutton(f13, text="?", command=function() {
-	tkmessageBox(message="NULL or a vector of length at most 4 containing 4 possible parameters 
+tkpack(tklabel(f13, text = 'law.pars', width = 10), side = 'left', pady = c(20, 10))
+tkpack(tkentry(f13, width = 20, textvariable = parlaw), side = 'left', padx = c(0, 0), pady = c(20, 10))
+tkpack(info13.but <- tkbutton(f13, text = "?", command = function() {
+	tkmessageBox(message = "NULL or a vector of length at most 4 containing 4 possible parameters 
 to generate random values from distribution law(parlaw[j],j<=4). 
 If NULL, the default parameter values for this law wil be used. \n
 Example : law.pars <- c(0,1) \n
 Should write in box : 0,1") })
-	,side='left',padx=c(5,0), pady=c(20,10))
+	, side = 'left', padx = c(5, 0), pady = c(20, 10))
 
 
-tkpack(f11,side='top')
-tkpack(f12,side='top')
-tkpack(f13,side='top')
+tkpack(f11, side = 'top')
+tkpack(f12, side = 'top')
+tkpack(f13, side = 'top')
 
 
 # function HELP.GENSAMPLE  
@@ -261,17 +263,17 @@ help.gensample <- function() {
   # tkdestroy(tt.gensample)
   
   # 2nd solution
-  print(eval(parse(text=paste("help(gensample)\n"))))
+  print(eval(parse(text = paste("help(gensample)\n"))))
   
 }
 # end of HELP.GENSAMPLE function	
 
-tkpack(info.but <- tkbutton(left.fr, text="?", command=help.gensample),side='left',padx=c(30,0), pady=c(30,20))
+tkpack(info.but <- tkbutton(left.fr, text = "?", command = help.gensample), side = 'left', padx = c(30, 0), pady = c(30, 20))
 
-tkpack(reset.but,side='left',padx=c(35,0), pady=c(30,20))
-tkpack(submit.but,side='left',padx=c(35,0), pady=c(30,20))
+tkpack(reset.but, side = 'left', padx = c(35, 0), pady = c(30, 20))
+tkpack(submit.but, side = 'left', padx = c(35, 0), pady = c(30, 20))
 
-tkpack(left.fr,side='left',padx=c(30,10))
+tkpack(left.fr, side = 'left', padx = c(30, 10))
 
 
 ## END OF LEFT.FR ##
@@ -285,11 +287,11 @@ right.fr <- tkframe(fr1)
 
 
 # Command editor 
-cmd.edit <- tklabel(right.fr,text='Command editor',width=20,font=fontTextLabel)
-txt <- tktext(right.fr, width=60, height=10)
+cmd.edit <- tklabel(right.fr, text = 'Command editor', width = 20, font = fontTextLabel)
+txt <- tktext(right.fr, width = 60, height = 10)
 
-tkpack(cmd.edit,side='top',padx=c(0,30),pady=c(5,0))
-tkpack(txt,side='top',padx=c(10,30),pady=c(10,10))
+tkpack(cmd.edit, side = 'top', padx = c(0, 30), pady = c(5, 0))
+tkpack(txt, side = 'top', padx = c(10, 30), pady = c(10, 10))
 
 
 # function LOAD and LOAD BUTTON
@@ -302,45 +304,45 @@ load <- function() {
   wfile <<- file
 }	     
 
-load.but <- tkbutton(right.fr, text="Load", command=load) 
+load.but <- tkbutton(right.fr, text = "Load", command = load) 
 
 
 # function SAVE and SAVE BUTTON
 save <- function() {
   file <- tclvalue(tkgetSaveFile(
-    initialfile=tclvalue(tclfile.tail(wfile)),
-    initialdir=tclvalue(tclfile.dir(wfile))))
+      initialfile = tclvalue(tclfile.tail(wfile)),
+      initialdir = tclvalue(tclfile.dir(wfile))))
   if (!length(file)) return()
   chn <- tclopen(file, "w")
-  tclputs(chn, tclvalue(tkget(txt,"0.0","end")))
+  tclputs(chn, tclvalue(tkget(txt, "0.0", "end")))
   tclclose(chn)
   wfile <<- file
 }
  
-save.but <- tkbutton(right.fr, text="Save", command=save) 
+save.but <- tkbutton(right.fr, text = "Save", command = save) 
 
 
 # function RUN and RUN BUTTON
 run <- function() {
-  code <- tclvalue(tkget(txt,"0.0","end"))
-  e <- try(parse(text=code))
+  code <- tclvalue(tkget(txt, "0.0", "end"))
+  e <- try(parse(text = code))
   if (inherits(e, "try-error")) {
-    tkmessageBox(message="Syntax error",icon="error")
+    tkmessageBox(message = "Syntax error", icon = "error")
   return()
   }
   cat("Executing from script window:",
-      "-----", code, "Result:", sep="\n")
+      "-----", code, "Result:", sep = "\n")
   print(eval(e))
 }
  
-run.but <- tkbutton(right.fr, text="Run", command=run) 
+run.but <- tkbutton(right.fr, text = "Run", command = run) 
   
-tkpack(load.but,side='left',padx=c(130,0),pady=c(20,20))
-tkpack(save.but,side='left',padx=c(50,0),pady=c(20,20))
-tkpack(run.but,side='left',padx=c(50,0),pady=c(20,20))
+tkpack(load.but,side = 'left', padx = c(130, 0), pady = c(20, 20))
+tkpack(save.but,side = 'left', padx = c(50, 0), pady = c(20, 20))
+tkpack(run.but,side = 'left', padx = c(50, 0), pady = c(20, 20))
 
 
-tkpack(right.fr,side='right',padx=c(20,20))
+tkpack(right.fr,side = 'right', padx = c(20, 20))
 
 
 ## END OF RIGHT.FR ##
@@ -358,11 +360,11 @@ tkpack(right.fr,side='right',padx=c(20,20))
 #--------------------------#
 
 
-tbn2 <- tclvalue(tkadd(tab.nb, label=nm[2]))
+tbn2 <- tclvalue(tkadd(tab.nb, label = nm[2]))
 tkpack(tbw2 <- .Tk.newwin(tbn2))
 tkpack(fr2 <- tkframe(tbw2))
-tkpack(lb2 <- tklabel(fr2, text=paste("Perform the test statistic for the given value of stat \n"), font=fontHeading))
-ID <- paste(tab.nb$ID, evalq(num.subwin <- num.subwin+1, tab.nb$env), sep=".")
+tkpack(lb2 <- tklabel(fr2, text = paste("Perform the test statistic for the given value of stat \n"), font = fontHeading))
+ID <- paste(tab.nb$ID, tab.nb$env$num.subwin <- tab.nb$env$num.subwin + 1, sep = ".")
 win <- .Tk.newwin(ID)
 assign(ID, tbw2, envir = tab.nb$env)
 assign("parent", tab.nb, envir = tbw2$env)
@@ -400,7 +402,7 @@ reset2 <- function() {
          tclvalue(parstat2) <- "NULL"
        }
 
-reset2.but <- tkbutton(left2.fr, text="Reset", command=reset2)
+reset2.but <- tkbutton(left2.fr, text = "Reset", command = reset2)
 
 
 # function SUBMIT2 and SUBMIT2 BUTTON	   
@@ -661,7 +663,7 @@ tbn3 <- tclvalue(tkadd(tab.nb, label=nm[3]))
 tkpack(tbw3 <- .Tk.newwin(tbn3))
 tkpack(fr3 <- tkframe(tbw3))
 tkpack(lb3 <- tklabel(fr3, text=paste("Computation of critical values for several test statistics \n"), font=fontHeading))
-ID <- paste(tab.nb$ID, evalq(num.subwin<-num.subwin+1, tab.nb$env), sep=".")
+ID <- paste(tab.nb$ID, tab.nb$env$num.subwin <- tab.nb$env$num.subwin + 1, sep=".")
 win <- .Tk.newwin(ID)
 assign(ID, tbw3, envir = tab.nb$env)
 assign("parent", tab.nb, envir = tbw3$env)
@@ -960,7 +962,7 @@ tbn4 <- tclvalue(tkadd(tab.nb, label=nm[4]))
 tkpack(tbw4 <- .Tk.newwin(tbn4))
 tkpack(fr4 <- tkframe(tbw4))
 tkpack(lb4 <- tklabel(fr4, text=paste("Computation of power and level tables for hypothesis tests \n"), font=fontHeading))
-ID <- paste(tab.nb$ID, evalq(num.subwin<-num.subwin+1, tab.nb$env), sep=".")
+ID <- paste(tab.nb$ID, tab.nb$env$num.subwin <- tab.nb$env$num.subwin + 1, sep=".")
 win <- .Tk.newwin(ID)
 assign(ID, tbw4, envir = tab.nb$env)
 assign("parent", tab.nb, envir = tbw4$env)
@@ -1341,7 +1343,7 @@ tbn5 <- tclvalue(tkadd(tab.nb, label=nm[5]))
 tkpack(tbw5 <- .Tk.newwin(tbn5))
 tkpack(fr5 <- tkframe(tbw5))
 tkpack(lb5 <- tklabel(fr5, text=paste("Reproduce examples from articles \n"), font=fontHeading))
-ID <- paste(tab.nb$ID, evalq(num.subwin<-num.subwin+1, tab.nb$env), sep=".")
+ID <- paste(tab.nb$ID, tab.nb$env$num.subwin <- tab.nb$env$num.subwin + 1, sep=".")
 win <- .Tk.newwin(ID)
 assign(ID, tbw5, envir = tab.nb$env)
 assign("parent", tab.nb, envir = tbw5$env)

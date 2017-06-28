@@ -1,5 +1,6 @@
-// Title: Statistique de test P_1 dans l'article 2 avec Alain et Alexandre ...
-// Ref. (book or article): 
+// Title: The Rn test for normality
+// Ref. (book or article): Desgagne, A., Lafaye de Micheaux, P. and Leblanc, A. (2013), Test of Normality Against Generalized Exponential Power Alternatives, 
+//                         Communications in Statistics - Theory and Methods, 42, 164--190.
 
 #include <R.h>
 #include "Rmath.h"
@@ -11,12 +12,12 @@ extern "C" {
 // If the test statistic can only be in category 3 or 4 (see just below), INDICATE the following line accordingly. Else, leave it commented.
 // 0: two.sided=bilateral, 1: less=unilateral, 2: greater=unilateral, 3: bilateral test that rejects H0 only for large values of the test statistic, 
 // 4: bilateral test that rejects H0 only for small values of the test statistic
-    if (alter[0] != 0 && alter[0] != 1 && alter[0] != 2) error("alter should be in {0,1,2}");
+    alter[0] = 3;
 
-    int i, j=0, n=xlen[0];
+    int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {
 // Here, INDICATE the name of your statistic
-      const char *nom = "$P_1$";
+      const char *nom = "$R_n$";
 // Here, INDICATE the number of parameters of your statistic
       nbparamstat[0] = 0;
 // Here, INDICATE the default values of the parameters:
@@ -29,64 +30,60 @@ extern "C" {
 	name[j][0] = nom[j];
 	j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50; i++) name[i][0] = space[0];
       return;
     }
 
-    if (n>3) {
+    if (n > 3) {
 // Computation of the value of the test statistic
-    double qnorm(double p, double mean, double sd, int lower_tail, int log_p);
-    //    double pnorm(double x, double mu, double sigma, int lower_tail, int log_p);
-    double *ychap;
-    ychap = new double[n];
-    double gamma=0.577215664901533, muchap=0.0, sigchap, sigchap2=0.0, deltachap=0.0, statvalue;
-     
+    double *y;
+    y = new double[n];
+    double varpopX = 0.0, meanX = 0.0, sdX, r1 = 0.0, r2 = 0.0, r3 = 0.0, Rn;
 
-    for (i=0;i<=(n-1);i++) muchap = muchap + x[i];
-    muchap = muchap/(double)n;
+    for (i = 0; i <= (n - 1); i++) meanX = meanX + x[i];
+    meanX = meanX / (double)n;
+    for (i = 0; i <= (n - 1); i++) varpopX = varpopX + R_pow(x[i], 2.0);
+    varpopX = varpopX / (double)n - R_pow(meanX, 2.0); 
+    sdX = sqrt(varpopX);
+    for (i = 0; i <= (n - 1); i++) y[i] = (x[i] - meanX) / sdX;
 
-    for (i=1;i<=n;i++) sigchap2 = sigchap2 + R_pow(*(x+i-1)-muchap,2.0);
-    sigchap2 = sigchap2/(double)n;
-    sigchap = sqrt(sigchap2);
-    for (i=0;i<=(n-1);i++) ychap[i] = (x[i]-muchap)/sigchap;
-    for (i=0;i<=(n-1);i++) {
-      if (ychap[i] != 0) {
-	ychap[i] = R_pow(ychap[i],2.0) * log(R_pow(ychap[i],2.0));
-      }
-      else ychap[i] = 0.0;
+    // Formulas given in our paper p. 169
+    for (i = 0; i <= (n - 1); i++) {
+      r1 = r1 + R_pow(y[i], 2.0) * log(fabs(y[i]));
+      r2 = r2 + log(1.0 + fabs(y[i]));
+      r3 = r3 + log(log(2.71828182846 + fabs(y[i])));
     }
-    for (i=0;i<=(n-1);i++) deltachap = deltachap + ychap[i];
-    deltachap = deltachap/(double)n;
+    r1 = 0.18240929 - 0.5 * r1 / (double)n;
+    r2 = 0.5348223 - r2 / (double)n;
+    r3 = 0.20981558 - r3 / (double)n;
+ 
+    // Formula given in our paper p. 170
+    Rn = (double)n * ((r1 * 1259.04213344 - r2 * 32040.69569026 + r3 * 85065.77739473) * r1 + (-r1 * 32040.6956903 + r2 * 918649.9005906 - r3 * 2425883.3443201) * r2 + (r1 * 85065.7773947 - r2 * 2425883.3443201 + r3 * 6407749.8211208) * r3);
+    
+    statistic[0] = Rn; // Here is the test statistic value
 
-    statvalue = sqrt((double)n)*((deltachap-(2.0-log(2.0)-gamma))/sqrt(2.0*(3.0*R_pow(M_PI,2.0)/4.0-7.0)));
-
-    statistic[0] = statvalue; // Here is the test statistic value
-
-if (pvalcomp[0] == 1) {
+    if (pvalcomp[0] == 1) {
 	// If possible, computation of the p-value.
-	#include "pvalues/pvalue35.cpp"
-}
+#include "pvalues/pvalue35.cpp"
+    }
 
 // We take the decision to reject or not to reject the null hypothesis H0
-    for (i=0;i<=(nblevel[0]-1);i++) {
-      
-	if (usecrit[0] == 1) { // We use the provided critical values
-	  if (alter[0] == 0) { if (statistic[0] > critvalR[i] || statistic[0] < critvalL[i]) decision[i] = 1; else decision[i] = 0; // two-sided
-	  } else if (alter[0] == 1) {  if (statistic[0] < critvalL[i]) decision[i] = 1; else decision[i] = 0;  // less
-	    } else { if (alter[0] == 2) {  if (statistic[0] > critvalR[i]) decision[i] = 1; else decision[i] = 0; } } // greater
-    } else {
-	  if (pvalue[0] < level[i]) decision[i] = 1; else decision[i] = 0; // We use the p-value
+     for (i = 0; i <= (nblevel[0] - 1); i++) {
+      if (usecrit[0] == 1) { // We use the provided critical values
+	  if (statistic[0] > critvalR[i]) decision[i] = 1; else decision[i] = 0; // two.sided (but in this case only one possible critical value)
+      } else {
+	    if (pvalue[0] < level[i]) decision[i] = 1; else decision[i] = 0; // We use the p-value
       }
     }
     
 // If applicable, we free the unused array of pointers
-    delete[] ychap;
+    delete[] y;
 
 }
 
 // We return
     return;
-    
+   
         
   }
   

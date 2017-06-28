@@ -9,7 +9,7 @@ extern "C" {
 
   void law38 (int *xlen, double *x, char **name, int *getname, double *params, int *nbparams, int *setseed) {
     
-    int i, j=0, n=xlen[0];
+    int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {
 // Here, INDICATE the name of the distribution:
       const char *nom = "$APD(theta,phi,alpha,lambda)$";
@@ -28,7 +28,7 @@ extern "C" {
 		name[j][0] = nom[j];
 		j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50; i++) name[i][0] = space[0];
       return;
     }
 
@@ -78,22 +78,22 @@ extern "C" {
     }
 
 // If necessary, we check if some parameter values are out of parameter space
-    if (phi <= 0 || alpha <= 0 || alpha >= 1 || lambda <= 0) {
+    if (phi <= 0.0 || alpha <= 0.0 || alpha >= 1.0 || lambda <= 0.0) {
       warning("lambda and phi should be > 0 and you must take 0 < alpha < 1 in law38!\n");
-      for (i=0;i<n;i++) x[i] = R_NaN;
+      for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }
 
 // Generation of the random values
     if (setseed[0] == 1) GetRNGstate();   
-    double runif(double a, double b);
-    double rgamma(double shape, double scale);
-    double delta = (2.0*R_pow(alpha,lambda)*R_pow(1.0-alpha,lambda))/(R_pow(alpha,lambda)+R_pow(1-alpha,lambda));
-    for (i=0;i<n;i++) {
-      if (runif(0.0,1.0) <= alpha) {
-	x[i] = theta + phi * (-alpha * R_pow(rgamma(1.0/lambda,1.0)/delta,1.0/lambda));
+    double Rf_runif(double a, double b);
+    double Rf_rgamma(double shape, double scale);
+    double delta = (2.0 * R_pow(alpha, lambda) * R_pow(1.0 - alpha, lambda)) / (R_pow(alpha, lambda) + R_pow(1.0 - alpha, lambda));
+    for (i = 0; i < n; i++) {
+      if (Rf_runif(0.0, 1.0) <= alpha) {
+	x[i] = theta + phi * (-alpha * R_pow(Rf_rgamma(1.0 / lambda, 1.0) / delta, 1.0 / lambda));
       } else {
-	x[i] = theta + phi * ((1.0-alpha) * R_pow(rgamma(1.0/lambda,1.0)/delta,1.0/lambda));
+	x[i] = theta + phi * ((1.0 - alpha) * R_pow(Rf_rgamma(1.0 / lambda, 1.0) / delta, 1.0 / lambda));
       }
     }
     if (setseed[0] == 1) PutRNGstate();

@@ -9,7 +9,7 @@ extern "C" {
 
   void law16 (int *xlen, double *x, char **name, int *getname, double *params, int *nbparams, int *setseed) {
     
-    int i, j=0, n=xlen[0];
+    int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {
 // Here, INDICATE the name of the distribution:
       const char *nom = "$VUnif(j)$";
@@ -25,7 +25,7 @@ extern "C" {
 	name[j][0] = nom[j];
 	j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50; i++) name[i][0] = space[0];
       return;
     }
 
@@ -44,25 +44,25 @@ extern "C" {
 
 // If necessary, we check if some parameter values are out of parameter space
     double intpart;
-    if (nbunif<=1 || modf(nbunif,&intpart) != 0) {
+    if (nbunif <= 1.0 || modf(nbunif, &intpart) != 0.0) {
       warning("nbunif should be a positive integer value in law16!\n");
-      for (i=0;i<n;i++) x[i] = R_NaN;
+      for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }
 
 // Generation of the random values
     if (setseed[0] == 1) GetRNGstate();   
-    double runif(double a, double b);
+    double Rf_runif(double a, double b);
     double temp;
     int k;
     temp = 0.0;
-    for (i=0; i<n; i++) {
-      temp = runif(0.0,1.0);
-      for (k=1; k<(int)nbunif; k++) {
-	temp = temp + runif(0.0,1.0);
+    for (i = 0; i < n; i++) {
+      temp = Rf_runif(0.0, 1.0);
+      for (k = 1; k < (int)nbunif; k++) {
+	temp = temp + Rf_runif(0.0, 1.0);
       }
-      temp = temp/(double)nbunif;
-      if( temp < 0.5 ) 
+      temp = temp / (double)nbunif;
+      if (temp < 0.5) 
 	x[i] = temp + 0.5 ;
       else 
 	x[i] = temp - 0.5 ;

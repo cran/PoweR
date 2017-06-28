@@ -9,7 +9,7 @@ extern "C" {
 
   void law15 (int *xlen, double *x, char **name, int *getname, double *params, int *nbparams, int *setseed) {
     
-    int i, j=0, n=xlen[0];
+    int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {
 // Here, INDICATE the name of the distribution:
       const char *nom = "$UUnif(j)$";
@@ -25,7 +25,7 @@ extern "C" {
 	name[j][0] = nom[j];
 	j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50; i++) name[i][0] = space[0];
       return;
     }
 
@@ -42,22 +42,22 @@ extern "C" {
     }
 
 // If necessary, we check if some parameter values are out of parameter space
-    if (power < 0) {
+    if (power < 0.0) {
       warning("power should not be < 0 in law15!\n");
-      for (i=0;i<n;i++) x[i] = R_NaN;
+      for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }
 
 // Generation of the random values
     if (setseed[0] == 1) GetRNGstate(); 
     double val;  
-    double runif(double a, double b);
-    for (i=0;i<n;i++) {
-      val = runif(0.0,1.0);
-      if(runif(0.0,1.0) < 0.5) 
-	x[i] = R_pow(val,power);
+    double Rf_runif(double a, double b);
+    for (i = 0; i < n; i++) {
+      val = Rf_runif(0.0, 1.0);
+      if (Rf_runif(0.0, 1.0) < 0.5) 
+	x[i] = R_pow(val, power);
       else 
-	x[i] = 1.0 - R_pow(val,power);
+	x[i] = 1.0 - R_pow(val, power);
     }
     if (setseed[0] == 1) PutRNGstate();
     

@@ -10,7 +10,7 @@ extern "C" {
 
   void law18 (int *xlen, double *x, char **name, int *getname, double *params, int *nbparams, int *setseed) {
 
-    int i, j=0, n=xlen[0];
+    int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {
 // Here, INDICATE the name of the distribution:
       const char *nom = "$Tukey(l)$";
@@ -26,7 +26,7 @@ extern "C" {
 	name[j][0] = nom[j];
 	j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50; i++) name[i][0] = space[0];
       return;
     }
     
@@ -46,17 +46,17 @@ extern "C" {
 
 // Generation of the random values
     if (setseed[0] == 1) GetRNGstate();   
-    double runif(double a, double b);
+    double Rf_runif(double a, double b);
     double *U;
     U = new double [n];
-    for (i=0;i<n;i++) U[i] = runif(0.0,1.0);
+    for (i = 0; i < n; i++) U[i] = Rf_runif(0.0,1.0);
     if (l == 0) {
-       for (i=0;i<n;i++)   {
-	 x[i] = log(U[i])-log(1-U[i]);
+       for (i = 0; i < n;i++)   {
+	 x[i] = log(U[i]) - log(1.0 - U[i]);
       }     
     } else {
-      for (i=0;i<n;i++)   {
-	x[i] = (R_pow(U[i],l)-R_pow(1-U[i],l))/l;
+      for (i = 0; i < n; i++)   {
+	x[i] = (R_pow(U[i], l) - R_pow(1 - U[i], l)) / l;
       }
     }
     if (setseed[0] == 1) PutRNGstate();

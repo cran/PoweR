@@ -12,12 +12,12 @@ This generator is called by function \code{\link{gensample}} to create random va
 
 The Asymmetric Power Distribution with parameters \code{theta},
 \code{phi}, \code{alpha} and \code{lambda} has density:
-\deqn{f(u) = \frac{\delta^{1/\lambda}_{\alpha,\lambda}}{\Gamma(1+1/\lambda)}\exp\left[-\frac{\delta_{\alpha,\lambda}}{\alpha^{\lambda}}|u|^{\lambda}\right]}{f(u) = (\delta^{1/\lambda}_{\alpha,\lambda})/(\Gamma(1+1/\lambda))*\exp[-(\delta_{\alpha,\lambda})/(\alpha^{\lambda})*|u|^{\lambda}]}
+\deqn{f(u) = \frac{1}{\phi}\frac{\delta^{1/\lambda}_{\alpha,\lambda}}{\Gamma(1+1/\lambda)}\exp\left[-\frac{\delta_{\alpha,\lambda}}{\alpha^{\lambda}}\left|\frac{u-\theta}{\phi}\right|^{\lambda}\right]}{f(u) = (1/\phi)*(\delta^{1/\lambda}_{\alpha,\lambda})/(\Gamma(1+1/\lambda))*\exp[-(\delta_{\alpha,\lambda})/(\alpha^{\lambda})*|(u-\theta)/\phi|^{\lambda}]}
 if \deqn{u\leq0}{u <= 0} and
 \deqn{f(u) =
-  \frac{\delta^{1/\lambda}_{\alpha,\lambda}}{\Gamma(1+1/\lambda)}\exp\left[-\frac{\delta_{\alpha,\lambda}}{(1-\alpha)^{\lambda}}|u|^{\lambda}\right]}{f(u)
+  \frac{1}{\phi}\frac{\delta^{1/\lambda}_{\alpha,\lambda}}{\Gamma(1+1/\lambda)}\exp\left[-\frac{\delta_{\alpha,\lambda}}{(1-\alpha)^{\lambda}}\left|\frac{u-\theta}{\phi}\right|^{\lambda}\right]}{f(u)
   =
-  (\delta^{1/\lambda}_{\alpha,\lambda})/(\Gamma(1+1/\lambda))*\exp[-(\delta_{\alpha,\lambda})/(1-\alpha)^{\lambda}*|u|^{\lambda}]}
+  (1/\phi)*(\delta^{1/\lambda}_{\alpha,\lambda})/(\Gamma(1+1/\lambda))*\exp[-(\delta_{\alpha,\lambda})/(1-\alpha)^{\lambda}*|(u-\theta)/\phi|^{\lambda}]}
 if \deqn{u\leq0,}{u > 0,}where \eqn{0<\alpha<1, \lambda>0} and \eqn{\delta_{\alpha,\lambda}=\frac{2\alpha^{\lambda}(1-\alpha)^{\lambda}}{\alpha^{\lambda}+(1-\alpha)^{\lambda}}}{\delta_{\alpha,\lambda}=(2*\alpha^{\lambda}(1-\alpha)^{\lambda})/(\alpha^{\lambda}+(1-\alpha)^{\lambda})}.
 
 

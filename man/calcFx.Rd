@@ -50,12 +50,13 @@ P. Lafaye de Micheaux, V. A. Tran
 \code{\link{many.pval}}, \code{\link{plot.pvalue}}, \code{\link{plot.discrepancy}}, \code{\link{plot.sizepower}}
 }
 \examples{
-stind <- c(43,44,42)   # Indices of test statistics.
-alter <-list(stat43=3,stat44=3,stat42=3) # Type for each test.
+stind <- c(43, 44, 42)   # Indices of test statistics.
+alter <-list(stat43 = 3, stat44 = 3, stat42 = 3) # Type for each test.
 # Several p-values computed under the null.
-pnull <- many.pval(stat.indices=stind,law.index=1,
-                        n=100,M=10,N=10,alter=alter,null.dist=1,
-                        method="direct")$pvals
+pnull <- many.pval(stat.indices = stind, law.index = 1,
+                        n = 100, M = 10, N = 10, alter = alter,
+                        null.dist = 1,
+                        method = "direct")$pvals
 xnull <- calcFx(pnull)
 }
 \keyword{nonparametric}

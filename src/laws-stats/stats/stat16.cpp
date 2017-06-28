@@ -334,13 +334,19 @@ double mc_C_d(double *z, int n, double *eps, int *iter)
 	if(trace_lev >= 4) {
 	    Rprintf(" before whimed(): work and iwt, each [0:(%d-1)]:\n", j);
 	    if(j >= 100) {
-		for(i=0; i < 90; i++) Rprintf(" %8g", work[i]); Rprintf("\n  ... ");
-		for(i=j-4; i < j; i++)Rprintf(" %8g", work[i]); Rprintf("\n");
-		for(i=0; i < 90; i++) Rprintf(" %8d", iwt [i]); Rprintf("\n  ... ");
-		for(i=j-4; i < j; i++)Rprintf(" %8d", iwt [i]); Rprintf("\n");
+		for(i=0; i < 90; i++) Rprintf(" %8g", work[i]);
+		Rprintf("\n  ... ");
+		for(i=j-4; i < j; i++)Rprintf(" %8g", work[i]);
+		Rprintf("\n");
+		for(i=0; i < 90; i++) Rprintf(" %8d", iwt [i]);
+		Rprintf("\n  ... ");
+		for(i=j-4; i < j; i++)Rprintf(" %8d", iwt [i]);
+		Rprintf("\n");
 	    } else { // j <= 99
-		for(i=0; i < j; i++) Rprintf(" %8g", work[i]); Rprintf("\n");
-		for(i=0; i < j; i++) Rprintf(" %8d", iwt [i]); Rprintf("\n");
+		for(i=0; i < j; i++) Rprintf(" %8g", work[i]);
+		Rprintf("\n");
+		for(i=0; i < j; i++) Rprintf(" %8d", iwt [i]);
+		Rprintf("\n");
 	    }
 	}
 	trial = whimed_i(work, iwt, j, acand, a_srt, iw_cand);
@@ -383,9 +389,11 @@ double mc_C_d(double *z, int n, double *eps, int *iter)
 		//		Rboolean lrg = h2 >= 100;
 		bool lrg = h2 >= 100;
 		int i_m = lrg ? 95 : h2;
-		for(i = 1; i <= i_m; i++) Rprintf(" %2d", p[i]); if(lrg) Rprintf(" ...");
+		for(i = 1; i <= i_m; i++) Rprintf(" %2d", p[i]);
+		if(lrg) Rprintf(" ...");
 		Rprintf(" sum=%4.0f\n%3s q[1:%d]:", (double)sum_p, "", h2);
-		for(i = 1; i <= i_m; i++) Rprintf(" %2d", q[i]); if(lrg) Rprintf(" ...");
+		for(i = 1; i <= i_m; i++) Rprintf(" %2d", q[i]);
+		if(lrg) Rprintf(" ...");
 		Rprintf(" sum=%4.0f\n", (double)sum_q);
 	    }
 	}

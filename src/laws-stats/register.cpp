@@ -1,10 +1,13 @@
-static const R_CMethodDef cMethods[] = {
-  //  {"calcpuiss",    (DL_FUNC) &powcompeasy,  15},
-  {"calccrit",     (DL_FUNC) &compquant,    19},
-  {"calp2",        (DL_FUNC) &powcompfast,  28},
-  {"calfx",        (DL_FUNC) &calccfx,       5},
+/*
+Note: stat38, stat39, stat40 and stat84 are available and can be used to incorporate new tests
+ */
+static const R_CMethodDef CEntries[] = {
+  {"calcfx",        (DL_FUNC) &calcfx,       5},
   {"matrixpval",   (DL_FUNC) &matrixpval,   13},
   {"matrixpvalMC", (DL_FUNC) &matrixpvalMC, 17},
+  {"compquantc",    (DL_FUNC) &compquantc,    17},
+  {"powcompeasy",  (DL_FUNC) &powcompeasy,  13},
+  {"powcompfast",  (DL_FUNC) &powcompfast,  28},
   // HERE WE PUT THE lawj NAMES
   {"law1",   (DL_FUNC) &law1,  7},
   {"law2",   (DL_FUNC) &law2,  7},
@@ -45,6 +48,7 @@ static const R_CMethodDef cMethods[] = {
   {"law37",  (DL_FUNC) &law37, 7},
   {"law38",  (DL_FUNC) &law38, 7},
   {"law39",  (DL_FUNC) &law39, 7},
+  {"law40",  (DL_FUNC) &law40, 7},
   // HERE WE PUT THE statj NAMES
   {"stat1",  (DL_FUNC) &stat1,  16},
   {"stat2",  (DL_FUNC) &stat2,  16},
@@ -59,7 +63,7 @@ static const R_CMethodDef cMethods[] = {
   {"stat11", (DL_FUNC) &stat11, 16},
   {"stat12", (DL_FUNC) &stat12, 16},
   {"stat13", (DL_FUNC) &stat13, 16},
-  {"stat15", (DL_FUNC) &stat15, 16},
+  {"stat14", (DL_FUNC) &stat14, 16},
   {"stat15", (DL_FUNC) &stat15, 16},
   {"stat16", (DL_FUNC) &stat16, 16},
   {"stat17", (DL_FUNC) &stat17, 16},
@@ -83,9 +87,9 @@ static const R_CMethodDef cMethods[] = {
   {"stat35", (DL_FUNC) &stat35, 16},
   {"stat36", (DL_FUNC) &stat36, 16},
   {"stat37", (DL_FUNC) &stat37, 16},
-  {"stat38", (DL_FUNC) &stat38, 16},
-  {"stat39", (DL_FUNC) &stat39, 16},
-  {"stat40", (DL_FUNC) &stat40, 16},
+  //  {"stat38", (DL_FUNC) &stat38, 16},
+  //  {"stat39", (DL_FUNC) &stat39, 16},
+  //  {"stat40", (DL_FUNC) &stat40, 16},
   {"stat41", (DL_FUNC) &stat41, 16},
   {"stat42", (DL_FUNC) &stat42, 16},
   {"stat43", (DL_FUNC) &stat43, 16},
@@ -129,13 +133,29 @@ static const R_CMethodDef cMethods[] = {
   {"stat81", (DL_FUNC) &stat81, 16},
   {"stat82", (DL_FUNC) &stat82, 16},
   {"stat83", (DL_FUNC) &stat83, 16},
-  {"stat84", (DL_FUNC) &stat84, 16},
+  //  {"stat84", (DL_FUNC) &stat84, 16},
   {"stat85", (DL_FUNC) &stat85, 16},
   {"stat86", (DL_FUNC) &stat86, 16},
   {"stat87", (DL_FUNC) &stat87, 16},
   {"stat88", (DL_FUNC) &stat88, 16},
   {"stat89", (DL_FUNC) &stat89, 16},
   {"stat90", (DL_FUNC) &stat90, 16},
-  {NULL}
+  {NULL, NULL, 0}
 };
 
+static const R_CallMethodDef CallEntries[] = {
+    {"compquantRcpp",    (DL_FUNC) &compquantRcpp,    19},
+    {"gensampleRcpp",    (DL_FUNC) &gensampleRcpp,     7},
+    {"matrixpvalMCRcpp", (DL_FUNC) &matrixpvalMCRcpp, 20},
+    {"matrixpvalRcpp",   (DL_FUNC) &matrixpvalRcpp,   15},
+    {"powcompeasyRcpp",  (DL_FUNC) &powcompeasyRcpp,  16},
+    {"powcompfastRcpp",  (DL_FUNC) &powcompfastRcpp,  31},
+    {"statcomputeRcpp",  (DL_FUNC) &statcomputeRcpp,   3},
+    {NULL, NULL, 0}
+};
+
+void R_init_PoweR(DllInfo *dll)
+{
+    R_registerRoutines(dll, CEntries, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
+}

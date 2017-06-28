@@ -39,23 +39,27 @@
 #include "laws/law37.cpp"
 #include "laws/law38.cpp"
 #include "laws/law39.cpp"
+#include "laws/law40.cpp"
 
 // Modify also below.
 // Change:
-//   39 to 40 
+//   40 to 41 
 // and add:
-//  ,law40
+//  ,law41
 
-void (*lawfunc[39])(int *xlen, double *x, char **name, int *trtname, double *params, int *nbparams, int *setseed) = {
+void (*lawfunc[40])(int *xlen, double *x, char **name, int *trtname, double *params, int *nbparams, int *setseed) = {
   law1,law2,law3,law4,law5,law6,law7,law8,law9,law10,
   law11,law12,law13,law14,law15,law16,law17,law18,law19,law20,
   law21,law22,law23,law24,law25,law26,law27,law28,law29,law30,
-  law31,law32,law33,law34,law35,law36,law37,law38,law39
+  law31,law32,law33,law34,law35,law36,law37,law38,law39,law40
 };
 
 
 // Below, add an: #include "stats/statj.cpp"
 
+/*
+Note: stat38, stat39, stat40 and stat84 are available and can be used to incorporate new tests
+ */
 #include "stats/stat1.cpp"
 #include "stats/stat2.cpp"
 #include "stats/stat3.cpp"
@@ -93,9 +97,9 @@ void (*lawfunc[39])(int *xlen, double *x, char **name, int *trtname, double *par
 #include "stats/stat35.cpp"
 #include "stats/stat36.cpp"
 #include "stats/stat37.cpp"
-#include "stats/stat38.cpp"
-#include "stats/stat39.cpp"
-#include "stats/stat40.cpp"
+// #include "stats/stat38.cpp"
+// #include "stats/stat39.cpp"
+// #include "stats/stat40.cpp"
 #include "stats/stat41.cpp"
 #include "stats/stat42.cpp"
 #include "stats/stat43.cpp"
@@ -139,13 +143,19 @@ void (*lawfunc[39])(int *xlen, double *x, char **name, int *trtname, double *par
 #include "stats/stat81.cpp"
 #include "stats/stat82.cpp"
 #include "stats/stat83.cpp"
-#include "stats/stat84.cpp"
+// #include "stats/stat84.cpp"
 #include "stats/stat85.cpp"
 #include "stats/stat86.cpp"
 #include "stats/stat87.cpp"
 #include "stats/stat88.cpp"
 #include "stats/stat89.cpp"
 #include "stats/stat90.cpp"
+
+
+// I added this to correct a bug that occured when calling (*statfunc[statindex-1]) from calcpuiss.cpp. This bug arrived when I removed stat38, stat39, etc below
+void nothing(double *x, int *xlen, double *level, int *nblevel, char **name, int *getname, double *statistic, int *pvalcomp, double *pvalue, double *critvalL, double *critvalR, int *usecrit, int *alter, int *decision, double *paramstat, int *nbparamstat) {
+  return;
+}
 
 // Modify also below.
 // Change:
@@ -157,10 +167,11 @@ void (*statfunc[90])(double *x, int *xlen, double *level, int *nblevel, char **n
   stat1,stat2,stat3,stat4,stat5,stat6,stat7,stat8,stat9,stat10,
   stat11,stat12,stat13,stat14,stat15,stat16,stat17,stat18,stat19,stat20,
   stat21,stat22,stat23,stat24,stat25,stat26,stat27,stat28,stat29,stat30,
-  stat31,stat32,stat33,stat34,stat35,stat36,stat37,stat38,stat39,stat40,
+    stat31,stat32,stat33,stat34,stat35,stat36,stat37,nothing,nothing,nothing,//stat38,stat39,stat40,
   stat41,stat42,stat43,stat44,stat45,stat46,stat47,stat48,stat49,stat50,
   stat51,stat52,stat53,stat54,stat55,stat56,stat57,stat58,stat59,stat60,
   stat61,stat62,stat63,stat64,stat65,stat66,stat67,stat68,stat69,stat70,
   stat71,stat72,stat73,stat74,stat75,stat76,stat77,stat78,stat79,stat80,
-  stat81,stat82,stat83,stat84,stat85,stat86,stat87,stat88,stat89,stat90
+    stat81,stat82,stat83,nothing,//stat84,
+    stat85,stat86,stat87,stat88,stat89,stat90
 };

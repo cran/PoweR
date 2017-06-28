@@ -9,7 +9,7 @@ extern "C" {
 
   void law32(int *xlen, double *x, char **name, int *getname, double *params, int *nbparams, int *setseed) {
     
-    int i, j=0, n=xlen[0];
+    int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {
 // Here, INDICATE the name of the distribution:
       const char *nom = "$TruncN(a,b)$";
@@ -26,7 +26,7 @@ extern "C" {
 	name[j][0] = nom[j];
 	j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50; i++) name[i][0] = space[0];
       return;
     }
     
@@ -53,18 +53,18 @@ extern "C" {
 // If necessary, we check if some parameter values are out of parameter space
     if (a > b) {
       warning("a should not be > b in law32!\n");
-      for (i=0;i<n;i++) x[i] = R_NaN;
+      for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }
 
 // Generation of the random values
     if (setseed[0] == 1) GetRNGstate();   
-    double rnorm(double mu, double sigma);
+    double Rf_rnorm(double mu, double sigma);
     double tmp;
-    if (a>=b) return; // protection!!
-    for (i=0;i<n;i++) {
-      tmp = rnorm(0.0,1.0);
-      while ((tmp<a) || (tmp>b)) tmp = rnorm(0.0,1.0); // repeated normal method
+    if (a >= b) return; // protection!!
+    for (i = 0; i < n; i++) {
+      tmp = Rf_rnorm(0.0, 1.0);
+      while ((tmp < a) || (tmp > b)) tmp = Rf_rnorm(0.0, 1.0); // repeated normal method
       x[i] = tmp;
     }
     if (setseed[0] == 1) PutRNGstate();

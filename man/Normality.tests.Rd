@@ -76,17 +76,11 @@ For the Martinez-Iglewicz statistic see \code{\link{stat0032.MartinezIglewicz}}.
 
 For the Gel-Miao-Gastwirth statistic see \code{\link{stat0033.GelMiaoGastwirth}}.
 
-For the 1st Desgagne-Micheaux-Leblanc statistic see \code{\link{stat0035.DesgagneMicheauxLeblanc-P1}}.
+For the Desgagne-LafayeDeMicheaux-Leblanc statistic see \code{\link{stat0035.DesgagneLafayeDeMicheauxLeblanc-Rn}}.
 
-For the 2nd Desgagne-Micheaux-Leblanc statistic see \code{\link{stat0036.DesgagneMicheauxLeblanc-P2}}.
+For the new CS Desgagne-LafayeDeMicheaux statistic see \code{\link{stat0036.DesgagneLafayeDeMicheaux-XAPD}}.
 
-For the S Desgagne-Micheaux statistic see \code{\link{stat0037.DesgagneMicheaux-S}}.
-
-For the C Desgagne-Micheaux statistic see \code{\link{stat0038.DesgagneMicheaux-C}}.
-
-For the new CS Desgagne-Micheaux statistic see \code{\link{stat0039.DesgagneMicheaux-CS}}.
-
-For the Desgagne-Micheaux-Leblanc statistic see \code{\link{stat0040.DesgagneMicheauxLeblanc-Rn}}.
+For the new CS Desgagne-LafayeDeMicheaux statistic see \code{\link{stat0037.DesgagneLafayeDeMicheaux-ZEPD}}.
 
 For the Spiegelhalter statistic see \code{\link{stat0041.Spiegelhalter}}.
 }

@@ -80,7 +80,9 @@ powcomp.fast(law.indices,stat.indices,vectn = c(20,50,100),M = 10^3,levels = c(0
     size (in \code{vectn}) and \eqn{s}-th test statistic (in
     \code{stat.indices}) is given by:
     
-    \code{decision}[\eqn{s} + \code{stats.len}*(\eqn{n}-1) + \code{stats.len}*\code{vectn.len}*(\eqn{d}-1) + \code{stats.len}*\code{vectn.len}*\code{laws.len}*(\eqn{l}-1)]
+    \code{decision}[\eqn{s} + \code{stats.len}*(\eqn{n}-1) +
+                     \code{stats.len}*\code{vectn.len}*(\eqn{d}-1) + 
+                      \code{stats.len}*\code{vectn.len}*\code{laws.len}*(\eqn{l}-1)]
 
     where \code{stats.len}, \code{vectn.len}, \code{laws.len} and \code{levels.len} are respectively the lengths of the vectors
     \code{stat.indices}, \code{vectn}, \code{law.indices} and \code{levels}.

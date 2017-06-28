@@ -1102,8 +1102,8 @@ RcppExport SEXP matrixpvalRcpp(SEXP NSEXP, SEXP lawindexSEXP, SEXP xlenSEXP, SEX
     void statcompute(int stat, double *x, int *xlen, double *level, int *nblevel, char **name2, int *getname, double *statistic, 
 		     int *pvalcomp, double *pvalue, double *critvalL, double *critvalR, int *usecrit, int *alter, int *decision, double *paramstat, int *nbparamstat);
 
-    void compquant(int *n, int *law, int *stat, int *M, double *statvec,// char **lawname, char **statname, 
-		   int *nbparlaw, double *parlaw, int *nbparstat, double *parstat, int *modelnum, char** funclist, double *thetavec, double *xvec, int *p, int *np, int *center, int *scale);
+    void compquantc(int *n, int *law, int *stat, int *M, double *statvec,// char **lawname, char **statname, 
+    		   int *nbparlaw, double *parlaw, int *nbparstat, double *parstat, int *modelnum, char** funclist, double *thetavec, double *xvec, int *p, int *np, int *center, int *scale);
     int gensample(int law, int *xlen, double *x, char **name, int *getname, double *params, int *nbparams, int *setseed, int *center, int *scale);
     int i, j, k;
 
@@ -1220,7 +1220,7 @@ RcppExport SEXP matrixpvalRcpp(SEXP NSEXP, SEXP lawindexSEXP, SEXP xlenSEXP, SEX
 	  compquantRcpp2(n, lawindex, statSEXP, M, statvecSEXP, 
 			 nbparams, parlawSEXP, nbparstat, parstat , modelnumSEXP,  funclist,  thetavecSEXP,  xvecSEXP,  pSEXP,  npSEXP,  Rlawindex, Rstat, center, scale);
 	} else {    
-	  compquant(ntmp,lawindextmp,stat,Mtmp,statvec,//lawname,statname,
+	  compquantc(ntmp,lawindextmp,stat,Mtmp,statvec,//lawname,statname,
 		    nbparlaw,parlaw,nbparamstat,paramstat,modelnum,funclisttmp,thetavec,xvec,p,np, centertmp, scaletmp);
 	}
 	delete[] paramstat;
@@ -1231,7 +1231,7 @@ RcppExport SEXP matrixpvalRcpp(SEXP NSEXP, SEXP lawindexSEXP, SEXP xlenSEXP, SEX
 			 nbparams, parlawSEXP, nbparstat, parstat , modelnumSEXP,  funclist,  thetavecSEXP,  xvecSEXP,  pSEXP,  npSEXP,  Rlawindex, Rstat, center, scale);
 	} else {
 	  
-	  compquant(ntmp,lawindextmp,stat,Mtmp,statvec,// lawname,statname,
+	  compquantc(ntmp,lawindextmp,stat,Mtmp,statvec,// lawname,statname,
 		    nbparlaw,parlaw,nbparamstat,(double*)0,modelnum,funclisttmp,thetavec,xvec,p,np, centertmp, scaletmp);
 	}
       }
@@ -1539,4 +1539,7 @@ RcppExport SEXP matrixpvalMCRcpp(SEXP nSEXP, SEXP lawindexSEXP, SEXP nbstatsSEXP
 }
 
 
+
+
+  
 }

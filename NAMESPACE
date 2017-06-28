@@ -1,7 +1,8 @@
-useDynLib(PoweR)
+useDynLib(PoweR, .registration = TRUE)
 
 # Export all names
-exportPattern("^[^\\.]")
+# exportPattern("^[^\\.]")
+export(calcFx, checklaw, compquant, create.alter, gensample, getindex, getnbparlaws, getnbparstats, graph, help.law, help.stat, law.cstr, many.crit, many.pval, plot.discrepancy, plot.pvalue, plot.sizepower, powcomp.easy, powcomp.fast, power.gui, print.critvalues, print.index, print.power, pvalueMC, stat.cstr, statcompute)
 import(Rcpp)
 import(parallel)
 S3method(plot, discrepancy)

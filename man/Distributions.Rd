@@ -88,6 +88,8 @@ For the Normal-inverse Gaussian distribution see
 For the Asymmetric Power Distribution see \code{\link{law0038.AsymmetricPowerDistribution}}.
 
 For the modified Asymmetric Power Distribution see \code{\link{law0039.modifiedAsymmetricPowerDistribution}}.
+
+For the Log-Pareto-tail-normal distribution see \code{\link{law0040.Log-Pareto-tail-normal}}.
 }
 
 \references{
@@ -100,7 +102,7 @@ Software}, \bold{69(3)}, 1--42. doi:10.18637/jss.v069.i03
 }
 
 \seealso{The CRAN task view on distributions, 
-\url{http://cran.r-project.org/web/views/Distributions.html}, 
+\url{https://CRAN.R-project.org/view=Distributions}, 
 mentioning several CRAN packages for additional distributions.
 }
 

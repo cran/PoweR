@@ -346,3 +346,18 @@ dlaw39 <- function(x, mu = 0.0, sigma = 1.0, theta1 = 0.5, theta2 = 2.0) {
     return(res / sigma)    
 }
 
+dlaw40 <- function(y, alpha, mu = 0.0, sigma = 1.0) {
+# Density of Log-Pareto-tail-normal
+    q <- 1.0 - 2.0 * pnorm(alpha, low = FALSE)   
+    beta <- 1.0 + (2.0 * dnorm(alpha) * alpha * log(alpha)) / (1.0 - q)
+    z <- abs((y - mu) / sigma)
+    tails <- as.numeric(z <= alpha)
+    # to avoid undefined value of log(log(z)) if tails=1 :
+    # zfloor <- apply(cbind(z), 1, max, 1.001)
+    # or equivalently
+    zfloor <- z + 2.0 * tails 
+    logf <- tails * dnorm(z, log = TRUE) + (1.0 - tails) * (dnorm(alpha, log = TRUE) + log(alpha)
+        -log(zfloor) + beta * log(log(alpha)) - beta * log(log(zfloor))) - log(sigma)
+    res <- exp(logf)
+    return(res)
+}

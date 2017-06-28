@@ -10,7 +10,7 @@ extern "C" {
 
   void law24 (int *xlen, double *x, char **name, int *getname, double *params, int *nbparams, int *setseed) {
     
-    int i, j=0, n=xlen[0];
+    int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {
 // Here, INDICATE the name of the distribution:
       const char *nom = "$GED(\\mu,\\sigma,p)$";
@@ -28,7 +28,7 @@ extern "C" {
 		name[j][0] = nom[j];
 		j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50; i++) name[i][0] = space[0];
       return;
     }
 
@@ -64,23 +64,24 @@ extern "C" {
     }
 
 // If necessary, we check if some parameter values are out of parameter space
-    if (sigma <= 0 || p <= 0) {
+    if (sigma <= 0.0 || p <= 0.0) {
       warning("p or sigma should not be <= 0 in law24!\n");
-      for (i=0;i<n;i++) x[i] = R_NaN;
+      for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }
 
 // Generation of the random values
-    if (setseed[0] == 1) GetRNGstate();   
+    if (setseed[0] == 1) GetRNGstate();
+    double Rf_runif(double a, double b);
     double shape, scale;
-    shape = 1/p;
+    shape = 1 / p;
     scale = p;
     double *U;
     U = new double [n];
-    for (i=0;i<n;i++) U[i] = runif(0.0,1.0);
-    double rgamma(double shape, double scale);
-    for (i=0;i<n;i++) {
-      if (U[i]>0.5) x[i] = mu + sigma*R_pow(rgamma(shape,scale)/p,1.0/p); else x[i] = mu - sigma*R_pow(rgamma(shape,scale)/p,1.0/p);
+    for (i = 0; i < n; i++) U[i] = Rf_runif(0.0, 1.0);
+    double Rf_rgamma(double shape, double scale);
+    for (i = 0; i < n; i++) {
+      if (U[i] > 0.5) x[i] = mu + sigma * R_pow(Rf_rgamma(shape, scale) / p, 1.0 / p); else x[i] = mu - sigma * R_pow(Rf_rgamma(shape, scale) / p, 1.0 / p);
     }
     if (setseed[0] == 1) PutRNGstate();
 

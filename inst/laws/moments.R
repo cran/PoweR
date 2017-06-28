@@ -283,6 +283,13 @@ moments39 <- function(mu, sigma, theta1, theta2) {
     return(list(expectation = expectation, variance = variance))
 }
 
+moments40 <- function(alpha, mu = 0, sigma = 1, logd = FALSE) {
+## Log-Pareto-tail-normal
+    expectation <- NA
+    variance <- NA
+    return(list(expectation = expectation, variance = variance))
+}
+
 
   
 

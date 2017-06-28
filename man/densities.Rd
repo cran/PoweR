@@ -1,4 +1,5 @@
 \name{densities} 
+\alias{dlaw40}
 \alias{dlaw39}
 \alias{dlaw38}
 \alias{dlaw37}

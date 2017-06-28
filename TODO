@@ -9,17 +9,8 @@
 - Rajouter la possibilité d'utiliser le package RGPU (qui permet d'utiliser la librairie C CUDA (pour faire du calcul parallèle avec les cartes video NVIDIA)
 - possibilité d'utiliser un cluster pour la fonction many.pval qui est très longue.
 
-- Quand je compile avec R-devel (R-devel CMD check --as-cran --check-subdirs=yes  PoweR), j'ai des NOTEs du genre:
-Registration problems:
-  Evaluating ‘paste("stat", as.character(stat.index), sep = "")’ during
-check gives error
-‘object ‘stat.index’ not found’:
-   .C(paste("stat", as.character(stat.index), sep = ""), 0, 1L,
-       0, 1L, rep(" ", 50), 1L, 0, 0L, 0, 0, 0, 0L, 0L, 0L, 0, 0L,
-       PACKAGE = "PoweR")
 
-Pour corriger cela, regarder le fichier suppressForeignCheck.pdf ou 
-faire un help(suppressForeignCheck.pdf,file_type="pdf") dans R-devel
 
-Il y a un problème dans la doc de la law0038.AssymetricPowerDistribution. La densité devrait faire intervenir theta et phi. Probablement, (1/phi) * f((x-theta)/phi).
 
+   Check here:
+   https://cran.r-project.org/web/checks/check_results_PoweR.html

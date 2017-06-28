@@ -10,7 +10,7 @@ extern "C" {
 
   void law34(int *xlen, double *x, char **name, int *getname, double *params, int *nbparams, int *setseed) {
     
-    int i, j=0, n=xlen[0];
+    int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {
 // Here, INDICATE the name of the distribution:
       const char *nom = "$GEP(t1,t2,t3,crit)$";
@@ -29,7 +29,7 @@ extern "C" {
 	name[j][0] = nom[j];
 	j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50; i++) name[i][0] = space[0];
       return;
     }
     
@@ -93,8 +93,8 @@ extern "C" {
 		double *result, double *abserr, int *neval, int *ier,
 		int *limit, int *lenw, int *last,
 		int *iwork, double *work);
-    double runif(double a, double b);
-    double rbinom(double nin, double pp);
+    double Rf_runif(double a, double b);
+    double Rf_rbinom(double nin, double pp);
     double *ex, *a, *b, *epsabs, *epsrel, *result, *abserr, *work;
     int *neval, *ier, *limit, *lenw, *last, *iwork;
     ex= new double[5];
@@ -152,78 +152,78 @@ extern "C" {
     gsupp = calcsup(cte, sigma, z0, t1, t2, t3);
     
    
-    for (i=0;i<n;i++) z[i] = runif(0.0,1.0)*2.0*z0 - z0;
+    for (i = 0; i < n; i++) z[i] = Rf_runif(0.0, 1.0) * 2.0 * z0 - z0;
     
-    for (i=0;i<n;i++) u[i] = runif(0.0,1.0);
+    for (i = 0; i < n; i++) u[i] = Rf_runif(0.0, 1.0);
     
     
     
-    for (i=0;i<n;i++) zavant[i] = z[i];
+    for (i = 0; i < n; i++) zavant[i] = z[i];
     
-    dgep(z,n,ex);
-    for (i=0;i<n;i++) bb[i] = z[i]/gsupp;
+    dgep(z, n, ex);
+    for (i = 0; i < n; i++) bb[i] = z[i] / gsupp;
     
-    for (i=0;i<n;i++) z[i] = zavant[i];
+    for (i = 0; i < n ; i++) z[i] = zavant[i];
     
-    for (i=0;i<n;i++) {if (u[i] < bb[i]) lw = lw+1;}
+    for (i = 0; i < n; i++) {if (u[i] < bb[i]) lw = lw + 1;}
     
-    if (lw>0) {
+    if (lw > 0) {
       delete[] w;
       w = new double[lw];
       jj = 0;
-      for (i=0;i<n;i++) {if (u[i] < bb[i]) {w[jj] = z[i]; jj = jj+1;}}
-      for (i=0;i<lw;i++) ww[ncum+i] = w[i];
+      for (i = 0; i < n; i++) {if (u[i] < bb[i]) {w[jj] = z[i]; jj = jj + 1;}}
+      for (i = 0; i < lw; i++) ww[ncum+i] = w[i];
     }
     
     ncum = ncum + lw;
     
     
-    if (0.1 > (double)ncum/(double)n) pourc = 0.1; else pourc = (double)ncum/(double)n;
+    if (0.1 > (double)ncum / (double)n) pourc = 0.1; else pourc = (double)ncum / (double)n;
     
     
     while (ncum < n) {
-      nsim = (int)floor((double)(n-ncum)/pourc); 
+      nsim = (int)floor((double)(n - ncum) / pourc); 
       
       delete[] z;
       z = new double[nsim];
-      for (i=0;i<nsim;i++) z[i] = runif(0.0,1.0)*2.0*z0 - z0;
+      for (i = 0; i < nsim; i++) z[i] = Rf_runif(0.0, 1.0) * 2.0 * z0 - z0;
       
       delete[] u;
       u = new double[nsim];
-      for (i=0;i<nsim;i++) u[i] = runif(0.0,1.0);
+      for (i = 0; i < nsim; i++) u[i] = Rf_runif(0.0, 1.0);
       
       delete[] zavant;
       zavant = new double[nsim];
-      for (i=0;i<nsim;i++) zavant[i] = z[i];
+      for (i = 0; i < nsim; i++) zavant[i] = z[i];
       
-      dgep(z,nsim,ex);
+      dgep(z, nsim, ex);
       delete[] bb;
       bb = new double[nsim];
-      for (i=0;i<nsim;i++) bb[i] = z[i]/gsupp;
+      for (i = 0; i < nsim; i++) bb[i] = z[i] / gsupp;
       
-      for (i=0;i<nsim;i++) z[i] = zavant[i];
+      for (i = 0; i < nsim; i++) z[i] = zavant[i];
       
       lw = 0;
-      for (i=0;i<nsim;i++) {if (u[i]<bb[i]) lw = lw+1;}
+      for (i = 0; i < nsim; i++) {if (u[i] < bb[i]) lw = lw + 1;}
       
-      if (lw>0) {
+      if (lw > 0) {
 	delete[] w; 
 	w = new double[lw];
 	jj = 0;
-	for (i=0;i<nsim;i++) {if (u[i]<bb[i]) {w[jj] = z[i];jj = jj+1;}}
+	for (i = 0; i < nsim;i++) {if (u[i] < bb[i]) {w[jj] = z[i]; jj = jj + 1;}}
       }
       
       if (lw > n-ncum) {
 	delete[] wavant;
 	wavant = new double[lw];
-	for (i=0;i<lw;i++) wavant[i] = w[i];
-	lw = n-ncum;
+	for (i = 0;i < lw; i++) wavant[i] = w[i];
+	lw = n - ncum;
 	delete[] w;
 	w = new double[lw];
-	for (i=0;i<lw;i++) w[i] = wavant[i];
+	for (i = 0; i < lw; i++) w[i] = wavant[i];
       }
       
-      if (lw>0) {for (i=0;i<=(lw-1);i++) ww[ncum+i] = w[i];}
+      if (lw > 0) {for (i = 0; i < lw; i++) ww[ncum + i] = w[i];}
       
       ncum = ncum + lw;
     }
@@ -235,12 +235,12 @@ extern "C" {
     Rdqags(dgep, ex, a, b, epsabs, epsrel, result, abserr, neval, ier,limit, lenw, last,iwork, work);
     extr = 1.0 - result[0];
     
-    for (i=0;i<n;i++) {
-      if (runif(0.0,1.0) < extr) ww[i] = z0*(rbinom(1.0,0.5)*2.0-1.0); 
+    for (i = 0; i < n; i++) {
+      if (Rf_runif(0.0, 1.0) < extr) ww[i] = z0 * (Rf_rbinom(1.0, 0.5) * 2.0 - 1.0); 
     }
     
     
-    for (i=0;i<n;i++) x[i] = ww[i];
+    for (i = 0; i < n; i++) x[i] = ww[i];
 
     if (setseed[0] == 1) PutRNGstate();
     

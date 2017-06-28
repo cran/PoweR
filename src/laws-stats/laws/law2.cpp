@@ -8,7 +8,7 @@ extern "C" {
 
   void law2 (int *xlen, double *x, char **name, int *getname, double *params, int *nbparams, int *setseed) {
     
-    int i, j=0, n=xlen[0];
+    int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {
 // Here, INDICATE the name of the distribution:
       const char *nom = "$Normal(\\mu,\\sigma)$";
@@ -25,7 +25,7 @@ extern "C" {
 	name[j][0] = nom[j];
 	j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50; i++) name[i][0] = space[0];
       return;
     }
     
@@ -50,16 +50,16 @@ extern "C" {
     }
 
 // If necessary, we check if some parameter values are out of parameter space
-    if (sigma < 0) {
+    if (sigma < 0.0) {
       warning("sigma should not be < 0 in law2!\n");
-      for (i=0;i<n;i++) x[i] = R_NaN;
+      for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }
 
 // Generation of the random values
     if (setseed[0] == 1) GetRNGstate();   
-    double rnorm(double mu, double sigma);
-    for (i=0;i<n;i++) x[i] = rnorm(mu,sigma);
+    double Rf_rnorm(double mu, double sigma);
+    for (i = 0; i < n; i++) x[i] = Rf_rnorm(mu, sigma);
     if (setseed[0] == 1) PutRNGstate();
 
 // If applicable, we free the unused array of pointers. Then we return.

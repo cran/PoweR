@@ -9,7 +9,7 @@ extern "C" {
 
   void law23 (int *xlen, double *x, char **name, int *getname, double *params, int *nbparams, int *setseed) {
 
-    int i, j=0, n=xlen[0];
+    int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {
 // Here, INDICATE the name of the distribution:
       const char *nom = "$GP(\\mu,\\sigma,\\xi)$";
@@ -27,7 +27,7 @@ extern "C" {
 	name[j][0] = nom[j];
 	j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50; i++) name[i][0] = space[0];
       return;
     }
 
@@ -63,28 +63,28 @@ extern "C" {
     }
    
 // If necessary, we check if some parameter values are out of parameter space
-    if (sigma <= 0) {
+    if (sigma <= 0.0) {
       warning("sigma should not be <= 0 in law23!\n");
-      for (i=0;i<n;i++) x[i] = R_NaN;
+      for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }
 
 // Generation of the random values
     if (setseed[0] == 1) GetRNGstate();   
-    double runif(double a, double b);
-    double rexp(double lambda);
+    double Rf_runif(double a, double b);
+    double Rf_rexp(double lambda);
     double *U;
     U = new double [n];	
     if (xi == 0.0) {
-      for (i=0;i<n;i++) {
-        U[i] = rexp(1.0);
-        x[i] = mu + sigma*U[i]; 
+      for (i = 0; i < n; i++) {
+        U[i] = Rf_rexp(1.0);
+        x[i] = mu + sigma * U[i]; 
       }	  
     }
     else {
-      for (i=0;i<n;i++) {
-        U[i] = runif(0.0,1.0);
-        x[i] = mu + sigma*(1.0 - R_pow(U[i],xi))/xi; 
+      for (i = 0; i < n; i++) {
+        U[i] = Rf_runif(0.0, 1.0);
+        x[i] = mu + sigma * (1.0 - R_pow(U[i], xi)) / xi; 
       }
     }
     if (setseed[0] == 1) PutRNGstate();
