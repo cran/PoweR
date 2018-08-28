@@ -26,8 +26,12 @@ print.power1 <- function(x, digits = 3, latex.output = FALSE, ...) {
 
     lawnames <- rep("", laws.len)
     for (i in 1:laws.len) {
-        if (x$law.indices[i] != 0) {
-            lawnames[i] <- PoweR::law.cstr(x$law.indices[i], (x$parlaws[4 * (i - 1) + 1:4])[1:x$nbparlaws[i]])$name
+      if (x$law.indices[i] != 0) {
+        if (x$nbparlaws[i] > 0) { #EDITED
+          lawnames[i] <- PoweR::law.cstr(x$law.indices[i], (x$parlaws[4 * (i - 1) + 1:4])[1:x$nbparlaws[i]])$name
+          } else { #EDITED
+            lawnames[i] <- PoweR::law.cstr(x$law.indices[i], NULL)$name #EDITED
+            }
         } else {
             lawnames[i] <- paste(names(x$Rlaws[i]), "(", paste(x$parlaws[4 * (i - 1) + 1:4][1:(length(formals(x$Rlaws[[i]])) - 1)], collapse = ","), ")", sep = "")
         }

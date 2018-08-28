@@ -14,113 +14,106 @@ extern "C" {
 // 4: bilateral test that rejects H0 only for small values of the test statistic
     alter[0] = 3;
 
-    int i, j=0, n=xlen[0];
+    int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {    
-// Here, INDICATE the name of your statistic
+      // Here, INDICATE the name of your statistic
       const char *nom = "$T_{n,a}^{(2)}-MO$";
-// Here, INDICATE the number of parameters of your statistic
+      // Here, INDICATE the number of parameters of your statistic
       nbparamstat[0] = 1;
-// Here, INDICATE the default values of the parameters:
+      // Here, INDICATE the default values of the parameters:
       if (name[0][0] == '1') { // To prevent writing in a non declared address (because maybe paramstat has not be initialized with a sufficient length since the correct value of nbparamstat[0] may be unkown yet).
-      paramstat[0] = 0.5;
-     }
-// The following 7 lines should NOT be modified
+	paramstat[0] = 0.5;
+      }
+      // The following 7 lines should NOT be modified
       const char *space = " ";
       while (nom[j] != '\0') {
 	name[j][0] = nom[j];
 	j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50; i++) name[i][0] = space[0];
       return;
     }
-
+    
 // Initialization of the parameters
-    double par;
-	if (nbparamstat[0] == 0) {
+    double a;
+    if (nbparamstat[0] == 0) {
       nbparamstat[0] = 1;
-      par = 0.5;
+      a = 0.5;
       paramstat[0] = 0.5;
     } else if (nbparamstat[0] == 1) {
-      par = paramstat[0];
+      a = paramstat[0];
     } else {
       return;
     }	
 
-    if (n>3) {
+    if (n > 3) {
 // Computation of the value of the test statistic
-    void R_rsort (double* x, int n);
-    double plaplace(double y);
     double *Y;
     Y = new double[n];
-    double statT2na, tmp=0.0, tmp2=0.0, bhat, muhat=0.0, sumM1=0.0, sumM2=0.0, pi;
+    double statT2na, tmp = 0.0, tmp2 = 0.0, bhat, muhat, sumM1 = 0.0, sumM2 = 0.0;
+    double Yi2, YimYj2, YimYj4, a2 = a * a, a4 = a2 * a2, twoa = 2.0 * a;
+    double foura = 4.0 * a, foura2 = 4.0 * a2, twelvea = 12.0 * a, twelvea2 = 12.0 * a2;
+    double thirtytwoa4 = 32.0 * a4;
 					  
-    pi = 4.0*atan(1.0); 	// or use pi = M_PI, where M_PI is defined in math.h
+    // calculate mu^ and b^ by using the moments estimators 
+    // mu^ = Xbar (sample mean)
+    // b^ = S / sqrt(2) where S^2 = sample variance = n^{-1} \sum_{j=1}^n(X_j-\bar{X})^2
 	
-	// calculate mu^ and b^ by using the moments estimators 
-	// mu^ = Xbar (sample mean)
-	// b^ = S/sqrt(2) where S^2 = sample variance 
-	
-	// calculate mu^
-	for (i=0;i<=(n-1);i++) {
-	  tmp = tmp + x[i];
+    // calculate mu^
+    for (i = 0; i < n; i++) {
+      tmp = tmp + x[i];
     }
-	muhat = tmp/(double)n;
+    muhat = tmp / (double)n;
 	
-	// calculate b^
-	// for (i=0;i<=(n-1);i++) {
-	  // tmp2 = tmp2 + R_pow(x[i],2.0);
-    // }
-	// tmp2 = ((double)n)*(tmp2/(double)n - R_pow(muhat,2.0))/(double)(n-1); 
-    // bhat = sqrt(tmp2)/sqrt(2.0);
+    // calculate b^
+    for (i = 0; i < n; i++) {
+      tmp2 = tmp2 + R_pow(x[i] - muhat, 2.0);
+    }
+    bhat = sqrt(tmp2 / (double)(2 *n));	
+
+    // generate vector Y where the transformed data Yj = (Xj - mu^) / b^, j = 1, 2, ..., n
+    for (i = 0; i < n; i++) {
+      Y[i] = (x[i] - muhat) / bhat;
+    }
 	
-	for (i=0; i<n; i++) {
-	  tmp2 = tmp2 + R_pow(x[i]-muhat,2.0);
-	}
-    bhat = sqrt(tmp2/(double)n)/sqrt(2.0);	
-	
-	// generate vector Y where the transformed data Yj = (Xj - mu^)/b^, j=1,2,...,n
-    for (i=0;i<n;i++) {
-	  Y[i] = (x[i] - muhat)/bhat;
-	}
-    // R_rsort(Y,n); // We sort the data, NO NEED SINCE 
-	
-	// calculate statT1na
-    for (i=0; i<n; i++) {
-	  sumM1 = sumM1 + (1.0 - (R_pow(Y[i],2.0)-2.0*par)/(4.0*R_pow(par,2.0)))*exp(-R_pow(Y[i],2.0)/(4.0*par));
-	  for (j=0; j<n; j++) {
-	    sumM2 = sumM2 + ( 1.0/2.0 + (R_pow(Y[i]-Y[j],4.0)+12.0*R_pow(par,2.0)-12.0*par*R_pow(Y[i]-Y[j],2.0))/(32.0*R_pow(par,4.0))
-                                  - (R_pow(Y[i]-Y[j],2.0)-2.0*par)/(4.0*R_pow(par,2.0)) ) * exp(-R_pow(Y[i]-Y[j],2.0)/(4.0*par)); 		
+    // calculate statT2na
+    for (i = 0; i < n; i++) {
+      Yi2 = R_pow(Y[i], 2.0);
+	  sumM1 = sumM1 + (1.0 - (Yi2 - twoa) / (foura2)) * exp(-Yi2 / foura);
+	  for (j = 0; j < n; j++) {
+	    YimYj2 = R_pow(Y[i] - Y[j], 2.0);
+	    YimYj4 = R_pow(Y[i] - Y[j], 4.0);
+	    sumM2 = sumM2 + (0.5 + (YimYj4 + twelvea2 - twelvea * YimYj2) / thirtytwoa4
+                                  - (YimYj2 - twoa) / foura2 ) * exp(-YimYj2 / foura); 		
 	  }
 	}
     
-	statT2na = (double)n*sqrt(pi/par) - 2.0*sqrt(pi/par)*sumM1 + 2.0*sqrt(pi/par)*sumM2/(double)n;
+    statT2na = sqrt(M_PI / a) * ((double)n - 2.0 * sumM1 + 2.0 * sumM2 / (double)n);
 	
     statistic[0] = statT2na; // Here is the test statistic value
 
-if (pvalcomp[0] == 1) {
-	// If possible, computation of the p-value.
-	#include "pvalues/pvalue49.cpp"
-}
-
-// We take the decision to reject or not to reject the null hypothesis H0
-    for (i=0;i<=(nblevel[0]-1);i++) {
+    if (pvalcomp[0] == 1) {
+      // If possible, computation of the p-value.
+#include "pvalues/pvalue49.cpp"
+    }
+    
+    // We take the decision to reject or not to reject the null hypothesis H0
+    for (i = 0; i < nblevel[0]; i++) {
       if (usecrit[0] == 1) { // We use the provided critical values
-	  if (statistic[0] > critvalR[i]) decision[i] = 1; else decision[i] = 0; // two.sided (but in this case only one possible critical value)
+	if (statistic[0] > critvalR[i]) decision[i] = 1; else decision[i] = 0; // two.sided (but in this case only one possible critical value)
       } else {
-		  if (pvalue[0] < level[i]) decision[i] = 1; else decision[i] = 0; // We use the p-value
-        }
+	if (pvalue[0] < level[i]) decision[i] = 1; else decision[i] = 0; // We use the p-value
+      }
     }
     
 // If applicable, we free the unused array of pointers
     delete[] Y;
-
-}
-
-// We return
+    
+    }
+    
+    // We return
     return;
-   
-        
+      
   }
-
-  
+   
 }

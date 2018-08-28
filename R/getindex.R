@@ -1,6 +1,7 @@
 getindex <- function(law.indices = NULL, stat.indices = NULL) {
   
     if (getRversion() < "3.1.0") dontCheck <- identity
+    Cstat.name <- "tmp" # To remove a NOTE at R CMD check
   
     tmp <- names(getDLLRegisteredRoutines("PoweR")[[".C"]])
 

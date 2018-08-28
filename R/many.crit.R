@@ -32,6 +32,7 @@ many.crit <- function(law.index, stat.indices, M = 10 ^ 3, vectn = c(20, 50, 100
             if (stat.indices[s] != 0) {
                 if (names(alter)[s] != paste("stat", stat.indices[s], sep = "")) stop(paste("Name of 'alter'[[", s, "]] should be equal to 'stat", stat.indices[s], sep = ""))
                 if (!(alter[[s]] %in% 0:4)) stop(paste("'alter'[[", s, "]] should be in  {0,1,2,3,4}.", sep = ""))
+                Cstat.name <- "tmp" # To remove a NOTE at R CMD check
                 Cstat.name <- paste("stat", as.character(stat.indices[s]), sep = "")
                 alter.true <- .C(dontCheck(Cstat.name), as.double(0.0), 1L, 0.05, 1L, rep(" ", 50), 1L, 0.0, 0L, 0.0, 0.0,
                                  0.0, 0L, alter = as.integer(alter[s]), 0L, rep(0.0, 4), 0L, PACKAGE = "PoweR")$alter
@@ -85,7 +86,7 @@ many.crit <- function(law.index, stat.indices, M = 10 ^ 3, vectn = c(20, 50, 100
     stats.len <- length(stat.indices)
     decision.len <- stats.len * vectn.len * nblevels
     decision <- rep(0L, decision.len)
-    critvalL <- rep(0.0, M * vectn.len * stats.len)
+    critvalR <- critvalL <- rep(0.0, M * vectn.len * stats.len)
     nbparlaws <- length(law.pars)
     
     if (is.null(law.pars)) {
@@ -102,7 +103,7 @@ many.crit <- function(law.index, stat.indices, M = 10 ^ 3, vectn = c(20, 50, 100
     if (Rcpp | any(stat.indices == 0)) {
         out <- .Call("powcompfastRcpp", M = as.integer(M), law.index = as.integer(law.index), laws.len = 1L, vectn = as.integer(vectn), vectn.len = as.integer(vectn.len),
                      stat.indices = as.integer(stat.indices), stats.len = as.integer(stats.len), decision = as.integer(decision), decision.len = as.integer(decision.len),
-                     levels = as.double(levels), nblevels = as.integer(nblevels), cL = as.double(critvalL), cR = as.double(0.0), usecrit = 0L, alter = as.integer(alter),
+                     levels = as.double(levels), nblevels = as.integer(nblevels), cL = as.double(critvalL), cR = as.double(critvalR), usecrit = rep(0L, stats.len * vectn.len), alter = as.integer(alter),
                      nbparlaws = as.integer(nbparlaws), parlaws = as.double(law.pars), nbparstats = as.integer(nbparstats), parstats = as.double(parstatstmp),
                      modelnum = 1L, funclist = list(function(){}), as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np),
                      as.list(Rlaw), Rstats, as.integer(center), as.integer(scale), compquant = 1L, PACKAGE="PoweR", NAOK = TRUE)$cL
@@ -110,7 +111,7 @@ many.crit <- function(law.index, stat.indices, M = 10 ^ 3, vectn = c(20, 50, 100
         
         out <- .C("powcompfast", M = as.integer(M), law.index = as.integer(law.index), laws.len = 1L, vectn = as.integer(vectn), vectn.len = as.integer(vectn.len),
                   stat.indices = as.integer(stat.indices), stats.len = as.integer(stats.len), decision = as.integer(decision), decision.len = as.integer(decision.len),
-                  levels = as.double(levels), nblevels = as.integer(nblevels), cL = as.double(critvalL), cR = as.double(0.0), usecrit = 0L, alter = as.integer(alter),
+                  levels = as.double(levels), nblevels = as.integer(nblevels), cL = as.double(critvalL), cR = as.double(critvalR), usecrit = rep(0L, stats.len * vectn.len), alter = as.integer(alter),
                   nbparlaws = as.integer(nbparlaws), parlaws = as.double(law.pars), nbparstats = as.integer(nbparstats), parstats = as.double(parstatstmp),
                   modelnum = 1L, funclist = list(function(){}), as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np),
                   as.integer(center), as.integer(scale), compquant= 1L, PACKAGE = "PoweR", NAOK = TRUE)$cL

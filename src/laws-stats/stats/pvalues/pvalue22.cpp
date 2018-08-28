@@ -1,2 +1,1 @@
-pval = Rf_pnorm5(z,0.0,1.0,0,0);
-pvalue[0] = pval;
+pvalue[0] = Rf_pnorm5(z, 0.0, 1.0, 0, 0);

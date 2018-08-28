@@ -10,6 +10,12 @@
 \details{The statistic tests for the Laplace distribution are named in
   the form \code{stat}\eqn{xxxx}.
 
+For the Glen-Leemis-Barr test see \code{\link{stat0038.Glen}}.
+
+For the 1st Rayner-Best statistic test see \code{\link{stat0039.Rayner1}}.
+
+For the 2nd Rayner-Best statistic test see \code{\link{stat0040.Rayner2}}.
+
 For the Anderson-Darling statistic see \code{\link{stat0042.AndersonDarling}}.
 
 For the Cramer-von Mises statistic see \code{\link{stat0043.CramervonMises}}.
@@ -47,6 +53,20 @@ For the Kundu statistic see \code{\link{stat0058.Kundu}}.
 For the Gulati statistic see \code{\link{stat0059.Gulati}}.
 
 For the Gel statistic see \code{\link{stat0060.Gel}}.
+
+For the 1st Gonzalez-Estrada and Villasenor test see \code{\link{stat0091.Gonzales1}}.
+
+For the 2nd Gonzalez-Estrada and Villasenor test see \code{\link{stat0092.Gonzales2}}.
+
+For the 1st Hogg test see \code{\link{stat0093.Hogg1}}.
+
+For the 2nd Hogg test see \code{\link{stat0094.Hogg2}}.
+
+For the 3rd Hogg test see \code{\link{stat0095.Hogg3}}.
+
+For the 4th Hogg test see \code{\link{stat0096.Hogg4}}.
+
+For the Rizzo and Haman test see \code{\link{stat0097.Rizzo}}.
 
 }
 

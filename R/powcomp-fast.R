@@ -55,8 +55,17 @@ powcomp.fast <- function(law.indices, stat.indices, vectn = c(20, 50, 100), M = 
     if (is.null(critval)) {
         warning(paste("'critval' has been computed internally using function many.crit() with the value of 'law.index'=",null.law.index," (i.e. ",law.cstr(null.law.index)$name,")",sep=""))
         if (is.null(null.law.pars)) {
-            tmp2 <- law.cstr(null.law.index)$law.pars
+          ## EDITED
+          # WAS:
+          #             tmp2 <- law.cstr(null.law.index)$law.pars
+          #             null.law.pars <- c(tmp2, rep(0.0, 4 - length(tmp2)))
+
+          tmp2 <- law.cstr(null.law.index)
+          if (tmp2$nbparams > 0) {
+            tmp2 <- tmp2$law.pars
             null.law.pars <- c(tmp2, rep(0.0, 4 - length(tmp2)))
+          }
+          ## END EDITING
         }
         critval <- many.crit(law.index = null.law.index, stat.indices, M, vectn, levels, alter, null.law.pars, parstats, center = center, scale = scale)
     }
@@ -94,6 +103,7 @@ powcomp.fast <- function(law.indices, stat.indices, vectn = c(20, 50, 100), M = 
             if (stat.indices[s] != 0) {
                 if (names(alter)[s] != paste("stat", stat.indices[s], sep = "")) stop(paste("Name of 'alter'[[", s, "]] should be equal to 'stat", stat.indices[s], sep = ""))
                 if (!(alter[[s]] %in% 0:4)) stop(paste("'alter'[[", s, "]] should be in  {0,1,2,3,4}.", sep = ""))
+                Cstat.name <- "tmp" # To remove a NOTE at R CMD check
                 Cstat.name <- paste("stat", as.character(stat.indices[s]), sep = "")
                 alter.true <- .C(dontCheck(Cstat.name), as.double(0.0), 1L, 0.05, 1L, rep(" ", 50), 1L, 0.0, 0L, 0.0, 0.0,
                                  0.0, 0L, alter = as.integer(alter[s]), 0L, rep(0.0, 4), 0L, PACKAGE = "PoweR")$alter
@@ -138,7 +148,9 @@ powcomp.fast <- function(law.indices, stat.indices, vectn = c(20, 50, 100), M = 
             if (law.indices[s] != 0) {
                 tmp <- law.cstr(law.indices[s])
                 nbparlaws <- c(nbparlaws, tmp$nbparams)
-                parlawtmp <- c(parlawtmp, c(tmp$law.pars, rep(0.0, 4 - nbparlaws[s])))
+                if (tmp$nbparams > 0) { #EDITED
+                  parlawtmp <- c(parlawtmp, c(tmp$law.pars, rep(0.0, 4 - nbparlaws[s]))) #EDITED
+                  } else {parlawtmp <- c(parlawtmp, rep(0.0, 4 - nbparlaws[s]))} #EDITED
             } else {
                 npartmp <- length(unlist(formals(eval(parse(text = tmp[s])))[-1]))
                 nbparlaws <- c(nbparlaws, npartmp)
@@ -304,8 +316,8 @@ powcomp.fast <- function(law.indices, stat.indices, vectn = c(20, 50, 100), M = 
     for (i in 1:length(out[[1]]$nbparstats)) {
         if (out[[1]]$nbparstats[i] == 0) {out[[1]]$parstats[k] <- NA ; k <- k + 1} else k <- k + out[[1]]$nbparstats[i]
     }
-    
-    return(structure(out[[1]], class = c("power","list")))
+
+  return(structure(out[[1]], class = c("power","list")))
     
 }
 

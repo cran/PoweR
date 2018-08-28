@@ -2,7 +2,8 @@ stat.cstr <- function(stat.index, stat.pars = NULL) {
 
     if (getRversion() < "3.1.0") dontCheck <- identity
 
-# We get the default (maximal) number of parameters
+  # We get the default (maximal) number of parameters
+    Cstat.name <- "tmp" # To remove a NOTE at R CMD check
     Cstat.name <- paste("stat", stat.index, sep = "")
     out <- .C(dontCheck(Cstat.name), 0.0, 0L, 0.0, 0L, rep(" ", 50), 1L, 0.0, 0L, 0.0, 0.0, 0.0, 0L, 0L, 0L, 0.0, nbparams = 1L, PACKAGE = "PoweR")
     nbparams <- out$nbparams

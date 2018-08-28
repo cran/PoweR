@@ -58,7 +58,7 @@ void (*lawfunc[40])(int *xlen, double *x, char **name, int *trtname, double *par
 // Below, add an: #include "stats/statj.cpp"
 
 /*
-Note: stat38, stat39, stat40 and stat84 are available and can be used to incorporate new tests
+Note: stat84 are available and can be used to incorporate new tests
  */
 #include "stats/stat1.cpp"
 #include "stats/stat2.cpp"
@@ -97,9 +97,9 @@ Note: stat38, stat39, stat40 and stat84 are available and can be used to incorpo
 #include "stats/stat35.cpp"
 #include "stats/stat36.cpp"
 #include "stats/stat37.cpp"
-// #include "stats/stat38.cpp"
-// #include "stats/stat39.cpp"
-// #include "stats/stat40.cpp"
+#include "stats/stat38.cpp"
+#include "stats/stat39.cpp"
+#include "stats/stat40.cpp"
 #include "stats/stat41.cpp"
 #include "stats/stat42.cpp"
 #include "stats/stat43.cpp"
@@ -150,28 +150,36 @@ Note: stat38, stat39, stat40 and stat84 are available and can be used to incorpo
 #include "stats/stat88.cpp"
 #include "stats/stat89.cpp"
 #include "stats/stat90.cpp"
+#include "stats/stat91.cpp"
+#include "stats/stat92.cpp"
+#include "stats/stat93.cpp"
+#include "stats/stat94.cpp"
+#include "stats/stat95.cpp"
+#include "stats/stat96.cpp"
+#include "stats/stat97.cpp"
 
 
-// I added this to correct a bug that occured when calling (*statfunc[statindex-1]) from calcpuiss.cpp. This bug arrived when I removed stat38, stat39, etc below
+// I added this to correct a bug that occured when calling (*statfunc[statindex-1]) from calcpuiss.cpp. This bug arrived when I removed stat84, etc below
 void nothing(double *x, int *xlen, double *level, int *nblevel, char **name, int *getname, double *statistic, int *pvalcomp, double *pvalue, double *critvalL, double *critvalR, int *usecrit, int *alter, int *decision, double *paramstat, int *nbparamstat) {
   return;
 }
 
 // Modify also below.
 // Change:
-//   90 to 91 
+//   97 to 98
 // and add:
-//  ,stat91
+//  ,stat98
 
-void (*statfunc[90])(double *x, int *xlen, double *level, int *nblevel, char **name, int *getname, double *statistic, int *pvalcomp, double *pvalue, double *critvalL, double *critvalR, int *usecrit, int *alter, int *decision, double *paramstat, int *nbparamstat) = {
+void (*statfunc[97])(double *x, int *xlen, double *level, int *nblevel, char **name, int *getname, double *statistic, int *pvalcomp, double *pvalue, double *critvalL, double *critvalR, int *usecrit, int *alter, int *decision, double *paramstat, int *nbparamstat) = {
   stat1,stat2,stat3,stat4,stat5,stat6,stat7,stat8,stat9,stat10,
   stat11,stat12,stat13,stat14,stat15,stat16,stat17,stat18,stat19,stat20,
   stat21,stat22,stat23,stat24,stat25,stat26,stat27,stat28,stat29,stat30,
-    stat31,stat32,stat33,stat34,stat35,stat36,stat37,nothing,nothing,nothing,//stat38,stat39,stat40,
+    stat31,stat32,stat33,stat34,stat35,stat36,stat37,stat38,stat39,stat40,
   stat41,stat42,stat43,stat44,stat45,stat46,stat47,stat48,stat49,stat50,
   stat51,stat52,stat53,stat54,stat55,stat56,stat57,stat58,stat59,stat60,
   stat61,stat62,stat63,stat64,stat65,stat66,stat67,stat68,stat69,stat70,
   stat71,stat72,stat73,stat74,stat75,stat76,stat77,stat78,stat79,stat80,
     stat81,stat82,stat83,nothing,//stat84,
-    stat85,stat86,stat87,stat88,stat89,stat90
+    stat85,stat86,stat87,stat88,stat89,stat90,
+    stat91,stat92,stat93,stat94,stat95,stat96,stat97
 };

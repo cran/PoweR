@@ -1,5 +1,5 @@
 /*
-Note: stat38, stat39, stat40 and stat84 are available and can be used to incorporate new tests
+Note: stat84 is available and can be used to incorporate new tests
  */
 static const R_CMethodDef CEntries[] = {
   {"calcfx",        (DL_FUNC) &calcfx,       5},
@@ -87,9 +87,9 @@ static const R_CMethodDef CEntries[] = {
   {"stat35", (DL_FUNC) &stat35, 16},
   {"stat36", (DL_FUNC) &stat36, 16},
   {"stat37", (DL_FUNC) &stat37, 16},
-  //  {"stat38", (DL_FUNC) &stat38, 16},
-  //  {"stat39", (DL_FUNC) &stat39, 16},
-  //  {"stat40", (DL_FUNC) &stat40, 16},
+  {"stat38", (DL_FUNC) &stat38, 16},
+  {"stat39", (DL_FUNC) &stat39, 16},
+  {"stat40", (DL_FUNC) &stat40, 16},
   {"stat41", (DL_FUNC) &stat41, 16},
   {"stat42", (DL_FUNC) &stat42, 16},
   {"stat43", (DL_FUNC) &stat43, 16},
@@ -140,6 +140,13 @@ static const R_CMethodDef CEntries[] = {
   {"stat88", (DL_FUNC) &stat88, 16},
   {"stat89", (DL_FUNC) &stat89, 16},
   {"stat90", (DL_FUNC) &stat90, 16},
+  {"stat91", (DL_FUNC) &stat91, 16},
+  {"stat92", (DL_FUNC) &stat92, 16},
+  {"stat93", (DL_FUNC) &stat93, 16},
+  {"stat94", (DL_FUNC) &stat94, 16},
+  {"stat95", (DL_FUNC) &stat95, 16},
+  {"stat96", (DL_FUNC) &stat96, 16},
+  {"stat97", (DL_FUNC) &stat97, 16},
   {NULL, NULL, 0}
 };
 

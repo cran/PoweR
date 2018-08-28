@@ -1,7 +1,8 @@
 statcompute <- function(stat.index, data, levels = c(0.05, 0.1), critvalL = NULL, critvalR = NULL, alter = 0, stat.pars = NULL, check = TRUE) {
 
     n <- length(data)
-    nblevels <- length(levels)
+  nblevels <- length(levels)
+    Cstat.name <- "tmp" # To remove a NOTE at R CMD check
     Cstat.name <- paste("stat", stat.index, sep = "")
 
     if (check) {  # The following instructions take time! This is why the 'check' argument exists.
@@ -9,7 +10,7 @@ statcompute <- function(stat.index, data, levels = c(0.05, 0.1), critvalL = NULL
         tmp <- names(getDLLRegisteredRoutines("PoweR")[[".C"]])
         ind.stats <- grep("stat", tmp)
         nb.stats <- length(ind.stats)
-        if (!(stat.index %in% 1:nb.stats)) stop("This test statistic has not been included in the package!")
+        if (!(paste("stat", stat.index, sep = "") %in% tmp)) stop("This test statistic has not been included in the package!")
 		
         if (is.null(stat.pars) || is.na(stat.pars)) {
             stat.pars <- rep(0.0, getnbparstats(stat.index)) # C++ technical requirement.

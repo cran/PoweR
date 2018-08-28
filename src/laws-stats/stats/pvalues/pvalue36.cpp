@@ -538,4 +538,4 @@ delete[] grcountoptim;
 delete[] msgoptim;
 */
 
-pvalue[0] = pchisq(statvalue, 2.0, 0, 0); // Asymptotic distribution
+pvalue[0] = pchisq(statistic[0], 2.0, 0, 0); // Asymptotic distribution

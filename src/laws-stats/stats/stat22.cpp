@@ -43,7 +43,7 @@ extern "C" {
     double *y, *xs;
     xs = new double[n];
     y = new double[n];
-    double varX=0.0, varY=0.0, meanX=0.0, meanY=0.0, pval, a, statWSF=0.0, u, v, mu, sig, z;
+    double varX=0.0, varY=0.0, meanX=0.0, meanY=0.0, a, statWSF=0.0, u, v, mu, sig, z;
  
     for (i=0;i<=(n-1);i++) xs[i] = x[i];
     R_rsort (xs,n); // We sort the data

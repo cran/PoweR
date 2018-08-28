@@ -97,7 +97,7 @@ Version 1.0.6
 -> I changed, in line 76 of file powcomp-fast.R,  !is.null(vals2) into length(vals2) != 0
 -> I modified the files statcompute.R and statcompute.Rd to output the symbol of the test statistic
 -> I added a 'check' argument to the statcompute() function for increase speed. See help page.
--> I added an example in the statcompute.Rd file to chosw how to use the .C call for fast computations. See also Details.
+-> I added an example in the statcompute.Rd file to chooss how to use the .C call for fast computations. See also Details.
 -> I implemented pvalue40.cpp (but only for the values of n in the Table1 p. 171 of our paper
 -> I removed files stat35.cpp, stat36.cpp, stat37.cpp, stat38.cpp and the corresponding pvaluexxx.cpp files
 -> stat40 becomes stat35 ; stat39 becomes stat36 ; stat84 becomes stat37 (so the cpp and Rd files are modified accordingly)
@@ -151,3 +151,14 @@ Version 1.0.6
 -> I added a new law40 (the Log-Pareto-tail-normal)
 -> I corrected in many lawj.cpp files, in the "check if some parameter values are out of parameter space", values that should be double instead of integer (e.g., 0 modified into 0.0)
 -> I modified many .cpp files to use the Rf_ version of dnorm, pnorm, rnorm and qnorm (and similarly for other distributions) as in https://github.com/RcppCore/Rcpp/blob/master/inst/include/Rcpp/Rmath.h
+
+2017-12-161
+----------
+
+Version 1.0.7
+
+-> I modified the file statcompute.R
+-> I changed usecrit = 0L to usecrit = rep(0L, stats.len * vectn.len) twice in file many.crit.R to solve a valgrind issue
+-> In file many.crit.R, I defined critvalR as critvalR (line 88) and used as.double(critvalL) for cR when calling the C/C++ code
+-> I added several new tests for the Laplace distribution: 38, 39, 40, 91, 92, 93, 94, 95, 96, 97
+

@@ -12,7 +12,8 @@ getnbparstats <- function(stat.indices = NULL) {
     lst <- length(stat.indices)
     nbparstats.list <- as.vector(rep(0, lst))
     
-    for (i in 1:lst) {
+  for (i in 1:lst) {
+        Cstat.name <- "tmp" # To remove a NOTE at R CMD check
         Cstat.name <- paste("stat", stat.indices[i], sep = "")
         nbparstats.list[i] <- (.C(dontCheck(Cstat.name), 0.0, 1L, 0.0, 1L, rep(" ", 50), 1L, 0.0, 0L,
                                   0.0, 0.0, 0.0, 0L, 0L, 0L, 0.0, nbparamstat = 0L, PACKAGE = "PoweR"))$nbparamstat

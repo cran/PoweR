@@ -50,6 +50,7 @@ pvalueMC <- function(data, stat.index, null.law.index, M = 10 ^ 5, alter, null.l
 	
 	
   # call .C function to obtain one test statistic
+    Cstat.name <- "tmp" # To remove a NOTE at R CMD check
     Cstat.name <- paste("stat", stat.index, sep = "")
     stattmp <- .C(dontCheck(Cstat.name), as.double(data), as.integer(n), as.double(level), as.integer(nblevel),
                   rep(" ", 50), 0L, statistic = 0.0, pvalcomp = 0L, pvalue = 0.0, cL = as.double(cL), cR = as.double(cR),
