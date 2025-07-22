@@ -32,4 +32,5 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Chi-Squared}
+\keyword{law}
+\keyword{Chi-Squared}

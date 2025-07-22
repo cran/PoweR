@@ -26,4 +26,7 @@ Puig, P. and Stephens, M. A. (2000), Tests of fit for the Laplace distribution, 
 \seealso{See package \code{lawstat}. See \code{\link{Laplace.tests}} for other goodness-of-fit tests for the Laplace distribution.
 }
 
-\keyword{statistic, test, Laplace, Watson}
+\keyword{statistic}
+\keyword{test}
+\keyword{Laplace}
+\keyword{Watson}

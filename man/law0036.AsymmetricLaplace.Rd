@@ -25,4 +25,5 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Asymmetric Laplace}
+\keyword{law}
+\keyword{Asymmetric Laplace}

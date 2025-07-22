@@ -25,4 +25,8 @@ Coin, D. (2008), A goodness-of-fit test for normality based on polynomial regres
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
-\keyword{statistic, test, normality, Coin}
+
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{Coin}

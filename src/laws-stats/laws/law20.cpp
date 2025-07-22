@@ -48,12 +48,12 @@ extern "C" {
       g = params[0];
       d = params[1];
     } else {
-      error("Number of parameters should be at most: 2");
+      Rf_error("Number of parameters should be at most: 2");
     }
    
 // If necessary, we check if some parameter values are out of parameter space
     if (d <= 0.0) {
-      warning("d should not be <= 0 in law20!\n");
+      Rf_warning("d should not be <= 0 in law20!\n");
       for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }

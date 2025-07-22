@@ -26,4 +26,9 @@ Rahman, M.M. and Govindarajulu, Z. (1997), A modification of the test of Shapiro
 \seealso{See \code{\link{stat0021.ShapiroWilk}} for the Shapiro-Wilk
   test. See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
-\keyword{statistic, test, normality, Shapiro-Wilk, Rahman-Govindarajulu}
+
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{Shapiro-Wilk}
+\keyword{Rahman-Govindarajulu}

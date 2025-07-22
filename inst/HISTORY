@@ -152,7 +152,7 @@ Version 1.0.6
 -> I corrected in many lawj.cpp files, in the "check if some parameter values are out of parameter space", values that should be double instead of integer (e.g., 0 modified into 0.0)
 -> I modified many .cpp files to use the Rf_ version of dnorm, pnorm, rnorm and qnorm (and similarly for other distributions) as in https://github.com/RcppCore/Rcpp/blob/master/inst/include/Rcpp/Rmath.h
 
-2017-12-161
+2017-12-16
 ----------
 
 Version 1.0.7
@@ -162,3 +162,112 @@ Version 1.0.7
 -> In file many.crit.R, I defined critvalR as critvalR (line 88) and used as.double(critvalL) for cR when calling the C/C++ code
 -> I added several new tests for the Laplace distribution: 38, 39, 40, 91, 92, 93, 94, 95, 96, 97
 
+2019-09-25
+----------
+
+Version 1.0.8
+
+-> I added Frederic Ouimet in the DESCRIPTION file
+-> I added a 'colcritval' variable in file print.critvalues1.R to solve the issue that stat21 critical values were not displayed properly
+-> I modified the files stat2.cpp  and pvalue2.cpp so that the results are identical to the ad.test() R function from the nortest package
+-> I modified the files stat4.cpp, stat5.cpp and stat18.cpp to try solving numerical errors when computing the log of some probabilities
+-> I added (or modified) several new tests for the Laplace distribution: 51, 84, 98, 99, 100, 101, 102, 103, 104, 105
+stat35 --> stat40
+stat36 --> stat39
+stat37 --> stat38
+stat38 --> stat35
+stat39 --> stat36
+stat40 --> stat37
+-> I modified the function stat.cstr(). I added an argument n since sometimes default values of some parameters (for some stats) depends on the value of n. Also, now we can have different names for the test statistic depending on the value of the parameters (see stat51 below).
+-> In stat51.cpp, the name (of the test statistic) that is displayed can now change depending on the value of the input parameters.
+-> I added law41, law42
+-> within the file print.power1.R, I modified the functions average_power(), average_gap(), worst_gap() by adding a drop = FALSE argument (and removing the next line)
+-> I added an argument summaries = TRUE to the functions print.power() and print.power1() and I modified the man file accordingly
+-> I now use the argument 'stat.pars' in the function PoweR::stat.cstr() within the file print.power1.R
+-> I corrected a bug in file create.alter.R (for repeated names of alter)
+-> I added a C function statcomputeC in the file calcpuiss.cpp (same as statcompute but first argument is a pointer so can be called directly from R, if needed)
+-> I added the definition of C function statcomputeC in file PoweR_init.c and in register.cpp
+-> I modified the R function statcompute() to add a pvalcomp argument (default to 1L to compute the p-value), and I also moved some stuff within the check block (and I modified the man file accordingly)
+-> In file getnbparstats.R, and in getindex.R, I changed grep("stat", tmp) into grep("stat[1-9]", tmp)
+-> In the C function powcompfast, I added an argument pvalcomp. I also added this argument to the R function powcomp.fast() (and to its man file). I did the same modification in the file calcpuissRcpp.cpp. And I modified accordingly the files many.crit.R, PowerR_init.c and register.cpp
+-> In files calcpuiss.cpp and calcpuissRcpp.cpp, I changed kmax <= nbparstat[t] into kmax < nbparstat[t]
+-> I added in the inst/computationsPureR the functions many.critR() and powcomp.fastR() to check that C++ and pureR approaches give the same output
+-> In law26, I corrected the default values to be 0 and 1
+-> In function gensample() and others, I added the argument NAOK = TRUE to .C() 
+-> In the file many.crit.R, I modified the line of code starting with mat <- expand.grid
+-> In the file many.crit.R, I modified the line of code starting with list.names.replicated
+
+!!!! Note: stat51 now computes also stat52 and stat53 (but I keep them since they are indicated in the JSS paper)
+!!!! stat54.cpp is The Desgagné-Micheaux-Leblanc statistic for the Laplace distribution \hat{G}_n  (as in Table 6 of the JSS paper and as in my book on the R software)
+Binary file stat61.cpp matches
+Binary file stat62.cpp matches
+Binary file stat85.cpp matches
+
+2021-01-30
+----------
+
+Version 1.1.1
+
+-> I added three missing delete[] entries in stat106.cpp
+-> In files many.pval.R and pvalueMC.R, I added some lines of code to better manage parstats
+-> I modified stat42.cpp so that it can now deal with testing APD(lambda) for any lambda, not only for lambda=1 which corresponds to the Laplace distribution.
+-> Same thing for stat43, stat44, stat45, stat46 and stat101
+-> I added the line 65 in file many.crit.R
+
+2022-08-18
+----------
+
+Version 1.1.3
+
+-> In stat98.cpp, I initialize nu
+-> In stat51.cpp, I initialize m
+
+2025-07-14
+----------
+
+Version 1.1.4
+
+-> Depends: R (>= 4.4.0)
+-> In files lawx.cpp (x=1, ..., 43), I replace error with Rf_error, and warning with Rf_warning, because the former were deprecated in R 4.2.0
+-> Same thing in files staty.cpp (y=16,17,24,27,28,30,31,34,36,37,38,42--52,55,56,61,62,72,74,75,78,79,80,83,84,86,88--96,98--103,106)
+-> Line 462 of file stat106.cpp, I removed the word register
+-> I modified lines 448--450 of file stat16.cpp
+-> The function call_R as been deprecated. As a result, in file calcpuiss.cpp, I addedd #include <Rinternals.h> and #include <cstring> as well as a new code to redefine this function from scratch. I also modified the function model()
+-> To correct this error: > powcomp.easy(params,M=10^2,Rlaws=list(NULL,NULL,NULL,NULL,rnorm))
+      Error in powcomp.easy(params, M = 10^2, Rlaws = list(NULL, NULL, NULL,  : 
+      R_ExternalPtrAddr: argument of type CLOSXP is not an external pointer
+   I modified the file calcpuisRcpp.cpp (two times around the model() function) and also the way to allocate funclisttmp 
+-> In file powcomp-easy.R, I modified lines 86--112   
+-> To supress NOTEs about Registration problems, I did this:
+   - I modified the function .onLoad() in file zzz.R
+   - I commented the variable statsym and defined a new function mydotC() in files statcompute.R, create.alter.R, getindex.R, getnbparstats.R, many.crit.R, many.pval.R, powcomp-fast.R, print.critvalues1.R, print.power1.R, pvalueMC.R, stat.cstr.R
+   - I commented the variable lawsym and defined a new function mydotC() in files gensample.R, getindex.R, getnbparlaws.R, law.cstr.R
+   - I removed the use of dontCheck()
+-> In files checklaw.R, gensample.R, powcomp-easy.R and powcomp-fast.R, I use function inherits() instead of constructions like (class(Rlaws[[i]]) != "function"
+-> In files create.alter.Rd, many.pval.Rd, powcomp-easy.Rd, pvalueMC.Rd, I escaped curly braces for {0,1,2,3,4}
+-> In many Rd files, I split the keyword entry so that it only contains one word
+-> In files print.critvalues1.R and print.power1.R, I changed 0 to 0L in the last argument of function mydotC()
+-> In file print.critvalues1.R and print.power1.R, I changed c("1", rep(" ", 49)) into rep(" ", 50) to avoid a  *** caught segfault *** address (nil), cause 'unknown'
+-> I corrected the expression of the density in file law0031.MixtureNormal.Rd
+-> In files RcppExports.cpp, callFaddeeva.cpp, calcpuissRcpp.cpp, calcpuiss.cpp, PoweR_init.c, I added:
+   #ifdef length
+   #undef length
+   #endif
+   #ifdef isNull
+   #undef isNull
+   #endif
+   #ifdef warning
+   #undef warning
+   #endif
+-> I added the author of the Faddeevaa library (Steven G. Johnson) in the DESCRIPTION file
+-> I improved the Description field in the DESCRIPTION file.
+-> In file statsPureR.R, I moved the code of function .hsm() into function stat108()
+-> In files stat16.cpp, stat84.cpp, stat103.cpp, stat106.cpp, I initialised some variables
+-> In file stat86.cpp (), I replaced l1++ with l2++ on line 84 (Statistique de test de Epps-Pulley modifiee avec notre poids volcano)
+-> I added a \value tag to these files: graph.Rd, help.law.Rd, help.stat.Rd, plot.discrepancy.Rd, plot.pvalue.Rd, plot.sizepower.Rd, power.gui.Rd, print.critvalues.Rd, print.power.Rd
+-> I removed the law.pdf file (but left the law.tex file)
+
+
+
+
+WRITE THE DOC FILES FOR ALL NEW TESTS/LAWS

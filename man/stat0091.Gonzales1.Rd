@@ -26,4 +26,6 @@ the Laplace distribution. \emph{Statistics and Probability Letters}, 119, 30-35.
 \seealso{See \code{\link{Laplace.tests}} for other goodness-of-fit tests
   for the Laplace distribution.
 }
-\keyword{statistic, test, Laplace}
+\keyword{statistic}
+\keyword{test}
+\keyword{Laplace}

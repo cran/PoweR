@@ -39,7 +39,7 @@ extern "C" {
     } else if (nbparams[0] == 1) {
       l = params[0];
     } else {
-      error("Number of parameters should be at most: 1");
+      Rf_error("Number of parameters should be at most: 1");
     }
 
 // If necessary, we check if some parameter values are out of parameter space

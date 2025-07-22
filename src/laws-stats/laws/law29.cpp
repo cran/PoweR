@@ -42,12 +42,12 @@ extern "C" {
     } else if (nbparams[0] == 1) {
       alpha = params[0];
     } else {
-      error("Number of parameters should be at most: 1");
+      Rf_error("Number of parameters should be at most: 1");
     }
 
 // If necessary, we check if some parameter values are out of parameter space
     if (alpha <= 0.0 || alpha >= 1.0) {
-      warning("You should take 0 < alpha <1 in law29!\n");
+      Rf_warning("You should take 0 < alpha <1 in law29!\n");
       for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }

@@ -39,13 +39,13 @@ extern "C" {
     } else if (nbparams[0] == 1) {
       nbunif = params[0] + 1.0;
     } else {
-      error("Number of parameters should be at most: 1");
+      Rf_error("Number of parameters should be at most: 1");
     }
 
 // If necessary, we check if some parameter values are out of parameter space
     double intpart;
     if (nbunif <= 1.0 || modf(nbunif, &intpart) != 0.0) {
-      warning("nbunif should be a positive integer value in law16!\n");
+      Rf_warning("nbunif should be a positive integer value in law16!\n");
       for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }

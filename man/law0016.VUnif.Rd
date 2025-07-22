@@ -31,4 +31,5 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, VUniform}
+\keyword{law}
+\keyword{VUniform}

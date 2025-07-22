@@ -74,12 +74,12 @@ extern "C" {
       alpha = params[2];
       lambda = params[3];
    } else {
-      error("Number of parameters should be at most: 4");
+      Rf_error("Number of parameters should be at most: 4");
     }
 
 // If necessary, we check if some parameter values are out of parameter space
     if (phi <= 0.0 || alpha <= 0.0 || alpha >= 1.0 || lambda <= 0.0) {
-      warning("lambda and phi should be > 0 and you must take 0 < alpha < 1 in law38!\n");
+      Rf_warning("lambda and phi should be > 0 and you must take 0 < alpha < 1 in law38!\n");
       for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }

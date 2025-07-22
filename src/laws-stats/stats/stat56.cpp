@@ -12,7 +12,7 @@ extern "C" {
 // If the test statistic can only be in category 3 or 4 (see just below), INDICATE the following line accordingly. Else, leave it commented.
 // 0: two.sided=bilateral, 1: less=unilateral, 2: greater=unilateral, 3: bilateral test that rejects H0 only for large values of the test statistic, 
 // 4: bilateral test that rejects H0 only for small values of the test statistic
-    if (alter[0] != 0 && alter[0] != 1 && alter[0] != 2) error("alter should be in {0,1,2}");
+    if (alter[0] != 0 && alter[0] != 1 && alter[0] != 2) Rf_error("alter should be in {0,1,2}");
 
     int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {    
@@ -36,23 +36,36 @@ extern "C" {
 
     if (n > 3) {
 // Computation of the value of the test statistic
+      void R_rsort (double* x, int n);
       double sqrt(double x);
-      double statV4, xbar, s, b2, tmp = 0.0, tmp2 = 0.0, tmp4 = 0.0;
+      double statV4 = 0.0, muhat, bhat, tmp = 0.0;
+      double *z;
+      z = new double[n];
+      
+      // calculate mu^ and b^ by using the maximum likelihood estimators 
+      // mu^ = the sample median
+      // b^ = 1/n * \sum_{i=1}^{n} |xi - mu^|
       
       // calculate mu^
-      for (i = 0; i < n; i++) tmp = tmp + x[i];
-      xbar = tmp / (double)n;
+      R_rsort(x, n); 		// we sort the data
+      if (n % 2 == 0) {		// check if n is divisible by 2
+	muhat = (x[n / 2 - 1] + x[n / 2]) / 2.0;
+      } else {
+	muhat = x[n / 2];
+      }
       
       // calculate b^
-      for (i = 0; i < n; i++) tmp2 = tmp2 + R_pow(x[i] - xbar, 2.0);
-      s = sqrt(tmp2 / (double)n);
+      for (i = 0; i < n; i++) {
+	tmp = tmp + fabs(x[i] - muhat);
+      }
+      bhat = tmp / (double)n;
+
+      for (i = 0; i < n; i++) z[i] = (x[i] - muhat) / bhat;	
       
-      // calculate b2
-      for (i = 0; i < n; i++) tmp4 = tmp4 + R_pow((x[i] - xbar) / s, 4.0);
-      b2 = tmp4 / (double)n;
 	
-      // calculate statV	
-      statV4 = (b2 - 6.0) * sqrt((double)n / 1072.8);	
+      // calculate statV4
+      for (i = 0; i < n; i++) statV4 = statV4 + (43.2 - 33.6 * R_pow(z[i], 2.0) + R_pow(z[i], 4.0));
+      statV4 = statV4 / (24.0 * sqrt((double)n * (149.0 / 5.0)));	
 	
       statistic[0] = statV4; // Here is the test statistic value
       
@@ -73,6 +86,7 @@ extern "C" {
       }
       
       // If applicable, we free the unused array of pointers
+      delete[] z;
       
     }
     

@@ -72,7 +72,7 @@ extern "C" {
       sumC = sumC / (double)n;
       sumS = sumS / (double)n;
       
-      statK1 = 2.26 * (double)n * (R_pow(sumC, 2.0) + R_pow(sumS, 2.0));
+      statK1 = 1.856 * (double)n * (R_pow(sumC, 2.0) + R_pow(sumS, 2.0));
 	
       statistic[0] = statK1; // Here is the test statistic value
 

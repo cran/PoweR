@@ -26,4 +26,8 @@ Tests of goodness-of-fit based on the L_2-Wasserstein distance,
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
-\keyword{statistic, test, normality, Barrio-Cuesta-Matran-Rodriguez}
+
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{Barrio-Cuesta-Matran-Rodriguez}

@@ -8,8 +8,11 @@ if (statAD < 0.2) {
  else if (statAD < 0.6) {
    pval = exp(0.9177 - 4.279 * statAD - 1.38 * R_pow(statAD, 2.0));
  }
- else {
+ else if (statAD < 10) {
    pval = exp(1.2937 - 5.709 * statAD + 0.0186 * R_pow(statAD, 2.0));
+ }
+ else {
+   pval = 3.7 * R_pow(10.0, -24.0);
  }
 
 pvalue[0] = pval;

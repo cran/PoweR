@@ -25,4 +25,8 @@ Cabana, A. and Cabana, E. (1994), Goodness-of-Fit and Comparison Tests of the Ko
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
-\keyword{statistic, test, normality, Cabana-Cabana}
+
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{Cabana-Cabana}

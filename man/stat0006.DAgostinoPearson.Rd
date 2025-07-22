@@ -26,4 +26,8 @@ Tests for Departure from Normality. Empirical Results for the Distributions of b
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
-\keyword{statistic, test, normality, D'Agostino-Pearson}
+
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{D'Agostino-Pearson}

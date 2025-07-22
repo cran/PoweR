@@ -18,7 +18,7 @@ powcomp.easy <- function(params, M = 10 ^ 5, model = NULL, Rlaws = NULL, Rstats 
         tmp <- strsplit(substr(tmp, 6, nchar(tmp) - 1), ",")[[1]]
         for (i in 1:nsim) {
             if (!is.null(Rlaws[[i]])) {
-                if (class(Rlaws[[i]]) != "function") stop("Each non-null compoment of the list 'Rlaws' should be a (random generation) function.")
+                if (!inherits(Rlaws[[i]], "function")) stop("Each non-null compoment of the list 'Rlaws' should be a (random generation) function.")
                 if (params[i, 2] != 0) stop(paste("params[", i, ",2] should be set to 0.", sep = ""))
                 if (!all(is.na(params[i, 8:11]))) {
                     npartmp <- length(unlist(formals(eval(parse(text = tmp[i])))[-1]))
@@ -83,42 +83,61 @@ powcomp.easy <- function(params, M = 10 ^ 5, model = NULL, Rlaws = NULL, Rstats 
     decision.len <- nsim
     decision <- rep(0, decision.len)
     
-    if (is.double(model) || is.integer(model)) {
-        
-        modelnum <- model
-        funclist <- list(function(){})
-        thetavec <- 0
-        xvec <- 0
-        p <- length(thetavec)
-        np <- length(xvec)
-        
+if (is.null(model)) {
+    modelnum <- -1               # No model
+    funclist_r <- list(NULL)     # For .Call: list with NULL
+    funclist_c <- character(0)   # For .C: empty character vector
+    thetavec <- numeric(0)
+    xvec <- numeric(0)
+    p <- 0
+    np <- 0
+
+} else if (is.double(model) || is.integer(model)) {
+    modelnum <- as.integer(model)
+    funclist_r <- list(NULL)
+    funclist_c <- character(0)
+    thetavec <- numeric(0)
+    xvec <- numeric(0)
+    p <- 0
+    np <- 0
+
+} else {
+    modelnum <- 0
+    funclist_r <- list(model[[1]])
+    thetavec <- model[[2]]
+    xvec <- model[[3]]
+    p <- length(thetavec)
+    np <- length(xvec)
+
+    # Prepare funclist_c: extract function name as character for .C
+    # If model[[1]] is a function, try to get its name:
+    if (is.function(model[[1]])) {
+      fname <- NULL
+      # Try to get the name in the calling environment
+      # This can be tricky; a safe fallback is:
+      fname <- deparse(substitute(model[[1]])) 
+      # but this often returns the expression "model[[1]]" itself, so better:
+      # The user should provide the function name as character instead of anonymous function.
+      # Or try environment lookup:
+      if (is.null(fname) || grepl("model\\[\\[1\\]\\]", fname)) {
+        fname <- "userfun"  # fallback name, you may want to require the user to provide a named function
+      }
+      funclist_c <- c(fname)
+    } else if (is.character(model[[1]])) {
+      funclist_c <- model[[1]]
     } else {
-        
-        if (is.null(model)) {
-            modelnum <- 1
-            funclist <- list(function(){})
-            thetavec <- 0
-            xvec <- 0
-            p <- length(thetavec)
-            np <- length(xvec)
-        } else { # model should be a list (function(x,thetavec,xvec),theta,xvec)
-            modelnum <- 0
-            funclist <- list(model[[1]])
-            thetavec <- model[[2]]
-            xvec <- model[[3]]
-            p <- length(thetavec)
-            np <- length(xvec)     
-        }
+      stop("The first element of 'model' must be a function or a function name as character.")
     }
-    
+}
+      
     if (Rcpp | any(params[,"stat"] == 0)) {
         out <- .Call("powcompeasyRcpp", as.integer(M), params = as.double(as.vector(t(params))), as.integer(ncol(params)), decision = as.integer(decision), as.integer(decision.len),
-                     as.integer(modelnum), as.list(funclist), as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np), as.list(Rlaws), Rstats, as.integer(center),
+                     as.integer(modelnum), as.list(funclist_r), as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np), as.list(Rlaws), Rstats, as.integer(center),
                      as.integer(scale), NAOK = TRUE, PACKAGE = "PoweR")
     } else {
   # call function powcompeasy in C  
         out <- .C("powcompeasy", as.integer(M), params = as.double(as.vector(t(params))), as.integer(ncol(params)), decision = as.integer(decision), as.integer(decision.len),
-                  as.integer(modelnum), funclist, as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np), as.integer(center), as.integer(scale), NAOK = TRUE, PACKAGE = "PoweR")
+                  as.integer(modelnum), funclist_c, as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np), as.integer(center), as.integer(scale), NAOK = TRUE, PACKAGE = "PoweR")
   }
   
     decision <- out$decision / M

@@ -28,4 +28,7 @@ Vasicek, O. (1976), A test for normality based on sample entropy,
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Uniformity.tests}} for other goodness-of-fit tests for uniformity.
 }
-\keyword{statistic, test, uniformity, Vasicek}
+\keyword{statistic}
+\keyword{test}
+\keyword{uniformity}
+\keyword{Vasicek}

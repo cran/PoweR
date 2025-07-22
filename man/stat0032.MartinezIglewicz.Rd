@@ -25,4 +25,8 @@ Martinez, J. and Iglewicz, B. (1981), A test for departure from normality based 
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
-\keyword{statistic, test, normality, Martinez-Iglewicz}
+
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{Martinez-Iglewicz}

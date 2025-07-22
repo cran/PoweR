@@ -1,7 +1,7 @@
 // Title: The Kundu statistic for the Laplace distribution
 // Ref. (book or article): Kundu, Debasis (2005), Discriminating between Normal and Laplace distributions,
 //						   Advances in ranking and selection, multiple comparisons, and reliability, 65--79, 
-//						   Stat. Ind. Technol., Birkhäuser Boston, Boston, MA. 
+//						   Stat. Ind. Technol., Birkhauser Boston, Boston, MA. 
 
 #include <R.h>
 #include "Rmath.h"

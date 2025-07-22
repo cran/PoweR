@@ -36,4 +36,5 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Gamma}
+\keyword{law}
+\keyword{Gamma}

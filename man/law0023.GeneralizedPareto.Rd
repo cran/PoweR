@@ -32,4 +32,5 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Generalized Pareto}
+\keyword{law}
+\keyword{Generalized Pareto}

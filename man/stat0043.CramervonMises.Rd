@@ -25,4 +25,8 @@ Yen, Vincent C. and Moore, Albert H. (1988), Modified goodness-of-fit test for t
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See package \code{lawstat}. See \code{\link{Laplace.tests}} for other goodness-of-fit tests for the Laplace distribution.
 }
-\keyword{statistic, test, Laplace, Cramer-von Mises}
+
+\keyword{statistic}
+\keyword{test}
+\keyword{Laplace}
+\keyword{Cramer-von Mises}

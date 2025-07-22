@@ -74,12 +74,12 @@ extern "C" {
       theta1 = params[2];
       theta2 = params[3];
    } else {
-      error("Number of parameters should be at most: 4");
+      Rf_error("Number of parameters should be at most: 4");
     }
 
 // If necessary, we check if some parameter values are out of parameter space
     if (sigma <= 0.0 || theta1 <= 0.0 || theta1 >= 1.0 || theta2 <= 0.0) {
-      warning("theta2 and sigma should be > 0 and you must take 0 < theta1 < 1 in law39!\n");
+      Rf_warning("theta2 and sigma should be > 0 and you must take 0 < theta1 < 1 in law39!\n");
       for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }

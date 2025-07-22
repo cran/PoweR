@@ -43,10 +43,17 @@ extern "C" {
     } else if (nbparamstat[0] == 1) {
       a = paramstat[0];
     } else {
+      Rf_error("Number of parameters should be at most: 1");
+    }
+
+// If necessary, we check if some parameter values are out of parameter space
+    if (a <= 0.0) {
+      Rf_warning("a should be > 0 in stat48!\n");
+      for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }
 
-    if (n>3) {
+    if (n > 3) {
 // Computation of the value of the test statistic
     void R_rsort (double* x, int n);
     double *Y;

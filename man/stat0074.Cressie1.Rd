@@ -28,4 +28,7 @@ Cressie, N. (1978), Power results for tests based on high order gaps,
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Uniformity.tests}} for other goodness-of-fit tests for uniformity.
 }
-\keyword{statistic, test, uniformity, Cressie}
+\keyword{statistic}
+\keyword{test}
+\keyword{uniformity}
+\keyword{Cressie}

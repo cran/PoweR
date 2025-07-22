@@ -39,24 +39,28 @@ extern "C" {
 // Computation of the value of the test statistic
     void R_rsort (double* x, int n);
     //    double pnorm(double q, double mean, double sd, int lower_tail, int log_p);
-    double *Phiz;
-    Phiz = new double[n];
-    double varX = 0.0, meanX = 0.0, sdX, statZA = 0.0;
+    double logp1, logp2;
+    double varX, meanX, sdX, statZA, tmp;
 
-    for (i = 0; i < n; i++) {
-      meanX = meanX + x[i];
-      varX = varX + R_pow(x[i], 2.0);
-    }
+    // Two-pass algorithm algorithm is less prone to numerical errors than the naive approach
+    // https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance
+    meanX = 0.0;
+    for (i = 0; i < n; i++) meanX = meanX + x[i];
     meanX = meanX / (double)n;
-    varX =  (varX - ((double)n) * R_pow(meanX, 2.0)) / (double)(n - 1); 
+    varX = 0.0;
+    for (i = 0; i < n; i++) varX = varX + R_pow(x[i] - meanX, 2.0);
+    varX = varX / (double)(n - 1); 
     sdX = sqrt(varX);
-    for (i = 0; i < n; i++) Phiz[i] = Rf_pnorm5((x[i] - meanX) / sdX, 0.0, 1.0, 1,0);
-    R_rsort (Phiz, n); // We sort the data
-    for (i = 1; i <= n; i++) statZA = statZA + log(Phiz[i - 1]) / ((double)(n - i) + 0.5) + log(1.0 - Phiz[i - 1]) / ((double)i - 0.5);
-    
-	// calculate statZA
-	
-    statZA = -statZA;
+
+    R_rsort (x, n); // We sort the data
+
+    statZA = 0.0;
+    for (i = 1; i <= n; i++) {
+      tmp = (x[i - 1] - meanX) / sdX;
+      logp1 = Rf_pnorm5(tmp, 0.0, 1.0, 1, 1);
+      logp2 = Rf_pnorm5(tmp, 0.0, 1.0, 0, 1);
+      statZA = statZA - logp1 / ((double)(n - i) + 0.5) - logp2 / ((double)i - 0.5);
+    }
     
     statZA = 10.0 * statZA - 32.0; // See p. 711 of the paper
     
@@ -78,7 +82,6 @@ extern "C" {
     }
     
 // If applicable, we free the unused array of pointers
-    delete[] Phiz;
 
 }
 

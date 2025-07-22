@@ -26,4 +26,7 @@ Yen, Vincent C. and Moore, Albert H. (1988), Modified goodness-of-fit test for t
 \seealso{See package \code{lawstat}. See \code{\link{Laplace.tests}} for other goodness-of-fit tests for the Laplace distribution.
 }
 
-\keyword{statistic, test, Laplace, Anderson-Darling}
+\keyword{statistic}
+\keyword{test}
+\keyword{Laplace}
+\keyword{Anderson-Darling}

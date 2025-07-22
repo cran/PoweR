@@ -37,7 +37,7 @@ extern "C" {
     if (n > 3) {
 // Computation of the value of the test statistic
       void R_rsort (double* x, int n);
-      double statK, muhat, bhat, zeta, xbar, v1sqrt, v2, tmp=0.0, tmp2=0.0, tmp3=0.0, tmp4=0.0, C1, C2;
+      double statK, muhat, bhat, zeta, xbar, v1sqrt, v2, tmp, tmp2, tmp3, tmp4, C1, C2;
 
       // calculate mu^ and b^ by using the maximum likelihood estimators 
       // mu^ = the sample median
@@ -52,6 +52,7 @@ extern "C" {
       }
       
       // calculate b^
+      tmp = 0.0;
       for (i = 0; i < n; i++) {
 	tmp = tmp + fabs(x[i] - muhat);
       }
@@ -61,25 +62,28 @@ extern "C" {
       zeta = sqrt(2.0) * bhat;
       
       // calculate xbar
+      tmp2 = 0.0;
       for (i = 0; i < n; i++) {
 	tmp2 = tmp2 + x[i];
       }
       xbar = tmp2 / (double)n;
       
       // calculate v1sqrt and v2
+      tmp3 = 0.0;
+      tmp4 = 0.0;
       for (i = 0; i < n; i++) {
 	tmp3 = tmp3 + R_pow(x[i] - xbar, 3.0);
 	tmp4 = tmp4 + R_pow(x[i] - xbar, 4.0);
       }
       
-      v1sqrt = (tmp3 / ((double)n) * R_pow(zeta, 3.0));
-      v2 = (tmp4 / ((double)n) * R_pow(zeta, 4.0));
+      v1sqrt = tmp3 / ((double)n * R_pow(zeta, 3.0));
+      v2 = tmp4 / ((double)n * R_pow(zeta, 4.0));
       
       // calculate statK
       C1 = 60.0;
       C2 = 1200.0;
       
-      statK = (double)n * R_pow(v1sqrt, 2.0) / C1 + (double)n * R_pow(v2 - 6.0, 2.0) / C2;	
+      statK = (double)n * (R_pow(v1sqrt, 2.0) / C1 + R_pow(v2 - 6.0, 2.0) / C2);	
       
       statistic[0] = statK; // Here is the test statistic value
 

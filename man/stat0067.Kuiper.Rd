@@ -28,4 +28,7 @@ Brunk, H. D. (1962), On the range of the difference between hypothetical distrib
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Uniformity.tests}} for other goodness-of-fit tests for uniformity.
 }
-\keyword{statistic, test, uniformity, Kuiper}
+\keyword{statistic}
+\keyword{test}
+\keyword{uniformity}
+\keyword{Kuiper}

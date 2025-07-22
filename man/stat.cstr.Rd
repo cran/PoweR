@@ -8,15 +8,17 @@ To obtain the name of a test as well as its default number of parameters
 and default parameter values.
 }
 \usage{
-stat.cstr(stat.index, stat.pars = NULL)
+stat.cstr(stat.index, stat.pars = NULL, n = 0)
 }
 \arguments{
   \item{stat.index }{a single integer value corresponding to the index of a test statistic as
 given by function \code{\link{getindex}}.
 }
   \item{stat.pars }{vector of the values of the parameters of the test specified in
-\code{stat.index}. If \code{NULL}, the default values are used.
-}
+    \code{stat.index}. If \code{NULL}, the default values are used.}
+
+    \item{n }{integer giving the sample size (useful since some default
+      values of the parameters might depend on the sample size).}
 }
 \value{
 \item{name }{name of the test.}

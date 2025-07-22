@@ -25,4 +25,7 @@ Desgagne, A., Lafaye de Micheaux, P. and Leblanc, A., unpublished document.
 
 \seealso{See package \code{lawstat}. See \code{\link{Laplace.tests}} for other goodness-of-fit tests for the Laplace distribution.
 }
-\keyword{statistic, test, Laplace, Desgagne-Micheaux-Leblanc}
+\keyword{statistic}
+\keyword{test}
+\keyword{Laplace}
+\keyword{Desgagne-Micheaux-Leblanc}

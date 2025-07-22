@@ -26,4 +26,7 @@ Working Paper, Nuffield College, Oxford University, U.K.
 \seealso{See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
 
-\keyword{statistic, test, normality, Doornik-Hansen}
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{Doornik-Hansen}

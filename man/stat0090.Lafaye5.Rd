@@ -24,4 +24,6 @@ Studies for Goodness-of-fit Tests in R. \emph{Journal of Statistical Software}, 
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
-\keyword{statistic, test, normality}
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}

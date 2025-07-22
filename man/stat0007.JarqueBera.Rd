@@ -26,4 +26,7 @@ Jarque, C.M. and Bera, A.K. (1987), A Test for Normality of Observations and Reg
 \seealso{See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
 
-\keyword{statistic, test, normality, Jarque-Bera}
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{Jarque-Bera}

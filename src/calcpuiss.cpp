@@ -8,6 +8,19 @@
 // // using namespace std; // Pierre modified this on 22/12/2015
 
 #include <R.h>
+#include <Rinternals.h>
+
+#ifdef length
+#undef length
+#endif
+#ifdef isNull
+#undef isNull
+#endif
+#ifdef warning
+#undef warning
+#endif
+
+#include <cstring> // for memcpy
 #include "Rmath.h"
 #include <R_ext/Rdynload.h>
 
@@ -19,6 +32,56 @@ extern "C" {
 
 static char *sfunction;
 
+void call_R(char *func,
+            long nargs,
+            void **arguments,
+            char **modes,
+            long *lengths,
+            char **names,
+            long nres,
+            SEXP *results) {
+
+  SEXP Rfunc = Rf_findFun(Rf_install(func), R_GlobalEnv);
+  if (Rfunc == R_UnboundValue) {
+    Rf_error("Function %s not found in R global environment", func);
+  }
+
+  // Build the call starting with the function symbol
+  SEXP call = PROTECT(Rf_lang1(Rfunc));
+
+  // Add arguments in reverse order with Rf_lcons
+  for (long i = 0; i < nargs; i++) {
+    SEXP arg = R_NilValue;
+
+    if (strcmp(modes[i], "double") == 0) {
+      arg = PROTECT(Rf_allocVector(REALSXP, lengths[i]));
+      memcpy(REAL(arg), arguments[i], lengths[i] * sizeof(double));
+    } else {
+      Rf_error("Unsupported mode %s in call_R", modes[i]);
+    }
+
+    call = Rf_lcons(arg, call);
+    UNPROTECT(1);
+  }
+
+  // Reverse call so order is (func arg1 arg2 ...)
+  SEXP call_reversed = R_NilValue;
+  SEXP tmp = call;
+  while (tmp != R_NilValue) {
+    call_reversed = Rf_lcons(CAR(tmp), call_reversed);
+    tmp = CDR(tmp);
+  }
+  UNPROTECT(1);
+  PROTECT(call_reversed);
+
+  // Evaluate the call
+  SEXP ans = Rf_eval(call_reversed, R_GlobalEnv);
+
+  UNPROTECT(1);  // call_reversed
+
+  results[0] = ans;  // Return the R object to caller
+}
+  
   // Generation of the sample
   
   int gensample(int law, int *xlen, double *x, char **name, int *getname, double *params, int *nbparams, int *setseed, int *center, int *scale) {
@@ -70,15 +133,32 @@ static char *sfunction;
     
   }
 
+    void statcomputeC(int *stat, double *x, int *xlen, double *level, int *nblevel, char **name, int *getname, double *statistic, int *pvalcomp, double *pvalue, double *critvalL, double *critvalR, int *usecrit, int *alter, int *decision, double *paramstat, int *nbparamstat) {
+    
+    //    int i;
+
+    //    double *xcopy; // POURQUOI J'AI FAIT CA??? IL FAUT LE FAIRE AUSSI POUR statistic, pvalue, etc ...?
+    //    xcopy = new double[*(xlen+0)];
+    //    for (i=1;i<=*(xlen+0);i++) *(xcopy+i-1) = *(x+i-1);    
+
+    //    (*statfunc[stat-1])(xcopy,xlen,level,nblevel,name,getname,statistic,pvalcomp,pvalue,critvalL,critvalR,usecrit,alter,decision,paramstat,nbparamstat);
+    (*statfunc[stat[0]-1])(x,xlen,level,nblevel,name,getname,statistic,pvalcomp,pvalue,critvalL,critvalR,usecrit,alter,decision,paramstat,nbparamstat);
+    
+    //    delete[] xcopy;
+
+    return;
+    
+  }
+
   // Models
   
   int model(int modelnum, char** funclist, double *thetavec, double *xvec, int *xlen, double *x, int *p, int *np) {
     
     if (modelnum == 0) { // Appel d'une fonction en R
 
-      void call_R(char *func, long nargs, void **arguments, char **modes,long *lengths, char **names, long nres, char **results);
+      void call_R(char *func, long nargs, void **arguments, char **modes,long *lengths, char **names, long nres, SEXP *results);
 
-      int i;
+//      int i;
       sfunction = funclist[0];
       
       long nargs=3; // Nombre d'arguments
@@ -105,21 +185,31 @@ static char *sfunction;
       names = (char**)0;
       
       long nres=1; // Longeur de la liste de valeurs renvoyées par la fonction R dont le nom est stocké dans funclist
-      
+
+      /*
       char **results; // Les résultats
       results = new char*[1];
       results[0] = new char[xlen[0]];
-      
+      */
+      SEXP *results = new SEXP[1];  // just allocate space for 1 SEXP pointer
       
       call_R(sfunction,nargs,arguments,modes,lengths,names,nres,results);
       
-  
+      /*
       for (i=0;i<=(xlen[0]-1);i++) {
 	
 		x[i] = ((double*)results[0])[i];
 	
       }
-      
+      */
+      if (TYPEOF(results[0]) == REALSXP) {
+	double *res_ptr = REAL(results[0]);
+	for (int i = 0; i < xlen[0]; i++) {
+	  x[i] = res_ptr[i];
+	}
+      } else {
+	Rf_error("Unexpected return type from R function");
+      }
       
       //On libere de la memoire
       delete[] arguments;
@@ -218,8 +308,9 @@ static char *sfunction;
 	for (i = 1; i <= M[0]; i++) { // on part la simul, sans refaire la 1ere iteration!
 	  
 	  gensample(law, xlen, x, name1, getname, parlaw, nbparlaw, setseed, center, scale); // on génère l'échantillon
+if (modelnum[0] >= 0) {
 	  model(modelnum[0], funclist, thetavec, xvec, xlen, x, p, np);  // on applique le modèle
-	  
+ }	  
 	  statcompute(stat, x, xlen, level, nblevel, name2, getname, statistic, pvalcomp, pvalue, critvalL, critvalR, usecrit, alter, decisiontmp, parstat, nbparstat);
 	  decision[row-1] = decision[row-1] + decisiontmp[0];
 	  
@@ -338,8 +429,9 @@ static char *sfunction;
       x = new double[*(n+0)];
       for (j=1;j<=*(n+0);j++) *(x+j-1) = 0.0;
       gensample(*(law+0),n,x,name1,getname,parlaw,nbparlaw,setseed,center,scale);
+if (modelnum[0] >= 0) {
       model(modelnum[0],funclist,thetavec,xvec,n,x,p,np);   // on applique le modèle
-    
+ }    
       statcompute(*(stat+0), x, n, level, nblevel, name2, getname, statistic, pvalcomp,pvalue,critvalL,critvalR,usecrit,alter,decisiontmp,parstat,nbparstat);
     
       *(statvec+i-1) = *(statistic+0);      
@@ -379,27 +471,25 @@ static char *sfunction;
   // Computation of the power of the test statistic
   void powcompfast(int *M, int *vectlaws, int *lawslen, int *vectn, int *vectnlen, int *vectstats, int *statslen, int *decision, int *decisionlen, double *level, int *nblevel,
 		   double *critvalL, double *critvalR, int *usecrit, int *alter, int *nbparlaw, double *parlaw, int *nbparstat, double *parstat, int *modelnum, char** funclist, 
-		   double *thetavec, double *xvec, int *p, int *np, int *center, int *scale, int *compquant) {
+		   double *thetavec, double *xvec, int *p, int *np, int *center, int *scale, int *compquant, int *pvalcomp) {
 
 
     // Warning: When compquant[0] == 1, critvalL should be initialized with lawslen[0] * M[0] * vectnlen[0] * statslen[0] double values since it will contain (when output)
     // all the test statistics generated. Most probably, lawslen[0] should be equal to 1.
 
     // Il faut permuter M et law ci-dessous et aussi dans les fichiers R concernés (ainsi que dans la fonction print)!!
-
+   
     int gensample(int law, int *xlen, double *x, char **name1, int *getname, double *params, int *nbparams, int *setseed, int *center, int *scale);
     void statcompute(int stat, double *x, int *xlen, double *level, int *nblevel, char **name2, int *getname, double *statistic, 
 		     int *pvalcomp,double *pvalue, double *critvalL, double *critvalR, int *usecrit, int *alter, int *decision, double *paramstat, int *nbparamstat);
     int model(int modelnum, char** funclist, double *thetavec, double *xvec, int *xlen, double *x, int *p, int *np);
    
     double *statistic, *pvalue; // POUR L'INSTANT JE N'EN FAIT RIEN DE pvalue!! Si je veux les récupérer dans R il faudra faire des modifs!! A voir ...
-    int *pvalcomp;
     statistic = new double[1];
     pvalue = new double[1];
-    pvalcomp = new int[1];
     statistic[0] = 0.0;
     pvalue[0] = 0.0;
-    if (compquant[0] == 1) pvalcomp[0] = 0; else pvalcomp[0] = 1;
+    if (compquant[0] == 1) pvalcomp[0] = 0;// else pvalcomp[0] = 1;
 
     int indtmp = 0;
 
@@ -449,7 +539,7 @@ static char *sfunction;
     //    int m;
     int kmax = 0; 		// kmax = parstats.len.max in powcomp-fast.R
     for (t = 0; t < statslen[0]; t++) {
-      if (kmax <= nbparstat[t]) {
+      if (kmax < nbparstat[t]) {
 	kmax = nbparstat[t];
       } //else kmax = kmax;
     }
@@ -464,17 +554,20 @@ static char *sfunction;
 
       for (i = 1; i <= M[0]; i++) {
 
+
 	xlen[0] = maxn; // on génère un échantillon de taille maxn de loi law 
 
+	
 	nbparlawtmp[0] = nbparlaw[law];
 	parlawtmp[0] = parlaw[0 + 4 * law];
 	parlawtmp[1] = parlaw[1 + 4 * law];
 	parlawtmp[2] = parlaw[2 + 4 * law];
 	parlawtmp[3] = parlaw[3 + 4 * law];
-	
+
 	gensample(vectlaws[law], xlen, x, name1, getname, parlawtmp, nbparlawtmp, setseed, center, scale);
+if (modelnum[0] >= 0) {
 	model(modelnum[0], funclist, thetavec, xvec, xlen, x, p, np);   // on applique le modèle
-	
+ }	
 	if (i == 1) {
 	  nbparlaw[law] = nbparlawtmp[0];
 	  parlaw[0 + 4 * law] = parlawtmp[0];
@@ -484,11 +577,15 @@ static char *sfunction;
 	}
 
 	for (n = 0; n < vectnlen[0]; n++) {
-	  
+
+
 	  xlen[0] = vectn[n]; // permet de ne prendre que la portion (au début) de x de taille vectn[n-1]
 	  
 	  stlen1 = 0; stlen2 = 0;
 	  for (stat = 0; stat < statslen[0]; stat++) {
+
+
+
 	    
 	    altertmp[0] = alter[stat];
 	    
@@ -523,6 +620,7 @@ static char *sfunction;
 	    if (compquant[0] == 0) {
 	      for (j = 0; j < nblevel[0]; j++) {
 		indtmp = stat + statslen[0] * n + statslen[0] * vectnlen[0] * law + statslen[0] * vectnlen[0] * lawslen[0] * j;
+		// The values in decision are organized as follows: level..law..n..stat (where stat moves the fastest)
 		decision[indtmp] = decision[indtmp] + decisiontmp[j];
 	      }
 	    }
@@ -545,7 +643,6 @@ static char *sfunction;
     delete[] name2;
     delete[] statistic;
     delete[] pvalue;
-    delete[] pvalcomp;
     delete[] decisiontmp;
     delete[] xlen;
     delete[] altertmp;

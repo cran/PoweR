@@ -30,4 +30,8 @@ Choi, B. and Kim, K. (2006), Testing goodness-of-fit for Laplace distribution ba
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Laplace.tests}} for other goodness-of-fit tests for the Laplace distribution.
 }
-\keyword{statistic, test, Laplace, Choi-Kim}
+
+\keyword{statistic}
+\keyword{test}
+\keyword{Laplace}
+\keyword{Choi-Kim}

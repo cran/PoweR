@@ -11,7 +11,7 @@ extern "C" {
 // If the test statistic can only be in category 3 or 4 (see just below), INDICATE the following line accordingly. Else, leave it commented.
 // 0: two.sided=bilateral, 1: less=unilateral, 2: greater=unilateral, 3: bilateral test that rejects H0 only for large values of the test statistic, 
 // 4: bilateral test that rejects H0 only for small values of the test statistic
-    alter[0] = 0;
+    alter[0] = 3;
 
     int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {    

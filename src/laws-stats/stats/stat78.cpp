@@ -1,8 +1,8 @@
 // Title: The Morales statistic for uniformity
 // Ref. (book or article): Morales, D., Pardo, L., Pardo, M. C. and Vajda, I. (2003), Limit laws for disparities of spacings,
 //						   Journal of Nonparametric Statistics, 15(3), 325-342.
-// M. A. Marhuenda, Y. Marhuenda, D. Morales, (2005), Uniformity tests under quantile categorization, 
-// \emph{Kybernetes}, \bold{34}(6), 888--901.
+// Y. Marhuenda, D. Morales & M. C. Pardo, (2005), A comparison of uniformity tests, 
+// A Journal of Theoretical and Applied Statistics, 39:4, 315-327
 
 
 #include <R.h>
@@ -34,82 +34,83 @@ extern "C" {
 	name[j][0] = nom[j];
 	j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50; i++) name[i][0] = space[0];
       return;
     }
 
 // Initialization of the parameters
-    double lambda, m;
+    double lambda;
+    int m;
     if (nbparamstat[0] == 0) {
       nbparamstat[0] = 2;
       lambda = 0.0;
-	  m = 2.0;
+      m = 2;
       paramstat[0] = 0.0;
       paramstat[1] = 2.0;
     } else if (nbparamstat[0] == 1) {
       nbparamstat[0] = 2;
       lambda = paramstat[0];
-      m = 2.0;
+      m = 2;
       paramstat[1] = 2.0;
     } else if (nbparamstat[0] == 2) {
       lambda = paramstat[0];
-      m = paramstat[1];
+      m = (int)paramstat[1];
     } else {
+      Rf_error("Number of parameters should be at most: 2");
+    }
+
+    // If necessary, we check if some parameter values are out of parameter space
+    if (m > (n + 1)) {
+      Rf_warning("m should be <= n+1 in stat78!\n");
+      for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }
-	
 
     if (n>3) {
 // Computation of the value of the test statistic
     void R_rsort (double* x, int n);
     double punif(double q, double min, double max, int lower_tail, int log_p);
     double *U;
-	double *G;
+    double *Gnm;
     U = new double[n];
-	G = new double[n];
-	double statDn, sumDn=0.0, nGm;
+    Gnm = new double[n];
+    double temp, statDn;
 	
 
-	// generate vector U
-	for (i=0;i<n;i++) {
-	  U[i] = punif(x[i],0.0,1.0,1,0);
-	}
-    R_rsort(U,n); // We sort the data
+    // generate vector U
+    for (i = 0; i < n; i++) {
+      U[i] = punif(x[i], 0.0, 1.0, 1, 0);
+    }
+    R_rsort(U, n); // We sort the data
 	
-	// generate vector G
-    for (i=0; i<n; i++) {
-      if (i < (n-(int)m)) {
-	    G[i] = U[i+(int)m] - U[i];
-	  } else {
-	    G[i] = 1.0 + U[i+(int)m-n] - U[i];
-	  }
+    // generate vector Gnm
+    for (i = 0; i < n; i++) {
+      if (i < (n - m)) {
+	Gnm[i] = U[i + m] - U[i];
+      } else {
+	Gnm[i] = 1.0 + U[i + m - n] - U[i];
+      }
     }
 	
-	    
-	// calculate statDn
-      
-	if (lambda == 0) {
-	  for (i=0;i<n;i++) {
-	    nGm = (double)n*G[i]/m;
-	    if (G[i] > 0.0000000000000001) sumDn = sumDn + nGm*log(nGm);
-	  }
-	}
-	  
-	if (lambda == -1) {
-	  for (i=0;i<n;i++) {
-	    sumDn = sumDn - log((double)n*G[i]/m);
-	  }
-	}
-	  
-	if ((lambda != 0) && (lambda != -1)) {
-	  for (i=0;i<n;i++) {
-	    sumDn = sumDn + (R_pow((double)n*G[i]/m,lambda+1.0) - 1.0)/(lambda*(lambda+1.0));
-	  }
-	}
-
-	statDn = sumDn;
-	
-	
+    // calculate statDn
+    if (fabs(lambda) < 0.0000000000000001) { // lambda = 0.0
+      statDn = 0.0;
+      for (i = 0; i < n; i++) {
+	temp = (double)n * Gnm[i] / (double)m;
+	if (Gnm[i] > 0.0000000000000001) statDn = statDn + temp * log(temp);
+      }
+    } else if (fabs(lambda + 1.0) < 0.0000000000000001) { // lambda = -1.0
+      statDn = 0.0;
+      for (i = 0; i < n; i++) {
+	statDn = statDn - log((double)n * Gnm[i] / (double)m);
+      }
+    } else {
+      statDn = 0.0;
+      for (i = 0; i < n; i++) {
+	statDn = statDn + (R_pow((double)n * Gnm[i] / (double)m, lambda + 1.0) - 1.0) / (lambda * (lambda + 1.0));
+      }
+    }
+    
     statistic[0] = statDn; // Here is the test statistic value
 	
 
@@ -118,7 +119,7 @@ if (pvalcomp[0] == 1) {
 	#include "pvalues/pvalue78.cpp"
 }
 // We take the decision to reject or not to reject the null hypothesis H0
-    for (i=0;i<=(nblevel[0]-1);i++) {
+    for (i = 0; i <= (nblevel[0] - 1); i++) {
       if (usecrit[0] == 1) { // We use the provided critical values
 	  if (statistic[0] > critvalR[i]) decision[i] = 1; else decision[i] = 0; // two.sided (but in this case only one possible critical value)
       } else {
@@ -128,7 +129,7 @@ if (pvalcomp[0] == 1) {
     
 // If applicable, we free the unused array of pointers
     delete[] U;
-	delete[] G;
+    delete[] Gnm;
 
 }
 

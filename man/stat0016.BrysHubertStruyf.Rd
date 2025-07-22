@@ -25,4 +25,8 @@ Brys, G., Hubert, M. and Struyf, A. (2008), Goodness-of-fit tests based on a rob
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
-\keyword{statistic, test, normality, Brys-Hubert-Struyf}
+
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{Brys-Hubert-Struyf}

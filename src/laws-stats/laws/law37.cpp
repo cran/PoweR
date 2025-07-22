@@ -75,12 +75,12 @@ extern "C" {
       delta = params[2];
       mu = params[3];
     } else {
-      error("Number of parameters should be at most: 4");
+      Rf_error("Number of parameters should be at most: 4");
     }
 
 // If necessary, we check if some parameter values are out of parameter space
     if (alpha <= 0.0 || delta < 0.0 || beta < -alpha || beta > alpha) {
-      warning("correct values of the parameters are: alpha > 0 && delta >= 0 && beta in (-alpha,alpha) in law37!\n");
+      Rf_warning("correct values of the parameters are: alpha > 0 && delta >= 0 && beta in (-alpha,alpha) in law37!\n");
       for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }

@@ -46,12 +46,12 @@ extern "C" {
       shape = params[0];
       scale = params[1];
     } else {
-      error("Number of parameters should be at most: 2");
+      Rf_error("Number of parameters should be at most: 2");
     }
 
 // If necessary, we check if some parameter values are out of parameter space
     if (shape <= 0.0 || scale < 0.0) {
-      warning("correct values are shape>0 and scale >=0 in law11!\n");
+      Rf_warning("correct values are shape>0 and scale >=0 in law11!\n");
       for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }

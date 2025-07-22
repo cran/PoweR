@@ -33,4 +33,5 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Generalized Extreme Value}
+\keyword{law}
+\keyword{Generalized Extreme Value}

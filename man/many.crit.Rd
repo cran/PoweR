@@ -1,4 +1,5 @@
 \name{many.crit}
+\alias{many.critR}
 \alias{many.crit}
 \title{Computation of critical values for several test statistics}
 \description{Computation of critical values for several test statistics,

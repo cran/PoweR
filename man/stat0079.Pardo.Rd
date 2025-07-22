@@ -27,4 +27,7 @@ Pardo, M. C. (2003), A test for uniformity based on informational energy,
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Uniformity.tests}} for other goodness-of-fit tests for uniformity.
 }
-\keyword{statistic, test, uniformity, Pardo}
+\keyword{statistic}
+\keyword{test}
+\keyword{uniformity}
+\keyword{Pardo}

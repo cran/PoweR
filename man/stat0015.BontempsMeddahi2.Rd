@@ -26,4 +26,7 @@ Bontemps, C. and Meddahi, N. (2005), Testing Normality: A GMM Approach,
 \seealso{See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
 
-\keyword{statistic, test, normality, Bontemps-Meddahi}
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{Bontemps-Meddahi}

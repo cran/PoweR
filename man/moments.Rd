@@ -1,4 +1,6 @@
 \name{moments} 
+\alias{moments42}
+\alias{moments41}
 \alias{moments40}
 \alias{moments39}
 \alias{moments38}

@@ -31,4 +31,5 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Generalized Error}
+\keyword{law}
+\keyword{Generalized Error}

@@ -1,5 +1,15 @@
 #include <Rcpp.h>
 
+#ifdef length
+#undef length
+#endif
+#ifdef isNull
+#undef isNull
+#endif
+#ifdef warning
+#undef warning
+#endif
+
 using namespace Rcpp;
 
 #include "Faddeeva.h"

@@ -31,4 +31,6 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Normal, Truncated Normal}
+\keyword{law}
+\keyword{Normal}
+\keyword{Truncated Normal}

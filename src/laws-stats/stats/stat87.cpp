@@ -34,7 +34,7 @@ extern "C" {
     double K = 1.0, XimXj, XimXbar;
 
 	
-    if (n>3) {
+    if (n > 3) {
 // Computation of the value of the test statistic
       double statTEP, term1=0.0, term2=0.0, xbar=0.0, S2=0.0, S, sMPI2, s1pK2;
       //double pnorm(double q, double mean, double sd, int lower_tail, int log_p);

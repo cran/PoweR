@@ -46,12 +46,12 @@ extern "C" {
       logmean = params[0];
       logsd = params[1];
     } else {
-      error("Number of parameters should be at most: 2");
+      Rf_error("Number of parameters should be at most: 2");
     }
 
 // If necessary, we check if some parameter values are out of parameter space
     if (logsd < 0.0) {
-      warning("logsd should not be < 0 in law10!\n");
+      Rf_warning("logsd should not be < 0 in law10!\n");
       for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }

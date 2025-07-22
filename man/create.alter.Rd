@@ -25,7 +25,7 @@ See Section 3.3 in Lafaye de Micheaux, P. and Tran, V. A. (2014).
 \value{
 A named list. Each component of the list has the name of the
 corresponding index in \code{stat.indices} (e.g. \code{stat}\eqn{xxx})
-and has the value (in {0,1,2,3,4}) of the type of test (see Details above). 
+and has the value (in \{0,1,2,3,4\}) of the type of test (see Details above). 
 }
 \references{
 Pierre Lafaye de Micheaux, Viet Anh Tran (2016). PoweR: A

@@ -1,6 +1,6 @@
 powcomp.fast <- function(law.indices, stat.indices, vectn = c(20, 50, 100), M = 10 ^ 3, levels = c(0.05, 0.1), critval = NULL,
                          alter = create.alter(stat.indices), parlaws = NULL, parstats = NULL, nbclus = 1, model = NULL,
-                         null.law.index = 2, null.law.pars = NULL, Rlaws = NULL, Rstats = NULL, center = FALSE, scale = FALSE) {
+                         null.law.index = 2, null.law.pars = NULL, Rlaws = NULL, Rstats = NULL, center = FALSE, scale = FALSE, pvalcomp = 1L) {
 
     compquant <- 0L # This argument should only be used when one wants to compute the critical values (quantiles) of some test statistics,
                     # through the function many.crit(). The values of the statistics will be returned through the critvalL argument (of size M*vectnlen*statslen*lawlen)
@@ -21,7 +21,7 @@ powcomp.fast <- function(law.indices, stat.indices, vectn = c(20, 50, 100), M = 
         tmpnames <- tmp
         for (i in 1:length(law.indices)) {
             if (!is.null(Rlaws[[i]])) {
-                if (class(Rlaws[[i]]) != "function") stop("Each non-null compoment of the list 'Rlaws' should be a (random generation) R function.")
+                if (!inherits(Rlaws[[i]], "function")) stop("Each non-null compoment of the list 'Rlaws' should be a (random generation) R function.")
                 if (law.indices[i] != 0) stop(paste("law.indices[", i, "] should be set to 0.", sep = ""))
             } else {
                 Rlaws[[i]] <- function(){}
@@ -30,7 +30,6 @@ powcomp.fast <- function(law.indices, stat.indices, vectn = c(20, 50, 100), M = 
     }
     
     
-    if (getRversion() < "3.1.0") dontCheck <- identity
     
     if (nbclus > 1) {
 #    suppressWarnings(parallel.pkg.present <- require(parallel))
@@ -105,7 +104,11 @@ powcomp.fast <- function(law.indices, stat.indices, vectn = c(20, 50, 100), M = 
                 if (!(alter[[s]] %in% 0:4)) stop(paste("'alter'[[", s, "]] should be in  {0,1,2,3,4}.", sep = ""))
                 Cstat.name <- "tmp" # To remove a NOTE at R CMD check
                 Cstat.name <- paste("stat", as.character(stat.indices[s]), sep = "")
-                alter.true <- .C(dontCheck(Cstat.name), as.double(0.0), 1L, 0.05, 1L, rep(" ", 50), 1L, 0.0, 0L, 0.0, 0.0,
+#                statsym <- getNativeSymbolInfo(Cstat.name, PACKAGE = "PoweR")
+mydotC <- get(".PoweR_stat_dispatch", envir = asNamespace("PoweR"))[[Cstat.name]]; if (is.null(mydotC)) stop("Unknown stat function: ", Cstat.name)
+
+                alter.true <- #.C(statsym, 
+                mydotC(as.double(0.0), 1L, 0.05, 1L, rep(" ", 50), 1L, 0.0, 0L, 0.0, 0.0,
                                  0.0, 0L, alter = as.integer(alter[s]), 0L, rep(0.0, 4), 0L, PACKAGE = "PoweR")$alter
                 if (alter[[s]] != alter.true) {
                     warning(paste("'alter'[[", s, "]] should be set to ", alter.true, ". We have done this for you!"), sep = "")
@@ -175,6 +178,9 @@ powcomp.fast <- function(law.indices, stat.indices, vectn = c(20, 50, 100), M = 
                 if (names(parstats)[s] != paste("stat", stat.indices[s], sep = "")) stop(paste("Name of 'parstats'[[", s, "]] should be equal to 'stat", stat.indices[s], sep = ""))
                 if (!is.na(parstats[[s]]) && (nbparstats[s] == 0)) stop(paste("'parstats[['", s, "]] should be equal to NA", sep = ""))
                 if ((nbparstats[s] != 0) && (length(parstats[[s]]) != nbparstats[s])) stop(paste("The length of parstats[[", s, "]] should be ", nbparstats[s], sep = ""))
+                if (is.na(parstats[[s]]) && (nbparstats[s] != 0)) {
+                  stop(paste("stat", stat.indices[s], " value(s) is set NA. Please provide these values. Note: default values are : ", stat.cstr(stat.indices[s])$stat.pars, sep = ""))
+                }
                 parstatstmp <- c(parstatstmp, parstats[[s]])
             }
         }
@@ -185,8 +191,9 @@ powcomp.fast <- function(law.indices, stat.indices, vectn = c(20, 50, 100), M = 
     }
     parstats <- parstatstmp
 #  parstats[is.na(parstats)] <- 0
-    parstats <- parstats[!is.na(parstats)]
+#    parstats <- parstats[!is.na(parstats)]
 
+    parstats <- parstats[!is.na(parstats)]
 
   
 # Management of model
@@ -239,7 +246,7 @@ powcomp.fast <- function(law.indices, stat.indices, vectn = c(20, 50, 100), M = 
                       usecrit = as.integer(usecrit), alter = as.integer(alter), nbparlaws = as.integer(nbparlaws), parlaws = as.double(parlaws),
                       nbparstats = as.integer(nbparstats), parstats = as.double(parstats), as.integer(modelnum), funclist, as.double(thetavec),
                       as.double(xvec), as.integer(p), as.integer(np), as.list(Rlaws), Rstats, as.integer(center), as.integer(scale), as.integer(compquant),
-                      PACKAGE = "PoweR", NAOK = TRUE)
+                      as.integer(pvalcomp), NAOK = TRUE, PACKAGE = "PoweR")
             }
             
             out <- parallel::clusterCall(cl, myfunc, round(M / nbclus)) # M/nbclus iterations are performed on each core
@@ -257,7 +264,7 @@ powcomp.fast <- function(law.indices, stat.indices, vectn = c(20, 50, 100), M = 
                               cL = as.double(critvalL), cR = as.double(critvalR), usecrit = as.integer(usecrit), alter = as.integer(alter), nbparlaws = as.integer(nbparlaws),
                               parlaws = as.double(parlaws), nbparstats = as.integer(nbparstats), parstats = as.double(parstats), as.integer(modelnum), funclist, as.double(thetavec),
                               as.double(xvec), as.integer(p), as.integer(np), as.list(Rlaws), Rstats, as.integer(center), as.integer(scale), as.integer(compquant),
-                              PACKAGE = "PoweR", NAOK = TRUE))
+                              as.integer(pvalcomp), NAOK = TRUE, PACKAGE = "PoweR"))
             
         }
 
@@ -276,7 +283,7 @@ powcomp.fast <- function(law.indices, stat.indices, vectn = c(20, 50, 100), M = 
                    levels = as.double(levels), nblevel = as.integer(nblevel), cL = as.double(critvalL), cR = as.double(critvalR), usecrit = as.integer(usecrit),
                    alter = as.integer(alter), nbparlaws = as.integer(nbparlaws), parlaws = as.double(parlaws), nbparstats = as.integer(nbparstats), parstats = as.double(parstats),
                    as.integer(modelnum), funclist, as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np), as.integer(center), as.integer(scale), as.integer(compquant),
-                   PACKAGE = "PoweR", NAOK = TRUE)
+                   as.integer(pvalcomp), NAOK = TRUE, PACKAGE = "PoweR")
             }
             
             out <- parallel::clusterCall(cl, myfunc, round(M / nbclus)) # M/nbclus iterations are performed on each core
@@ -293,7 +300,7 @@ powcomp.fast <- function(law.indices, stat.indices, vectn = c(20, 50, 100), M = 
                            decision.len = as.integer(decision.len), levels = as.double(levels), nblevel = as.integer(nblevel), cL = as.double(critvalL),
                            cR = as.double(critvalR), usecrit = as.integer(usecrit), alter = as.integer(alter), nbparlaws = as.integer(nbparlaws), parlaws = as.double(parlaws),
                            nbparstats = as.integer(nbparstats), parstats = as.double(parstats), as.integer(modelnum), funclist, as.double(thetavec), as.double(xvec),
-                           as.integer(p), as.integer(np), as.integer(center), as.integer(scale), as.integer(compquant), PACKAGE = "PoweR", NAOK = TRUE))
+                           as.integer(p), as.integer(np), as.integer(center), as.integer(scale), as.integer(compquant), as.integer(pvalcomp), NAOK = TRUE, PACKAGE = "PoweR"))
             
         }
     }

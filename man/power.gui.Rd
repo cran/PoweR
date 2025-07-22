@@ -7,6 +7,7 @@ Graphical user interface (GUI) for the package.
 \usage{
 power.gui()
 }
+\value{No return value. Displays a graphical user interface.}
 \details{
   This GUI is a 5-tabbed notebook whose goal is to make our package
   easier to use :

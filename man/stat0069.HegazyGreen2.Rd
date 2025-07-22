@@ -25,4 +25,7 @@ Hegazy, Y. A. S. and Green, J. R. (1975), Some new goodness-of-fit tests using o
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Uniformity.tests}} for other goodness-of-fit tests for uniformity.
 }
-\keyword{statistic, test, uniformity, Hegazy-Green}
+\keyword{statistic}
+\keyword{test}
+\keyword{uniformity}
+\keyword{Hegazy-Green}

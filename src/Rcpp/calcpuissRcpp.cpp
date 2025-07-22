@@ -1,5 +1,16 @@
 #include <R.h>
 #include <Rcpp.h>
+
+#ifdef length
+#undef length
+#endif
+#ifdef isNull
+#undef isNull
+#endif
+#ifdef warning
+#undef warning
+#endif
+
 using namespace Rcpp;
 
 
@@ -148,9 +159,24 @@ SEXP powcompeasyRcpp2(IntegerVector M, NumericVector params, IntegerVector ncolp
     for (i=1;i<=p[0];i++) thetavectmp[i-1] = 0.0;
     xvectmp = new double[np[0]];
     for (i=1;i<=np[0];i++) xvectmp[i-1] = 0.0;
-    char **name1, **name2, **funclisttmp;
+    char **name1, **name2;
+// funclisttmp[0] = (char *)R_ExternalPtrAddr(funclist[0]);
+char** funclisttmp = nullptr;
+
+if (modelnum[0] < 0) {
+    // No model: don't allocate funclisttmp, leave nullptr
+    funclisttmp = nullptr;
+} else if (modelnum[0] == 0) {
+    // R function model: no external pointer needed, just nullptr or skip
+    funclisttmp = nullptr;
+} else {
+    // C model: funclist[0] must be an external pointer
+    if (TYPEOF(funclist[0]) != EXTPTRSXP) {
+        Rf_error("funclist[0] must be an external pointer when modelnum > 0");
+    }
     funclisttmp = new char*[1];
-    funclisttmp[0] = (char *)R_ExternalPtrAddr(funclist[0]);
+    funclisttmp[0] = (char*)R_ExternalPtrAddr(funclist[0]);
+}
     name1 = new char*[50];
     name2 = new char*[50];
     for (i = 0; i < 50; i++) {
@@ -216,8 +242,17 @@ SEXP powcompeasyRcpp2(IntegerVector M, NumericVector params, IntegerVector ncolp
 	    List resultsample = gensampleRcpp2(rlawfunc, nSEXP, params, nbparlaw[0], "", center, scale);
 	    NumericVector mysample = resultsample["sample"];
 	    for (j=1;j<=n;j++) x[j-1] = mysample[j-1];
-	    model(modelnum[0],funclisttmp,thetavectmp,xvectmp,xlen,x,ptmp,nptmp);  // on applique le modèle
-	    
+	    //	    model(modelnum[0],funclisttmp,thetavectmp,xvectmp,xlen,x,ptmp,nptmp);  // on applique le modèle
+	    if (modelnum[0] < 0) {
+        // No model applied, do nothing
+    } else if (modelnum[0] == 0) {
+        Rcpp::Function rmodelfun = Rcpp::as<Rcpp::Function>(funclist[0]);
+        NumericVector res = rmodelfun(Rcpp::NumericVector(x, x + n), thetavec, xvec);
+        for (int j = 0; j < n; j++) x[j] = res[j];
+    } else {
+        // C model call
+        model(modelnum[0], funclisttmp, thetavectmp, xvectmp, xlen, x, ptmp, nptmp);
+    }
 	    if (stat == 0) {
 	      NumericVector levelSEXP = level[0];
 	      IntegerVector usecritSEXP(1);
@@ -239,8 +274,17 @@ SEXP powcompeasyRcpp2(IntegerVector M, NumericVector params, IntegerVector ncolp
 	  for (i=1;i<=M[0];i++) { // on part la simul, sans refaire la 1ere iteration!
 	    
 	    gensample(law,xlen,x,name1,getname,parlaw,nbparlaw,setseed,centertmp,scaletmp); // on génère l'échantillon
-	    model(modelnum[0],funclisttmp,thetavectmp,xvectmp,xlen,x,ptmp,nptmp);  // on applique le modèle
-	    
+	    //	    model(modelnum[0],funclisttmp,thetavectmp,xvectmp,xlen,x,ptmp,nptmp);  // on applique le modèle
+if (modelnum[0] < 0) {
+        // No model applied, do nothing
+    } else if (modelnum[0] == 0) {
+        Rcpp::Function rmodelfun = Rcpp::as<Rcpp::Function>(funclist[0]);
+        NumericVector res = rmodelfun(Rcpp::NumericVector(x, x + n), thetavec, xvec);
+        for (int j = 0; j < n; j++) x[j] = res[j];
+    } else {
+        // C model call
+        model(modelnum[0], funclisttmp, thetavectmp, xvectmp, xlen, x, ptmp, nptmp);
+    }	    
 	    if (stat == 0) {
 	      NumericVector mysample (xlen[0]);
 	      for (k=1;k<=M[0];k++) mysample[k-1] = x[k-1];
@@ -304,7 +348,11 @@ SEXP powcompeasyRcpp2(IntegerVector M, NumericVector params, IntegerVector ncolp
     delete[] nblevel;
     delete[] setseed;
     delete[] getname;   
-    delete[] funclisttmp; 
+    //    delete[] funclisttmp; 
+if (funclisttmp != nullptr) {
+    delete[] funclisttmp;
+    funclisttmp = nullptr;
+}
     delete[] thetavectmp;
     delete[] xvectmp;
     delete[] ptmp;
@@ -572,11 +620,11 @@ RcppExport SEXP compquantRcpp(SEXP nSEXP, SEXP lawSEXP, SEXP statSEXP, SEXP MSEX
 
   // Computation of the power of the test statistic
   SEXP powcompfastRcpp2(IntegerVector M, IntegerVector vectlaws, IntegerVector lawslen, IntegerVector vectn, IntegerVector vectnlen, 
-			IntegerVector vectstats, IntegerVector statslen,IntegerVector  decision,IntegerVector  decisionlen, NumericVector level,
-			IntegerVector nblevel,NumericVector  critvalL,NumericVector  critvalR, IntegerVector usecrit, IntegerVector alter,
-			IntegerVector nbparlaw, NumericVector parlaw,IntegerVector  nbparstat,NumericVector  parstat, IntegerVector modelnum, List funclist, 
-			NumericVector thetavec, NumericVector xvec,IntegerVector  p,IntegerVector  np, List Rlaws, List Rstats, IntegerVector center, 
-			IntegerVector scale, IntegerVector compquant) {
+			IntegerVector vectstats, IntegerVector statslen, IntegerVector  decision,IntegerVector  decisionlen, NumericVector level,
+			IntegerVector nblevel,NumericVector  critvalL, NumericVector  critvalR, IntegerVector usecrit, IntegerVector alter,
+			IntegerVector nbparlaw, NumericVector parlaw, IntegerVector  nbparstat,NumericVector  parstat, IntegerVector modelnum, List funclist, 
+			NumericVector thetavec, NumericVector xvec, IntegerVector p, IntegerVector np, List Rlaws, List Rstats, IntegerVector center, 
+			IntegerVector scale, IntegerVector compquant, IntegerVector pvalcomp) {
 	      
     // Warning: When compquant[0] == 1, critvalL should be initialized with lawslen[0] * M[0] * vectnlen[0] * statslen[0] double values since it will contain (when output)
     // all the test statistics generated. Most probably, lawslen[0] should be equal to 1.
@@ -587,14 +635,16 @@ RcppExport SEXP compquantRcpp(SEXP nSEXP, SEXP lawSEXP, SEXP statSEXP, SEXP MSEX
     int model(int modelnum, char** funclist, double *thetavec, double *xvec, int *xlen, double *x, int *p, int *np);
    
     double *statistic, *pvalue; // POUR L'INSTANT JE N'EN FAIT RIEN de pvalue!! Si je veux les récupérer dans R il faudra faire des modifs!! A voir ...
-    int *pvalcomp;
     statistic = new double[1];
     pvalue = new double[1];
-    pvalcomp = new int[1];
     statistic[0] = 0.0;
     pvalue[0] = 0.0;
-    if (compquant[0] == 1) pvalcomp[0] = 0; else pvalcomp[0] = 1;
+    if (compquant[0] == 1) pvalcomp[0] = 0; // else pvalcomp[0] = 1;
 
+    int *pvalcomptmp;
+    pvalcomptmp = new int[1];
+    pvalcomptmp[0] = pvalcomp[0];
+    
     int indtmp = 0;
 
     int i, n, law, stat, j, *xlen, *getname;
@@ -641,7 +691,7 @@ RcppExport SEXP compquantRcpp(SEXP nSEXP, SEXP lawSEXP, SEXP statSEXP, SEXP MSEX
     //    int m;
     int kmax=0; 		// kmax = parstats.len.max in powcomp-fast.R
     for (t = 0; t < statslen[0]; t++) {
-      if (kmax <= nbparstat[t]) {
+      if (kmax < nbparstat[t]) {
 	kmax = nbparstat[t];
       } //else kmax = kmax;
     }
@@ -749,7 +799,7 @@ RcppExport SEXP compquantRcpp(SEXP nSEXP, SEXP lawSEXP, SEXP statSEXP, SEXP MSEX
 	      }
 	    } else {
 	      // decisiontmp est de longueur nblevel[0]
-	      statcompute(vectstats[stat], x, xlen, leveltmp, nbleveltmp, name2, getname, statistic, pvalcomp, pvalue, critvalLtmp, critvalRtmp, usecrittmp, altertmp, decisiontmp, parstattmp, nbparstattmp);
+	      statcompute(vectstats[stat], x, xlen, leveltmp, nbleveltmp, name2, getname, statistic, pvalcomptmp, pvalue, critvalLtmp, critvalRtmp, usecrittmp, altertmp, decisiontmp, parstattmp, nbparstattmp);
 	      if (compquant[0] == 1) {
 		critvalL[i + M[0] * n + M[0] * vectnlen[0] * stat - 1] = statistic[0];
 	      }
@@ -793,7 +843,7 @@ RcppExport SEXP compquantRcpp(SEXP nSEXP, SEXP lawSEXP, SEXP statSEXP, SEXP MSEX
     delete[] name2;
     delete[] statistic;
     delete[] pvalue;
-    delete[] pvalcomp;
+    delete[] pvalcomptmp;
     delete[] decisiontmp;
     delete[] xlen;
     delete[] altertmp;
@@ -833,7 +883,7 @@ RcppExport SEXP compquantRcpp(SEXP nSEXP, SEXP lawSEXP, SEXP statSEXP, SEXP MSEX
 RcppExport SEXP powcompfastRcpp(SEXP MSEXP, SEXP vectlawsSEXP, SEXP lawslenSEXP, SEXP vectnSEXP, SEXP vectnlenSEXP,  
 				SEXP vectstatsSEXP, SEXP statslenSEXP, SEXP decisionSEXP, SEXP decisionlenSEXP, SEXP levelSEXP, SEXP nblevelSEXP, SEXP critvalLSEXP, SEXP critvalRSEXP, 
 				SEXP usecritSEXP, SEXP alterSEXP, SEXP nbparlawSEXP, SEXP parlawSEXP, SEXP nbparstatSEXP, SEXP parstatSEXP, SEXP modelnumSEXP, SEXP funclistSEXP, 
-				SEXP thetavecSEXP, SEXP xvecSEXP, SEXP pSEXP, SEXP npSEXP, SEXP RlawsSEXP, SEXP RstatsSEXP, SEXP centerSEXP, SEXP scaleSEXP, SEXP compquantSEXP) {
+				SEXP thetavecSEXP, SEXP xvecSEXP, SEXP pSEXP, SEXP npSEXP, SEXP RlawsSEXP, SEXP RstatsSEXP, SEXP centerSEXP, SEXP scaleSEXP, SEXP compquantSEXP, SEXP pvalcompSEXP) {
   BEGIN_RCPP
   IntegerVector M = Rcpp::as<IntegerVector >(MSEXP);
   IntegerVector vectlaws = Rcpp::as<IntegerVector >(vectlawsSEXP);
@@ -863,11 +913,12 @@ RcppExport SEXP powcompfastRcpp(SEXP MSEXP, SEXP vectlawsSEXP, SEXP lawslenSEXP,
   IntegerVector center = Rcpp::as<IntegerVector >(centerSEXP);
   IntegerVector scale = Rcpp::as<IntegerVector >(scaleSEXP);
   IntegerVector compquant = Rcpp::as<IntegerVector >(compquantSEXP);
+  IntegerVector pvalcomp = Rcpp::as<IntegerVector >(pvalcompSEXP);
   List Rlaws = Rcpp::as<List >(RlawsSEXP);
   List Rstats = Rcpp::as<List >(RstatsSEXP);
   SEXP __result = powcompfastRcpp2(M, vectlaws, lawslen, vectn, vectnlen, vectstats, statslen, decision, decisionlen, level, nblevel,
 				   critvalL, critvalR, usecrit, alter, nbparlaw, parlaw, nbparstat, parstat, modelnum, funclist, thetavec, 
-				   xvec, p, np, Rlaws, Rstats, center, scale, compquant);
+				   xvec, p, np, Rlaws, Rstats, center, scale, compquant, pvalcomp);
   return Rcpp::wrap(__result);
   END_RCPP
 }

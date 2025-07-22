@@ -25,4 +25,7 @@ Quesenberry, C. P. and Miller, F. L. Jr. (1977), Power studies of some tests for
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Uniformity.tests}} for other goodness-of-fit tests for uniformity.
 }
-\keyword{statistic, test, uniformity, Quesenberry-Miller}
+\keyword{statistic}
+\keyword{test}
+\keyword{uniformity}
+\keyword{Quesenberry-Miller}

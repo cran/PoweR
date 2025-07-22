@@ -1,5 +1,5 @@
-// Title: The Desgagné-Micheaux-Leblanc statistic for the Laplace distribution
-// Ref. (book or article): Desgagné, A., Lafaye de Micheaux, P. and Leblanc, A., - unpublished document. 
+// Title: The Desgagne-Micheaux-Leblanc statistic for the Laplace distribution
+// Ref. (book or article): Desgagne, A., Lafaye de Micheaux, P. and Leblanc, A., - unpublished document. 
 
 #include <R.h>
 #include "Rmath.h"
@@ -102,7 +102,8 @@ if (pvalcomp[0] == 1) {
     }
     
 // If applicable, we free the unused array of pointers
-
+    delete[] Y;
+    
 }
 
 // We return

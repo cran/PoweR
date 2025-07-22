@@ -1,31 +1,33 @@
 print.critvalues1 <- function(x, digits = 3, latex.output = FALSE, ...) {
 
-    if (getRversion() < "3.1.0") dontCheck <- identity 
+#  if (getRversion() < "3.1.0") dontCheck <- identity 
     
-    critval <- x
+  critval <- x
+  
+  if(!inherits(critval, "critvalues1")) stop("Method is only for 'critvalues1' objects!")
+  
+  oneSTAT <- FALSE
+  if ((length(names(critval)) == 1) && (sum(apply(critval[[1]][, -(1:3)], FUN = function(x) all(is.na(x)), MARGIN = 2)) == 1)) { # One stat and ane critical values column
+    oneSTAT <- TRUE
     
-    if(!inherits(critval, "critvalues1")) stop("Method is only for 'critvalues1' objects!")
+    colcritval <- if(all(is.na(critval[[1]][, 5]))) 4 else 5
     
-    oneSTAT <- FALSE
-    if ((length(names(critval)) == 1) && (sum(apply(critval[[1]][, -(1:3)], FUN = function(x) all(is.na(x)), MARGIN = 2)) == 1)) { # One stat and ane critical values column
-        oneSTAT <- TRUE
-        
-        nvec <- unique(critval[[1]][, 1])
-        levels <- unique(critval[[1]][, 2])
-        
-        mytable <- matrix(c(nvec, critval[[1]][, 5]), nrow = length(nvec), ncol = length(levels) + 1, byrow = FALSE)
-        colnames(mytable) <- c("n", paste(levels))
-        
-        parstats.list <- list()
-        pars <- as.character(critval[[1]][1, 3])
-        if (!((pars == "NA") || (pars == ""))) parstats.list[[paste("params.", names(critval)[1], sep = "")]] <- as.numeric(strsplit(pars, " ")[[1]])
-        
-    } else {
-        
-        mytable <- critval[[1]][, 1:2]
-        parstats.list <- list()
-        
-        for (i in 1:length(critval)) {
+    nvec <- unique(critval[[1]][, 1])
+    levels <- unique(critval[[1]][, 2])
+    
+    mytable <- matrix(c(nvec, critval[[1]][, colcritval]), nrow = length(nvec), ncol = length(levels) + 1, byrow = FALSE)
+    colnames(mytable) <- c("n", paste(levels))
+    
+    parstats.list <- list()
+    pars <- as.character(critval[[1]][1, 3])
+    if (!((pars == "NA") || (pars == ""))) parstats.list[[paste("params.", names(critval)[1], sep = "")]] <- as.numeric(strsplit(pars, " ")[[1]])
+    
+  } else {
+    
+    mytable <- critval[[1]][, 1:2]
+    parstats.list <- list()
+    
+    for (i in 1:length(critval)) {
             
       # We check if the current test statistic has parameters
             pars <- as.character(critval[[i]][1, 3])
@@ -47,11 +49,13 @@ print.critvalues1 <- function(x, digits = 3, latex.output = FALSE, ...) {
         if (oneSTAT) { # One stat and ane critical values column
       
             stat.index <- round(as.numeric(sub("stat", "", names(critval)[1])))
-            statname <- paste("stat", stat.index, sep = "")
-            
-            out <- .C(dontCheck(statname), 0, 0L, 0, 
-                      0L, name = c("1", rep(" ", 49)), 1L, 0, 0L, 0, 0, 0, 0L, 
-                      0L, 0L, 0.0, 0, PACKAGE = "PoweR")
+            Cstat.name <- paste("stat", stat.index, sep = "")
+          #statsym <- getNativeSymbolInfo(Cstat.name, PACKAGE = "PoweR")
+mydotC <- get(".PoweR_stat_dispatch", envir = asNamespace("PoweR"))[[Cstat.name]]; if (is.null(mydotC)) stop("Unknown stat function: ", Cstat.name)
+            out <- #.C(statsym, 
+            mydotC(0, 0L, 0, 
+                      0L, name = rep(" ", 50), 1L, 0, 0L, 0, 0, 0, 0L, 
+                      0L, 0L, 0.0, 0L, PACKAGE = "PoweR")
             name <- sub(' +$', '', paste(out$name, collapse = "")) # Remove trailing white spaces
       
             cat("\\begin{table}[ht]\n")
@@ -81,11 +85,13 @@ print.critvalues1 <- function(x, digits = 3, latex.output = FALSE, ...) {
                 ncol(tmp)
         
                 stat.index <- round(as.numeric(sub("stat", "", names(critval)[j])))
-                statname <- paste("stat", stat.index, sep = "")
-
-                out <- .C(dontCheck(statname), 0, 0L, 0, 
-                          0L, name = c("1", rep(" ", 49)), 1L, 0, 0L, 0, 0, 0, 0L, 
-                          0L, 0L, 0.0, 0, PACKAGE = "PoweR")
+                Cstat.name <- paste("stat", stat.index, sep = "")
+             # statsym <- getNativeSymbolInfo(Cstat.name, PACKAGE = "PoweR")
+mydotC <- get(".PoweR_stat_dispatch", envir = asNamespace("PoweR"))[[Cstat.name]]; if (is.null(mydotC)) stop("Unknown stat function: ", Cstat.name)
+                out <- #.C(statsym, 
+                mydotC(0, 0L, 0, 
+                          0L, name = rep(" ", 50), 1L, 0, 0L, 0, 0, 0, 0L, 
+                          0L, 0L, 0.0, 0L, PACKAGE = "PoweR")
                 name <- paste(out$name, collapse = "")
         
                 cat("\\begin{table}[ht]\n")

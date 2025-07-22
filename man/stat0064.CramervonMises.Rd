@@ -28,4 +28,7 @@ Anderson, T. W. and Darling, D. A. (1954), A test of goodness-of-fit,
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Uniformity.tests}} for other goodness-of-fit tests for uniformity.
 }
-\keyword{statistic, test, uniformity, Cramer-von Mises}
+\keyword{statistic}
+\keyword{test}
+\keyword{uniformity}
+\keyword{Cramer-von Mises}

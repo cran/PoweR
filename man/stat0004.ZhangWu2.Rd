@@ -25,4 +25,8 @@ Zhang, J. and Wu, Y. (2005), Likelihood-ratio tests for normality,
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
-\keyword{statistic, test, normality, Zhang-Wu}
+
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{Zhang-Wu}

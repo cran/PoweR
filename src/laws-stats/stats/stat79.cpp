@@ -1,6 +1,8 @@
 // Title: The Pardo statistic for uniformity
 // Ref. (book or article): Pardo, M. C. (2003), A test for uniformity based on informational energy,
 //                         Statistical Papers, 44, 521-534.
+// Y. Marhuenda, D. Morales & M. C. Pardo, (2005), A comparison of uniformity tests, 
+// A Journal of Theoretical and Applied Statistics, 39:4, 315-327
 
 #include <R.h>
 #include "Rmath.h"
@@ -35,52 +37,47 @@ extern "C" {
     }
 
 // Initialization of the parameters
-	double par;
+    int m;
     if (nbparamstat[0] == 0) {
       nbparamstat[0] = 1;
-      par = 2.0;
+      m = 2;
       paramstat[0] = 2.0;
     } else if (nbparamstat[0] == 1) {
-      par = paramstat[0];
+      m = (int)paramstat[0];
     } else {
+      Rf_error("Number of parameters should be at most: 1");
+    }
+
+    // If necessary, we check if some parameter values are out of parameter space
+    if (m > (n + 1)) {
+      Rf_warning("m should be <= n+1 in stat79!\n");
+      for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }
-	
+
 	
     if (n>3) {
 // Computation of the value of the test statistic
     void R_rsort (double* x, int n);
     double punif(double q, double min, double max, int lower_tail, int log_p);
     double *U;
-	double *Z1;
-    double *Z2;
-	U = new double[n];
-	Z1 = new double[n];
-	Z2 = new double[n];
-	double statEn, sumEn=0.0;
-	
-
-	// generate vector U
-	for (i=0;i<n;i++) {
-	  U[i] = punif(x[i],0.0,1.0,1,0);
-	}
-    R_rsort(U,n); // We sort the data
-	
-	    
-	// calculate statEn
-	for (i=0; i<n; i++) {
-	  if (i < (int)par) { 
-	    Z2[i] = U[0];
-	  } else Z2[i] = U[i-(int)par];
-	  if (i > (n-(int)par-1)) {
-	    Z1[i] = U[n-1];
-	  } else Z1[i] = U[i+(int)par];
-	  
-	  sumEn = sumEn + 2.0*par/((double)n*(Z1[i]-Z2[i]));
+    U = new double[n];
+    double temp1, temp2, statEn;
     
-	}
-
-	statEn = sumEn/(double)n;
+    // generate vector U
+    for (i = 0; i < n; i++) {
+      U[i] = punif(x[i], 0.0, 1.0, 1, 0);
+    }
+    R_rsort(U, n); // We sort the data
+    
+    // calculate statEn
+    statEn = 0.0;
+    for (i = 0; i < n; i++) {
+      if (i < m) temp2 = U[0]; else temp2 = U[i-m];
+      if (i > (n - m- 1 )) temp1 = U[n-1]; else temp1 = U[i+m];
+      statEn = statEn + (double)(2 * m) / ((double)n * (temp1 - temp2));
+    }
+    statEn = statEn / (double)n;
 	
     statistic[0] = statEn; // Here is the test statistic value
 	
@@ -91,25 +88,22 @@ if (pvalcomp[0] == 1) {
 }
 
 // We take the decision to reject or not to reject the null hypothesis H0
-    for (i=0;i<=(nblevel[0]-1);i++) {
-      if (usecrit[0] == 1) { // We use the provided critical values
-	  if (statistic[0] > critvalR[i]) decision[i] = 1; else decision[i] = 0; // two.sided (but in this case only one possible critical value)
-      } else {
-		  if (pvalue[0] < level[i]) decision[i] = 1; else decision[i] = 0; // We use the p-value
-        }
-    }
+ for (i = 0; i <= (nblevel[0] - 1); i++) {
+   if (usecrit[0] == 1) { // We use the provided critical values
+     if (statistic[0] > critvalR[i]) decision[i] = 1; else decision[i] = 0; // two.sided (but in this case only one possible critical value)
+   } else {
+     if (pvalue[0] < level[i]) decision[i] = 1; else decision[i] = 0; // We use the p-value
+   }
+ }
     
 // If applicable, we free the unused array of pointers
-    delete[] U;
-	delete[] Z1;
-	delete[] Z2;
+ delete[] U;
 
 }
 
 // We return
     return;
-   
-        
+       
   }
   
   

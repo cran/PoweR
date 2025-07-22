@@ -361,3 +361,37 @@ dlaw40 <- function(y, alpha, mu = 0.0, sigma = 1.0) {
     res <- exp(logf)
     return(res)
 }
+
+dlaw41 <- function(y, xi = 0, omega = 1, alpha = 0, nu = Inf) {
+  # Density of Skew-t
+    if (nu == Inf) {
+      z <- (y - xi) / omega
+      logN <- (-log(sqrt(2 * pi)) - logb(omega) - z ^ 2 / 2)
+      if (abs(alpha) < Inf) 
+        logS <- pnorm(alpha * z, log.p = TRUE)
+      else logS <- -Inf
+      logPDF <- as.numeric(logN + logS - pnorm(0, log.p = TRUE))
+      logPDF <- replace(logPDF, abs(y) == Inf, -Inf)
+      logPDF <- replace(logPDF, omega <= 0, NaN)
+      res <- exp(logPDF)
+    } else if (nu == 1) {
+      z <- (y - xi)/omega
+      logPDF <- (dcauchy(y, xi, omega, log = TRUE) + log1p(alpha * 
+        z / sqrt(1 + z ^ 2 * (1 + alpha ^ 2))))
+      res <- exp(logPDF)    
+    } else {
+      z <- (y - xi) / omega
+      pdf <- dt(z, df = nu, log = FALSE)
+      cdf <- pt(alpha * z * sqrt((nu + 1) / (z ^ 2 + nu)), df = nu + 
+                                                         1, log.p = FALSE)
+      res <-  2 * pdf * cdf / omega
+    }
+  return(res)
+}
+ 
+dlaw42 <- function(y, mu = 1, lambda = 1) {
+  # Density of Inverse Gaussian
+  phi <- 1 / lambda
+  res <- exp(-(y - mu) ^ 2 / (2 * phi * mu ^ 2 * y)) / sqrt(2 * pi * phi * y ^ 3)
+  return(res)
+}

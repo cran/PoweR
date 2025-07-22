@@ -11,7 +11,7 @@ extern "C" {
 // If the test statistic can only be in category 3 or 4 (see just below), INDICATE the following line accordingly. Else, leave it commented.
 // 0: two.sided=bilateral, 1: less=unilateral, 2: greater=unilateral, 3: bilateral test that rejects H0 only for large values of the test statistic, 
 // 4: bilateral test that rejects H0 only for small values of the test statistic
-    alter[0] = 0;
+    if (alter[0] != 0 && alter[0] != 1 && alter[0] != 2) Rf_error("alter should be in {0,1,2}");
 
     int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {    
@@ -38,14 +38,18 @@ extern "C" {
 	
     if (n > 3) {
       // Computation of the value of the test statistic
-      double xbar = 0.0, S2 = 0.0, sigbar = 0.0, statG1;
+      double xbar, S2, sigbar, statG1;
+
       // calculate xbar
+      xbar = 0.0;
       for (i = 0; i < n; i++) {
 	xbar = xbar + x[i];
       }
       xbar = xbar / (double)n;
       
       // calculate S^2
+      S2 = 0.0;
+      sigbar = 0.0;
       for (i = 0; i < n; i++) {
 	S2 = S2 + R_pow(x[i] - xbar, 2.0);
 	sigbar = sigbar + fabs(x[i] - xbar);
@@ -53,7 +57,7 @@ extern "C" {
       S2 = S2 / (double)n;
       sigbar = sigbar / (double)n;
 
-      statG1 = sqrt((double)(4 * n)) * (sqrt(S2 / (double)n) / sigbar - 1.0);
+      statG1 = sqrt((double)(4 * n)) * (sqrt(0.5 * S2) / sigbar - 1.0);
 
       statistic[0] = statG1; // Here is the test statistic value
 
@@ -65,7 +69,9 @@ extern "C" {
       // We take the decision to reject or not to reject the null hypothesis H0
       for (i = 0; i < nblevel[0]; i++) {
 	if (usecrit[0] == 1) { // We use the provided critical values
-	  if (statistic[0] > critvalR[i]) decision[i] = 1; else decision[i] = 0; // two.sided (but in this case only one possible critical value)
+	  if (alter[0] == 0) { if (statistic[0] > critvalR[i] || statistic[0] < critvalL[i]) decision[i] = 1; else decision[i] = 0; // two-sided
+	  } else if (alter[0] == 1) {  if (statistic[0] < critvalL[i]) decision[i] = 1; else decision[i] = 0;  // less
+	  } else { if (alter[0] == 2) {  if (statistic[0] > critvalR[i]) decision[i] = 1; else decision[i] = 0; } } // greater
 	} else {
 	  if (pvalue[0] < level[i]) decision[i] = 1; else decision[i] = 0; // We use the p-value
 	}

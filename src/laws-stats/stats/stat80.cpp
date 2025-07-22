@@ -31,33 +31,34 @@ extern "C" {
 	name[j][0] = nom[j];
 	j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50; i++) name[i][0] = space[0];
       return;
     }
 
 // Initialization of the parameters
-    double lambda, m;
+    double lambda;
+    int m;
     if (nbparamstat[0] == 0) {
       nbparamstat[0] = 2;
       lambda = 1.0;
-      m = 5.0;
+      m = 5;
       paramstat[0] = 1.0;
       paramstat[1] = 5.0;
     } else if (nbparamstat[0] == 1) {
       nbparamstat[0] = 2;
       lambda = paramstat[0];
-      m = 5.0;
+      m = 5;
       paramstat[1] = 5.0;
     } else if (nbparamstat[0] == 2) {
       lambda = paramstat[0];
-      m = paramstat[1];
+      m = (int)paramstat[1];
     } else {
-      return;
+      Rf_error("Number of parameters should be at most: 2");
     }
 	
 // If necessary, we check if some parameter values are not correct
-    if (n < ((int)m-1)) {
-      warning("n should not be < (m-1) in stat80\n");
+    if ((n + 1) < m) {
+      Rf_warning("m should be <= n+1 in stat80\n");
       statistic[0] = R_NaN;
       return;
     }
@@ -67,34 +68,29 @@ extern "C" {
     void R_rsort (double* x, int n);
     double punif(double q, double min, double max, int lower_tail, int log_p);
     double *U;
-    double *Z1;
-    double *Z2;
     U = new double[n];
-    Z1 = new double[n];
-    Z2 = new double[n];
-    double statTn, sumTn=0.0, pni;
+    double statTn, sumTn, pni;
     int ni, nim;
 	
 
-	// generate vector U
+    // generate vector U
     for (i=0;i<n;i++) {
-      U[i] = punif(x[i],0.0,1.0,1,0);
+      U[i] = punif(x[i], 0.0, 1.0, 1, 0);
     }
     R_rsort(U,n); // We sort the data
-	
-	    
-    pni = U[n/(int)m];
-    sumTn = pni*(R_pow(m*pni,lambda) - 1.0);
-    for (i=2; i<=((int)m-1); i++) {
-      ni = (i*n)/(int)m;
-      nim = ((i-1)*n)/(int)m;
+		    
+    pni = U[n / m];
+    sumTn = pni * (R_pow(m * pni, lambda) - 1.0);
+    for (i = 2; i<= (m - 1); i++) {
+      ni = (i * n) / m;
+      nim = ((i - 1) * n) / m;
       pni = U[ni] - U[nim];
-      sumTn = sumTn + pni*(R_pow(m*pni,lambda) - 1.0);
+      sumTn = sumTn + pni * (R_pow(m * pni, lambda) - 1.0);
     }
-    pni = 1.0 - U[n*((int)m-1)/(int)m];
-    sumTn = sumTn + pni*(R_pow(m*pni,lambda) - 1.0);
+    pni = 1.0 - U[n * (m - 1) / m];
+    sumTn = sumTn + pni * (R_pow(m * pni, lambda) - 1.0);
 
-    statTn = 2.0*(double)n*sumTn/(lambda*(lambda+1.0));
+    statTn = (double)(2 * n) * sumTn / (lambda * (lambda + 1.0));
 	
     statistic[0] = statTn; // Here is the test statistic value
 
@@ -104,7 +100,7 @@ extern "C" {
     }
 
 // We take the decision to reject or not to reject the null hypothesis H0
-    for (i=0;i<=(nblevel[0]-1);i++) {
+    for (i = 0; i <= (nblevel[0] - 1);i++) {
       if (usecrit[0] == 1) { // We use the provided critical values
 	if (statistic[0] > critvalR[i]) decision[i] = 1; else decision[i] = 0; // two.sided (but in this case only one possible critical value)
       } else {
@@ -114,8 +110,6 @@ extern "C" {
     
 // If applicable, we free the unused array of pointers
     delete[] U;
-    delete[] Z1;
-    delete[] Z2;
     
 }
 

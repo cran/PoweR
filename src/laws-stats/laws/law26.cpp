@@ -18,7 +18,7 @@ extern "C" {
       nbparams[0] = 2;
 // Here, INDICATE the default values of the parameters:
       if (name[0][0] == '1') { // To prevent writing in a non declared address (because maybe params has not be initialized with a sufficient length since the correct value of nbparams[0] may be unkown yet).
-      params[0] = 1.0;
+      params[0] = 0.0;
       params[1] = 1.0;
      }
 // The following 7 lines should NOT be modified
@@ -37,7 +37,7 @@ extern "C" {
       nbparams[0] = 2;
       mu = 0.0;
       sigma = 1.0;
-      params[0] = 1.0;
+      params[0] = 0.0;
       params[1] = 1.0;
     } else if (nbparams[0] == 1) {
       nbparams[0] = 2;
@@ -48,12 +48,12 @@ extern "C" {
       mu = params[0];
       sigma = params[1];
     } else {
-      error("Number of parameters should be at most: 2");
+      Rf_error("Number of parameters should be at most: 2");
     }
 
 // If necessary, we check if some parameter values are out of parameter space
     if (sigma < 0.0) {
-      warning("sigma should not be < 0 in law26!\n");
+      Rf_warning("sigma should not be < 0 in law26!\n");
       for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }

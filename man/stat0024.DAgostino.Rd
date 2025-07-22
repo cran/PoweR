@@ -25,4 +25,8 @@ D'Agostino, R.B. (1971), An omnibus test of normality for moderate and large siz
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
-\keyword{statistic, test, normality, D'Agostino}
+
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{D'Agostino}

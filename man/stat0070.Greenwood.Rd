@@ -27,4 +27,7 @@ Greenwood, M. (1946), The statistical study of infectious diseases,
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{\code{\link{Uniformity.tests}} for other goodness-of-fit tests for uniformity.
 }
-\keyword{statistic, test, uniformity, Greenwood}
+\keyword{statistic}
+\keyword{test}
+\keyword{uniformity}
+\keyword{Greenwood}

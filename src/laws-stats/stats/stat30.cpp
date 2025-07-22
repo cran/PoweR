@@ -180,13 +180,13 @@ void nscor2(double *s, int *n, int *n2) {
     /* input parameter checks. */
 
     if (*n2 > *n / 2) {
-		error("\nn2>n");
+		Rf_error("\nn2>n");
     }
     if (*n <= 1) {
-		error("\nn<=1");
+		Rf_error("\nn<=1");
     }
     if (*n > 2000) {
-		warning("\nValues may be inaccurate because of the size of N");
+		Rf_warning("\nValues may be inaccurate because of the size of N");
     }
 
     s[0] = b1;

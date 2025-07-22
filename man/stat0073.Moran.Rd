@@ -27,4 +27,7 @@ Moran, P. A. P. (1951), The random division of an interval - Part II,
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Uniformity.tests}} for other goodness-of-fit tests for uniformity.
 }
-\keyword{statistic, test, uniformity, Moran}
+\keyword{statistic}
+\keyword{test}
+\keyword{uniformity}
+\keyword{Moran}

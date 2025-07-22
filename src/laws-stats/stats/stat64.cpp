@@ -1,4 +1,4 @@
-// Title: The Cramér-von Mises statistic for uniformity
+// Title: The Cramer-von Mises statistic for uniformity
 // Ref. (book or article): Anderson, T.W. and Darling, D.A. (1954) 'A test of goodness-of-fit', 
 //                         Journal of the American Statistical Association, 49, 765-769.
 

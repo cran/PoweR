@@ -14,6 +14,9 @@ help.law(law.index)
   \item{law.index }{law index as given by function \code{\link{getindex}}.}
 }
 
+\value{
+No return value. The function opens the help page for the law corresponding to the given index.
+}
 \references{
 Pierre Lafaye de Micheaux, Viet Anh Tran (2016). PoweR: A
 Reproducible Research Tool to Ease Monte Carlo Power Simulation

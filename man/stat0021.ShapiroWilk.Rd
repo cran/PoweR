@@ -25,4 +25,8 @@ Shapiro, S.S. and Wilk, M.B. (1965), An analysis of variance test for normality 
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
-\keyword{statistic, test, normality, Shapiro-Wilk}
+
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{Shapiro-Wilk}

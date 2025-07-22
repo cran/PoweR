@@ -35,4 +35,5 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Log Normal}
+\keyword{law}
+\keyword{Log Normal}

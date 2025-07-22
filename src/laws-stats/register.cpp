@@ -7,7 +7,8 @@ static const R_CMethodDef CEntries[] = {
   {"matrixpvalMC", (DL_FUNC) &matrixpvalMC, 17},
   {"compquantc",    (DL_FUNC) &compquantc,    17},
   {"powcompeasy",  (DL_FUNC) &powcompeasy,  13},
-  {"powcompfast",  (DL_FUNC) &powcompfast,  28},
+  {"powcompfast",  (DL_FUNC) &powcompfast,  29},
+  {"statcomputeC",  (DL_FUNC) &statcomputeC,  17},
   // HERE WE PUT THE lawj NAMES
   {"law1",   (DL_FUNC) &law1,  7},
   {"law2",   (DL_FUNC) &law2,  7},
@@ -49,6 +50,9 @@ static const R_CMethodDef CEntries[] = {
   {"law38",  (DL_FUNC) &law38, 7},
   {"law39",  (DL_FUNC) &law39, 7},
   {"law40",  (DL_FUNC) &law40, 7},
+  {"law41",  (DL_FUNC) &law41, 7},
+  {"law42",  (DL_FUNC) &law42, 7},
+  {"law43",  (DL_FUNC) &law43, 7},
   // HERE WE PUT THE statj NAMES
   {"stat1",  (DL_FUNC) &stat1,  16},
   {"stat2",  (DL_FUNC) &stat2,  16},
@@ -133,7 +137,7 @@ static const R_CMethodDef CEntries[] = {
   {"stat81", (DL_FUNC) &stat81, 16},
   {"stat82", (DL_FUNC) &stat82, 16},
   {"stat83", (DL_FUNC) &stat83, 16},
-  //  {"stat84", (DL_FUNC) &stat84, 16},
+  {"stat84", (DL_FUNC) &stat84, 16},
   {"stat85", (DL_FUNC) &stat85, 16},
   {"stat86", (DL_FUNC) &stat86, 16},
   {"stat87", (DL_FUNC) &stat87, 16},
@@ -147,6 +151,17 @@ static const R_CMethodDef CEntries[] = {
   {"stat95", (DL_FUNC) &stat95, 16},
   {"stat96", (DL_FUNC) &stat96, 16},
   {"stat97", (DL_FUNC) &stat97, 16},
+  {"stat98", (DL_FUNC) &stat98, 16},
+  {"stat99", (DL_FUNC) &stat99, 16},
+  {"stat100", (DL_FUNC) &stat100, 16},
+  {"stat101", (DL_FUNC) &stat101, 16},
+  {"stat102", (DL_FUNC) &stat102, 16},
+  {"stat103", (DL_FUNC) &stat103, 16},
+  {"stat104", (DL_FUNC) &stat104, 16},
+  {"stat105", (DL_FUNC) &stat105, 16},
+  {"stat106", (DL_FUNC) &stat106, 16},
+  {"stat107", (DL_FUNC) &stat107, 16},
+  {"stat108", (DL_FUNC) &stat108, 16},
   {NULL, NULL, 0}
 };
 
@@ -156,7 +171,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"matrixpvalMCRcpp", (DL_FUNC) &matrixpvalMCRcpp, 20},
     {"matrixpvalRcpp",   (DL_FUNC) &matrixpvalRcpp,   15},
     {"powcompeasyRcpp",  (DL_FUNC) &powcompeasyRcpp,  16},
-    {"powcompfastRcpp",  (DL_FUNC) &powcompfastRcpp,  31},
+    {"powcompfastRcpp",  (DL_FUNC) &powcompfastRcpp,  32},
     {"statcomputeRcpp",  (DL_FUNC) &statcomputeRcpp,   3},
     {NULL, NULL, 0}
 };

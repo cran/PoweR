@@ -26,4 +26,7 @@ Hosking, J.R.M. (1990), L-moments: analysis and estimation of distributions usin
 \seealso{\code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
 
-\keyword{statistic, test, normality, Hosking}
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{Hosking}

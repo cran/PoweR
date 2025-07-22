@@ -1,6 +1,6 @@
 // Title: Statistique de test de Cabana-Cabana T_{K,l}
-// Ref. (book or article): Cabana, A. and Cabana, E. (1994), Goodness-of-Fit and Comparison Tests of the Kolmogorov-Smirnov Type for Bivariate Populations, 
-//						   The Annals of Statistics, Vol. 22, No. 3, pp. 1447-1459.
+// Ref. (book or article): A. Cabana and E.M. Cabana, Tests of normality based on transformed empirical processes, Methodol. Comput.
+// Appl. Probab. 5(3) (2003), 309--335.
 
 #include <R.h>
 #include "Rmath.h"

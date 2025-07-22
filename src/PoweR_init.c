@@ -5,6 +5,17 @@ R-devel
 */
 #include <R.h>
 #include <Rinternals.h>
+
+#ifdef length
+#undef length
+#endif
+#ifdef isNull
+#undef isNull
+#endif
+#ifdef warning
+#undef warning
+#endif
+
 #include <stdlib.h> // for NULL
 #include <R_ext/Rdynload.h>
 
@@ -34,7 +45,8 @@ extern void powcompeasy(int *M, double *params, int *ncolparams, int *decision, 
 		   int *modelnum, char** funclist, double *thetavec, double *xvec, int *p, int *np, int *center, int *scale);
 extern void powcompfast(int *M, int *vectlaws, int *lawslen, int *vectn, int *vectnlen, int *vectstats, int *statslen, int *decision, int *decisionlen, double *level, int *nblevel,
 		   double *critvalL, double *critvalR, int *usecrit, int *alter, int *nbparlaw, double *parlaw, int *nbparstat, double *parstat, int *modelnum, char** funclist, 
-		   double *thetavec, double *xvec, int *p, int *np, int *center, int *scale, int *compquant);
+			double *thetavec, double *xvec, int *p, int *np, int *center, int *scale, int *compquant, int *pvalcomp);
+extern void statcomputeC(int *stat, double *x, int *xlen, double *level, int *nblevel, char **name, int *getname, double *statistic, int *pvalcomp, double *pvalue, double *critvalL, double *critvalR, int *usecrit, int *alter, int *decision, double *paramstat, int *nbparamstat);
 
 /* .Call calls */
 extern SEXP compquantRcpp(SEXP nSEXP, SEXP lawSEXP, SEXP statSEXP, SEXP MSEXP, SEXP statvecSEXP,  
@@ -53,6 +65,6 @@ extern SEXP powcompeasyRcpp(SEXP MSEXP, SEXP paramsSEXP, SEXP ncolparamsSEXP, SE
 extern SEXP powcompfastRcpp(SEXP MSEXP, SEXP vectlawsSEXP, SEXP lawslenSEXP, SEXP vectnSEXP, SEXP vectnlenSEXP,  
 				SEXP vectstatsSEXP, SEXP statslenSEXP, SEXP decisionSEXP, SEXP decisionlenSEXP, SEXP levelSEXP, SEXP nblevelSEXP, SEXP critvalLSEXP, SEXP critvalRSEXP, 
 				SEXP usecritSEXP, SEXP alterSEXP, SEXP nbparlawSEXP, SEXP parlawSEXP, SEXP nbparstatSEXP, SEXP parstatSEXP, SEXP modelnumSEXP, SEXP funclistSEXP, 
-				SEXP thetavecSEXP, SEXP xvecSEXP, SEXP pSEXP, SEXP npSEXP, SEXP RlawsSEXP, SEXP RstatsSEXP, SEXP centerSEXP, SEXP scaleSEXP, SEXP compquantSEXP);
+			    SEXP thetavecSEXP, SEXP xvecSEXP, SEXP pSEXP, SEXP npSEXP, SEXP RlawsSEXP, SEXP RstatsSEXP, SEXP centerSEXP, SEXP scaleSEXP, SEXP compquantSEXP, SEXP pvalcompSEXP);
 extern SEXP statcomputeRcpp(SEXP rstatfuncSEXP, SEXP echSEXP, SEXP levelsSEXP, SEXP usecritSEXP, SEXP critvalLSEXP, SEXP critvalRSEXP);
 

@@ -1,6 +1,5 @@
-print.power1 <- function(x, digits = 3, latex.output = FALSE, ...) {
+print.power1 <- function(x, digits = 3, latex.output = FALSE, summaries = TRUE, ...) {
 
-    if (getRversion() < "3.1.0") dontCheck <- identity 
     
     if(!inherits(x, "power1")) stop("Method is only for 'power1' objects!")
 
@@ -14,10 +13,11 @@ print.power1 <- function(x, digits = 3, latex.output = FALSE, ...) {
 
     res2 <- matrix(0, nrow = vectn.len * laws.len * nblevel, ncol = 3 + stats.len)
     
-    statnames <- rep("", stats.len)
+  statnames <- rep("", stats.len)
+  tmp <- c(0, cumsum(x$nbparstats))
     for (i in 1:stats.len) {
         if (x$stat.indices[i] != 0) {
-            statnames[i] <- PoweR::stat.cstr(x$stat.indices[i])$name
+            statnames[i] <- PoweR::stat.cstr(x$stat.indices[i], stat.pars = if (x$nbparstats[i] == 0) NULL else x$parstats[(tmp[i] + 1):tmp[i + 1]])$name
         } else {
             statnames[i] <- "stat0"
         }
@@ -106,8 +106,7 @@ print.power1 <- function(x, digits = 3, latex.output = FALSE, ...) {
 #---------------#
  
     average_power <- function(mytable, level, n) {
-        tmp <- mytable[mytable[, "level"] == level & mytable[, "n"] == n, -(1:3)]
-        if (is.vector(tmp)) tmp <- t(as.matrix(tmp))
+        tmp <- mytable[mytable[, "level"] == level & mytable[, "n"] == n, -(1:3), drop = FALSE]
         return(round(apply(tmp, FUN = mean, MARGIN = 2), digits))
     }
 
@@ -116,8 +115,7 @@ print.power1 <- function(x, digits = 3, latex.output = FALSE, ...) {
 #-------------#
 
     average_gap <- function(mytable, level, n) {
-        tmp <- mytable[mytable[, "level"] == level & mytable[, "n"] == n, -(1:3)]
-        if (is.vector(tmp)) tmp <- t(as.matrix(tmp))
+        tmp <- mytable[mytable[, "level"] == level & mytable[, "n"] == n, -(1:3), drop = FALSE]
         return(round(apply(abs(sweep(tmp, MARGIN = 1, STATS = apply(tmp, FUN = max, MARGIN = 1))), FUN = mean, MARGIN = 2), digits))
     }
 
@@ -126,8 +124,7 @@ print.power1 <- function(x, digits = 3, latex.output = FALSE, ...) {
 #-----------#
 
     worst_gap <- function(mytable, level, n) {
-        tmp <- mytable[mytable[, "level"] == level & mytable[, "n"] == n, -(1:3)]
-        if (is.vector(tmp)) tmp <- t(as.matrix(tmp))
+        tmp <- mytable[mytable[, "level"] == level & mytable[, "n"] == n, -(1:3), drop = FALSE]
         return(round(apply(abs(sweep(tmp, MARGIN = 1, STATS = apply(tmp, FUN = max, MARGIN = 1))), FUN = max, MARGIN = 2), digits))
     }
 
@@ -135,7 +132,7 @@ print.power1 <- function(x, digits = 3, latex.output = FALSE, ...) {
 # We add average power, average gap and worst gap tables to the output
 
     mytable2 <- expand.grid(vectn, levels)
-    t2 <- matrix(NA, nrow = nblevel * nbvectn, ncol = ncol(mytable) - 3)
+  t2 <- matrix(NA, nrow = nblevel * nbvectn, ncol = ncol(mytable) - 3)
     for (i in 1:length(levels)) {
         for (j in 1:length(vectn)) {      
             t2[j + nbvectn * (i - 1), ] <- average_power(mytable, levels[i], vectn[j])
@@ -176,10 +173,14 @@ print.power1 <- function(x, digits = 3, latex.output = FALSE, ...) {
         name <- c()
         for (stat.index in x$stat.indices) {
             if (stat.index != 0) {
-                statname <- paste("stat", stat.index, sep = "")
-                out <- .C(dontCheck(statname), 0, 0L, 0, 
-                          0L, name = c("1", rep(" ", 49)), 1L, 0, 0L, 0, 0, 0, 0L, 
-                          0L, 0L, 0.0, 0, PACKAGE = "PoweR")
+              Cstat.name <- paste("stat", stat.index, sep = "")
+             # statsym <- getNativeSymbolInfo(Cstat.name, PACKAGE = "PoweR")
+mydotC <- get(".PoweR_stat_dispatch", envir = asNamespace("PoweR"))[[Cstat.name]]; if (is.null(mydotC)) stop("Unknown stat function: ", Cstat.name)
+
+                out <- #.C(statsym, 
+                mydotC(0, 0L, 0, 
+                          0L, name = rep(" ", 50), 1L, 0, 0L, 0, 0, 0, 0L, 
+                          0L, 0L, 0.0, 0L, PACKAGE = "PoweR")
                 name <- c(name,sub(' +$', '', paste(out$name, collapse = ""))) # Remove trailing white spaces
             } else {
                 name <- "stat0"
@@ -256,10 +257,12 @@ print.power1 <- function(x, digits = 3, latex.output = FALSE, ...) {
         
     } else {
         
-        print(mytable, digits, ...)
+      print(mytable, digits, ...)
+      if (summaries) {
         print(mytable2, digits, ...)
         print(mytable3, digits, ...)
         print(mytable4, digits, ...)
+      }
     }
     
     invisible(list("Power table" = mytable, "Average power table" = mytable2, "Average gap table" = mytable3, "Worst gap table" = mytable4))

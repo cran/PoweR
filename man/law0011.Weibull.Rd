@@ -34,4 +34,5 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Weibull}
+\keyword{law}
+\keyword{Weibull}

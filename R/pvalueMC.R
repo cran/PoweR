@@ -1,6 +1,5 @@
 pvalueMC <- function(data, stat.index, null.law.index, M = 10 ^ 5, alter, null.law.pars = NULL, stat.pars = NULL, list.stat = NULL, method = c("Fisher"), center = FALSE, scale = FALSE) {
 
-    if (getRversion() < "3.1.0") dontCheck <- identity
 
     method <- match.arg(method)
   
@@ -15,9 +14,9 @@ pvalueMC <- function(data, stat.index, null.law.index, M = 10 ^ 5, alter, null.l
   # because parlaw (arg. params of the C function) should always be a 4-length vector of double.
     null.law.pars <- c(null.law.pars, rep(0, 4 - nbparlaw))
 
-    if (is.null(stat.pars) || is.na(stat.pars)) {
-        stat.pars <- rep(0, getnbparstats(stat.index)) # C++ technical requirement.
-        nbparstat <- 0 # The default values will be used by the C++ function.
+    if (is.null(stat.pars) || any(is.na(stat.pars))) {
+        stat.pars <- rep(0.0, getnbparstats(stat.index)) # C++ technical requirement.
+        nbparstat <- 0L # The default values will be used by the C++ function.
     } else {
         nbparstat <- length(stat.pars)
     }
@@ -51,8 +50,12 @@ pvalueMC <- function(data, stat.index, null.law.index, M = 10 ^ 5, alter, null.l
 	
   # call .C function to obtain one test statistic
     Cstat.name <- "tmp" # To remove a NOTE at R CMD check
-    Cstat.name <- paste("stat", stat.index, sep = "")
-    stattmp <- .C(dontCheck(Cstat.name), as.double(data), as.integer(n), as.double(level), as.integer(nblevel),
+  Cstat.name <- paste("stat", stat.index, sep = "")
+ # statsym <- getNativeSymbolInfo(Cstat.name, PACKAGE = "PoweR")
+mydotC <- get(".PoweR_stat_dispatch", envir = asNamespace("PoweR"))[[Cstat.name]]; if (is.null(mydotC)) stop("Unknown stat function: ", Cstat.name)
+
+    stattmp <- #.C(statsym, 
+    mydotC(as.double(data), as.integer(n), as.double(level), as.integer(nblevel),
                   rep(" ", 50), 0L, statistic = 0.0, pvalcomp = 0L, pvalue = 0.0, cL = as.double(cL), cR = as.double(cR),
                   as.integer(usecrit), alter = as.integer(alter), decision = as.integer(rep(0, nblevel)),
                   paramstat = as.double(stat.pars), nbparamstat = as.integer(nbparstat), PACKAGE = "PoweR")

@@ -25,4 +25,8 @@ Bonett, D.G. and Seier, E. (2002), A test of normality with high uniform power,
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
-\keyword{statistic, test, normality, Bonett-Seier}
+
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{Bonett-Seier}

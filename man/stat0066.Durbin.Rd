@@ -28,4 +28,7 @@ Durbin, J. (1969), Test for serial correlation in regression analysis based on t
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Uniformity.tests}} for other goodness-of-fit tests for uniformity.
 }
-\keyword{statistic, test, uniformity, Durbin}
+\keyword{statistic}
+\keyword{test}
+\keyword{uniformity}
+\keyword{Durbin}

@@ -25,4 +25,8 @@ Shapiro, S.S. and Francia, R. (1972), An approximation analysis of variance test
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See package \code{nortest}. See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
-\keyword{statistic, test, normality, Shapiro-Francia}
+
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{Shapiro-Francia}

@@ -2,7 +2,7 @@ checklaw <- function(law.index, sample.size = 50000, law.pars = NULL, density = 
 
     if ((length(law.index) != 1) &&  !(is.numeric(law.index))) stop("law.index argument should contain a single integer value.")
     if (is.character(density)) density <- eval(parse(text = density))
-    if (!is.null(density)) {if (! (class(density) == "function")) stop("density argument should contain a function")}
+    if (!is.null(density)) {if (! (inherits(density, "function"))) stop("density argument should contain a function")}
     
     tab <- getindex()$mat.laws  # Table of all the laws.
     index <- which(tab[, 1] == law.index)

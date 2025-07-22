@@ -25,4 +25,6 @@ of the American Statistical Association}, \bold{67(338)}, 422-424.
 \seealso{See \code{\link{Laplace.tests}} for other goodness-of-fit tests
   for the Laplace distribution.
 }
-\keyword{statistic, test, Laplace}
+\keyword{statistic}
+\keyword{test}
+\keyword{Laplace}

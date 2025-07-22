@@ -9,7 +9,8 @@
 into a LaTeX code for creating the table of power simulations.}
 
 \usage{
-\method{print}{power}(x, digits = 3, latex.output = FALSE, template = 1, ...)
+\method{print}{power}(x, digits = 3, latex.output = FALSE, template = 1,
+summaries = TRUE, ...)
 }
 
 \arguments{
@@ -19,8 +20,15 @@ into a LaTeX code for creating the table of power simulations.}
                       If \code{FALSE}, we output this table in the R Console.}
   \item{template }{integer, template to use for the (LaTeX) printing of
   values. Only \code{template = 1} is defined for the moment.}
+  \item{summaries }{logical, to display the summaries Average power
+  table, Average gap table and Worst gap table.}
   \item{... }{further arguments passed to or from other methods.}
 }
+
+\value{
+No return value. The function prints a formatted representation of power analysis results, optionally in 'LaTeX' format. The printed object is of class \code{"powerX"}, where \code{X} is the template number.
+}
+
 
 \references{
 Pierre Lafaye de Micheaux, Viet Anh Tran (2016). PoweR: A

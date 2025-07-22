@@ -34,4 +34,6 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Normal, Skew Normal}
+\keyword{law}
+\keyword{Normal}
+\keyword{Skew Normal}

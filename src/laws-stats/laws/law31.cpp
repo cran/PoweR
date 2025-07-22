@@ -1,5 +1,5 @@
 // Title: MixN(p,m)
-// Ref. (book or article): Romão, Xavier, Delgado, Raimundo and Costa, Aníbal, 
+// Ref. (book or article): Romao, Xavier, Delgado, Raimundo and Costa, Anibal, 
 //			   "An empirical power comparison of univariate goodness-of-fit tests for normality",
 //                         J. Stat. Comput. Simul. 80 (2010), no. 5-6, 545--591.
 
@@ -60,12 +60,12 @@ extern "C" {
       m = params[1];
       d = params[2];
     } else {
-      error("Number of parameters should be at most: 3");
+      Rf_error("Number of parameters should be at most: 3");
     }
    
 // If necessary, we check if some parameter values are out of parameter space
     if (d <= 0.0 || p < 0.0 || p > 1.0) {
-      warning("d should be >0 and p should be in [0,1] in law31!\n");
+      Rf_warning("d should be >0 and p should be in [0,1] in law31!\n");
       for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }

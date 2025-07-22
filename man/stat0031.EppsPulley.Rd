@@ -25,4 +25,8 @@ Epps, T.W. and Pulley, L.B. (1983), A test of normality based on empirical chara
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
-\keyword{statistic, test, normality, Epps-Pulley}
+
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{Epps-Pulley}

@@ -1,6 +1,7 @@
 // Title: Statistique de test d'Anderson-Darling pour une distribution de Laplace
 // Ref. (book or article): Yen, Vincent C. and Moore, Albert H. (1988) 'Modified goodness-of-fit test for the laplace distribution', 
 // Communications in Statistics - Simulation and Computation, 17:1, 275-281.
+// Now, one can also test for an APD(lambda) for any lambda.
 
 #include <R.h>
 #include "Rmath.h"
@@ -19,10 +20,12 @@ extern "C" {
       // Here, INDICATE the name of your statistic
       const char *nom = "$A^2$";
       // Here, INDICATE the number of parameters of your statistic
-      nbparamstat[0] = 0;
+      nbparamstat[0] = 3;
       // Here, INDICATE the default values of the parameters:
       if (name[0][0] == '1') { // To prevent writing in a non declared address (because maybe paramstat has not be initialized with a sufficient length since the correct value of nbparamstat[0] may be unkown yet).
-	
+	paramstat[0] = 0.5;
+	paramstat[1] = 1.0;
+	paramstat[2] = 1.0;
       }
       // The following 7 lines should NOT be modified
       const char *space = " ";
@@ -34,20 +37,106 @@ extern "C" {
       return;
     }
 
+    // Initialization of the parameters
+    double theta1, theta2, lambda;
+    if (nbparamstat[0] == 0) {
+      nbparamstat[0] = 3;
+      paramstat[0] = 0.5;
+      paramstat[1] = 1.0;
+      paramstat[2] = 1.0;
+      theta1 = 0.5;
+      theta2 = 1.0;
+      lambda = 1.0;
+    } else if (nbparamstat[0] == 1) {
+      nbparamstat[0] = 3;
+      paramstat[1] = 1.0;
+      paramstat[2] = 1.0;
+      theta1 = paramstat[0];
+      theta2 = 1.0;
+      lambda = 1.0;
+    } else if (nbparamstat[0] == 2) {
+      nbparamstat[0] = 3;
+      paramstat[2] = 1.0;
+      theta1 = paramstat[0];
+      theta2 = paramstat[1];
+      lambda = 1.0;
+    } else if (nbparamstat[0] == 3) {
+      theta1 = paramstat[0];
+      theta2 = paramstat[1];
+      lambda = paramstat[2];
+    } else {
+      Rf_error("Number of parameters in stat42 should be at most: 3");
+    }
+
+  // If necessary, we check if some parameter values are out of parameter space
+    if (lambda < 1.0 - 0.000000000000001) {
+      Rf_warning("lambda should be >=1 in stat42!\n");
+      for (i = 0; i < n; i++) statistic[0] = R_NaN;
+      return;
+    }
+    if ((theta1 >= 1.0) || (theta1 <= 0)) {
+      Rf_warning("theta1 should be in (0,1) in stat42!\n");
+      for (i = 0; i < n; i++) statistic[0] = R_NaN;
+      return;
+    }
+    if (theta2 <= 0) {
+      Rf_warning("theta2 should be > 0 in stat42!\n");
+      for (i = 0; i < n; i++) statistic[0] = R_NaN;
+      return;
+    }
+
+
     if (n > 3) {
       // Computation of the value of the test statistic
+      double pgamma(double q, double shape, double scale, int lowertail, int logp);     
+      double myf42(double x, void *info);
+      double R_zeroin2(			/* An estimate of the root */
+		       double ax,				/* Left border | of the range	*/
+		       double bx,				/* Right border| the root is seeked*/
+		       double fa, double fb,		/* f(a), f(b) */
+		       double (*f)(double x, void *info),	/* Function under investigation	*/
+		       void *info,				/* Add'l info passed on to f	*/
+		       double *Tol,			/* Acceptable tolerance		*/
+		       int *Maxit);
+    double *info;				/* Add'l info passed on to f	*/
+    info = new double[n + 2];
+    info[0] = lambda;
+    info[1] = (double)n;
+    for (i = 0; i < n; i++) info[i + 2] = x[i];
+    double *Tol;			/* Acceptable tolerance		*/
+    Tol = new double[1];
+    Tol[0] = 0.000000000001;
+    int *Maxit;
+    Maxit = new int[1];
+    Maxit[0] = 1000;
+    double minx, maxx;
+    minx = x[0];
+    maxx = x[0];
+    for (i = 1; i < n; i++) {
+      if (x[i] < minx) minx = x[i];
+      if (x[i] > maxx) maxx = x[i];
+    }
+    double fminx, fmaxx;
+    fminx = myf42(minx, info);
+    fmaxx = myf42(maxx, info);
+
       void R_rsort (double* x, int n);
       double plaplace(double y);
       double *ADa;
       ADa = new double[n];
       double statAD, tmp = 0.0, bhat, muhat, sumAD = 0.0;
+      R_rsort(x, n); 		// we sort the data
+
+      	double deltatheta, y, tmp1, tmp2;
+	deltatheta = (2.0 * R_pow(theta1, theta2) * R_pow(1.0 - theta1, theta2)) / (R_pow(theta1, theta2) + R_pow(1.0 - theta1, theta2));
+
+      if (fabs(lambda - 1.0) < 0.000000000000001) { // i.e. lambda = 1.0; Laplace case
       
     // calculate mu^ and b^ by using the maximum likelihood estimators 
     // mu^ = the sample median
     // b^ = 1/n * \sum_{i=1}^{n} |xi - mu^|
 	
     // calculate mu^
-    R_rsort(x, n); 		// we sort the data
     if (n % 2 == 0) {		// check if n is divisible by 2
       muhat = (x[n / 2 - 1] + x[n / 2]) / 2.0;
     } else {
@@ -62,19 +151,82 @@ extern "C" {
 	
     // generate vector ADa
     for (i = 0; i < n; i++) {
-      ADa[i] = plaplace((x[i] - muhat) / bhat);
+      y = (x[i] - muhat) / bhat;
+      if (y < 0.0) tmp1 = -y / theta1; else tmp1 = 0.0;
+      if (y > 0.0) tmp2 = y / (1.0 - theta1); else tmp2 = 0.0;
+      ADa[i] = theta1 * (1.0 - pgamma(deltatheta * R_pow(tmp1, theta2) / lambda, 1.0 / theta2, 1.0, 1, 0)) +
+	(1.0 - theta1) * pgamma(deltatheta * R_pow(tmp2, theta2) / lambda, 1.0 / theta2, 1.0, 1, 0);
+
+      //      ADa[i] = plaplace((x[i] - muhat) / bhat);
     }
     // R_rsort(ADa, n); // We sort the data, NO NEED SINCE plaplace(x[i]) < plaplace(x[i+1])
 	
+
+      } else if (fabs(lambda - 2.0) < 0.000000000000001) {// i.e. lambda = 2.0; Normal case
+
+	
+	muhat = 0.0;
+	for (i = 0; i < n; i++) {
+	  muhat = muhat + x[i];
+	}
+	muhat = muhat / (double)n;
+	for (i = 0; i < n; i++) {
+	  tmp = tmp + R_pow(x[i] - muhat, 2.0);
+	}
+	bhat = sqrt(tmp / (double)n);
+	
+	for (i = 0; i < n; i++) { 
+	      y = (x[i] - muhat) / bhat;
+      if (y < 0.0) tmp1 = -y / theta1; else tmp1 = 0.0;
+      if (y > 0.0) tmp2 = y / (1.0 - theta1); else tmp2 = 0.0;
+      ADa[i] = theta1 * (1.0 - pgamma(deltatheta * R_pow(tmp1, theta2) / lambda, 1.0 / theta2, 1.0, 1, 0)) +
+	(1.0 - theta1) * pgamma(deltatheta * R_pow(tmp2, theta2) / lambda, 1.0 / theta2, 1.0, 1, 0);
+
+      //ADa[i] = Rf_pnorm5((x[i] - muhat) / bhat, 0.0, 1.0, 1, 0);
+	}
+
+
+      } else {
+
+	    double invlambda = 1.0 / lambda;
+
+	// uniroot()
+      muhat = R_zeroin2(minx,				/* Left border | of the range	*/
+			maxx,				/* Right border| the root is seeked*/
+			fminx, fmaxx,		/* f(a), f(b) */
+			myf42,	/* Function under investigation	*/
+			info,				/* Add'l info passed on to f	*/
+			Tol,			/* Acceptable tolerance		*/
+			Maxit);
+    // calculate sighat^
+    for (i = 0; i < n; i++) {
+      tmp = tmp + R_pow(fabs(x[i] - muhat), lambda);
+    }
+    bhat = R_pow(tmp / (double)n, invlambda);
+
+    for (i = 0; i < n; i++) {
+      // See equ (2.3) in Desgagne et al. (2021)
+      y = (x[i] - muhat) / bhat;
+      if (y < 0.0) tmp1 = -y / theta1; else tmp1 = 0.0;
+      if (y > 0.0) tmp2 = y / (1.0 - theta1); else tmp2 = 0.0;
+      ADa[i] = theta1 * (1.0 - pgamma(deltatheta * R_pow(tmp1, theta2) / lambda, 1.0 / theta2, 1.0, 1, 0)) +
+	(1.0 - theta1) * pgamma(deltatheta * R_pow(tmp2, theta2) / lambda, 1.0 / theta2, 1.0, 1, 0);
+    }
+
+    
+      }
+      
+
     // calculate statAD
     // for (i = 1; i <= n; i++) sumAD = sumAD + (double)(2 * i - 1) * (log(ADa[i - 1]) + log(1.0 - ADa[n - i]));
     // An alternative expression in which only a single observation is dealt with at each step of the summation is:
-    for (i = 1; i <= n; i++) sumAD = sumAD + (double)(2 * i - 1) * log(ADa[i - 1]) + (double)(2 * n - 2 * i + 1) * log(1.0 - ADa[i - 1]);
+    for (i = 1; i <= n; i++) sumAD = sumAD + (double)(2 * i - 1) * log(ADa[i - 1]) + (double)(2 * (n - i) + 1) * log(1.0 - ADa[i - 1]);
 	
     statAD = -((double)n + sumAD / (double)n);
 
     statistic[0] = statAD; // Here is the test statistic value
 
+      
 if (pvalcomp[0] == 1) {
 	// If possible, computation of the p-value.
 	#include "pvalues/pvalue42.cpp"
@@ -91,13 +243,30 @@ if (pvalcomp[0] == 1) {
     
  // If applicable, we free the unused array of pointers
  delete[] ADa;
-
+ delete[] info;
+ delete[] Tol;
+ delete[] Maxit;
     }
 
     // We return
     return;
         
   }
+
+    int sgn42(double v) {
+    return (v > 0) - (v < 0);
+  }
+
+  double myf42(double x, void *info) {
+    double lambda = (double)((double*)info)[0];
+    int i, n = (int)((double*)info)[1];
+    double tmp = 0.0;
+    for (i = 0; i < n; i++) {
+      tmp = tmp + R_pow(fabs((double)((double*)info)[i + 2] - x), lambda - 1.0) * (double)sgn42((double)((double*)info)[i + 2] - x);
+    }
+    return(tmp);
+  }
+
 
   // This function is first defined in stat38.cpp
   // The cumulative Laplace distribution function with \mu = 0 and \theta = 1

@@ -25,5 +25,7 @@ Langholz, B. and Kronmal, R. A. (1991), Tests of distributional hypotheses with 
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Laplace.tests}} for other goodness-of-fit tests for the Laplace distribution.
 }
-
-\keyword{statistic, test, Laplace, Langholz-Kronmal}
+\keyword{statistic}
+\keyword{test}
+\keyword{Laplace}
+\keyword{Langholz-Kronmal}

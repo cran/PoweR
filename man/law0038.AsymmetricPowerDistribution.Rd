@@ -55,4 +55,5 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Asymmetric Power Distribution}
+\keyword{law}
+\keyword{Asymmetric Power Distribution}

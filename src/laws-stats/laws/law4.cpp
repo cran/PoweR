@@ -46,7 +46,7 @@ extern "C" {
       mu = params[0];
       sigma = params[1];
     } else {
-      error("Number of parameters should be at most: 2");
+      Rf_error("Number of parameters should be at most: 2");
     }
 
 // If necessary, we check if some parameter values are out of parameter space

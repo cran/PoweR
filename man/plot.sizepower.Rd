@@ -27,6 +27,7 @@ the x-y coordinates of the legend.
 \item{... }{further arguments passed to the \code{plot} or \code{points} functions.
   }
 }
+\value{No return value. Displays a graph.}
 \details{
 See Section 2.3 in Lafaye de Micheaux, P. and Tran, V. A. (2014).
 }

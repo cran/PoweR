@@ -25,4 +25,8 @@ Desgagne, A., Lafaye de Micheaux, P. and Leblanc, A. (2013), Test of Normality A
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
-\keyword{statistic, test, normality, Desgagne-LafayeDeMicheaux-Leblanc}
+
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{Desgagne-LafayeDeMicheaux-Leblanc}

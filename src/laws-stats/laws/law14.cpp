@@ -1,7 +1,7 @@
 // Title: Mean of k r.v. following a Uniform distribution 
 // Ref. (book or article): Quesenberry and Miller, "Power studies of some tests for uniformity", 
 //                         Journal of Statistical Computation and Simulation (1977), 5:3, 169--191 see p. 179
-//	                   Bates, Grace E., "Joint distributions of time intervals for the occurrence of successive accidents in a generalized Pólya scheme.",
+//	                   Bates, Grace E., "Joint distributions of time intervals for the occurrence of successive accidents in a generalized Polya scheme.",
 //	                   Ann. Math. Statist. 26 (1955), 705--720. 
 
 #include <R.h>
@@ -62,13 +62,13 @@ extern "C" {
       a = params[1];
       b = params[2];
     } else {
-      error("Number of parameters should be at most: 3");
+      Rf_error("Number of parameters should be at most: 3");
     }
 
 // If necessary, we check if some parameter values are out of parameter space
     double intpart;
     if (k < 1.0 || modf(k, &intpart) != 0.0 || a > b) {
-      warning("k should be a positive integer value and a should not be > b in law14!\n");
+      Rf_warning("k should be a positive integer value and a should not be > b in law14!\n");
       for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }

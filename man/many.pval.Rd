@@ -35,7 +35,7 @@ integer. Number of Monte-Carlo repetitions. Only used when \code{method} = 'MC'.
 integer. Number of \eqn{p}-values to compute for each test statistic.
 }
   \item{alter }{
-integer value in {0,1,2,3,4}. Type of test. See function \code{\link{create.alter}}.
+integer value in \{0,1,2,3,4\}. Type of test. See function \code{\link{create.alter}}.
 }
   \item{law.pars }{
 vector of the parameter values for the law specified in \code{law.index}.

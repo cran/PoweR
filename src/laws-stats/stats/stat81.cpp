@@ -14,7 +14,7 @@ extern "C" {
 // 4: bilateral test that rejects H0 only for small values of the test statistic
     alter[0] = 3;
 
-    int i, j=0, n=xlen[0];
+    int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {    
 // Here, INDICATE the name of your statistic
       const char *nom = "$Z_A$";
@@ -30,7 +30,7 @@ extern "C" {
 	name[j][0] = nom[j];
 	j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50;i++) name[i][0] = space[0];
       return;
     }
 
@@ -40,30 +40,26 @@ extern "C" {
     double punif(double q, double min, double max, int lower_tail, int log_p);
     double *U;
     U = new double[n];
-    double statZA, sumZA=0.0;
+    double statZA, sumZA;
 	
 
-	// generate vector U
-    for (i=0;i<n;i++) {
-	  U[i] = punif(x[i],0.0,1.0,1,0);
-	}
-    R_rsort(U,n); // We sort the data
+    // generate vector U
+    for (i = 0; i < n; i++) {
+      U[i] = punif(x[i], 0.0, 1.0, 1, 0);
+    }
+    R_rsort(U, n); // We sort the data
 	
     
-	// calculate statZA
-	for (i=0; i<n; i++) {
-	  
-	  sumZA = sumZA - (log(U[i])/((double)n-((double)i+1.0)+1.0/2.0) + log(1.0-U[i])/((double)i+1.0-1.0/2.0));
-	  
-	  // sumZA = sumZA - log(U[i])/((double)(n-i-0.5)) - log(1.0-U[i])/((double)(i+0.5));
-	
-	}
+    // calculate statZA
+    sumZA = 0.0;
+    for (i = 0; i < n; i++) {      
+      sumZA = sumZA - (log(U[i]) / ((double)(n - i + 1) + 0.5) + log(1.0 - U[i]) / ((double)(i + 1) - 0.5));      
+      // sumZA = sumZA - log(U[i])/((double)(n-i-0.5)) - log(1.0-U[i])/((double)(i+0.5));      
+    }
     
-	statZA = 10.0*sumZA - 32.0;
-	
-    // statZA = sumZA;
+    statZA = 10.0 * sumZA - 32.0;
     
-	statistic[0] = statZA; // Here is the test statistic value
+    statistic[0] = statZA; // Here is the test statistic value
 	
 
 if (pvalcomp[0] == 1) {

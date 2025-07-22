@@ -25,4 +25,7 @@ One-Sample Test for a Mean (Sigma Unknown)
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
-\keyword{statistic, test, normality}
+\keyword{statistic}
+\keyword{test}
+\keyword{uniformity}
+\keyword{normality}

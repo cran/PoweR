@@ -38,4 +38,5 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Logistic}
+\keyword{law}
+\keyword{Logistic}

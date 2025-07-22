@@ -32,4 +32,6 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Normal, Folded Normal}
+\keyword{law}
+\keyword{Normal}
+\keyword{Folded Normal}

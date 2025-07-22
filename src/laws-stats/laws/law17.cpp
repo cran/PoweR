@@ -75,12 +75,12 @@ extern "C" {
       nu = params[2];
       tau = params[3];
     } else {
-      error("Number of parameters should be at most: 4");
+      Rf_error("Number of parameters should be at most: 4");
     }
 
 // If necessary, we check if some parameter values are out of parameter space
     if (sigma <= 0.0 || tau <= 0.0) {
-      warning("sigma and tau should be > 0 in law17!\n");
+      Rf_warning("sigma and tau should be > 0 in law17!\n");
       for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }

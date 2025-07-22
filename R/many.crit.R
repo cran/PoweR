@@ -18,7 +18,6 @@ many.crit <- function(law.index, stat.indices, M = 10 ^ 3, vectn = c(20, 50, 100
     
     if (is.function(Rlaw) & (law.index != 0)) stop("You should set 'law.index' to 0 when 'Rlaw' is a (random generating) function.")
     
-    if(getRversion() < "3.1.0") dontCheck <- identity
     
     stats.len <- length(stat.indices)
 
@@ -34,7 +33,11 @@ many.crit <- function(law.index, stat.indices, M = 10 ^ 3, vectn = c(20, 50, 100
                 if (!(alter[[s]] %in% 0:4)) stop(paste("'alter'[[", s, "]] should be in  {0,1,2,3,4}.", sep = ""))
                 Cstat.name <- "tmp" # To remove a NOTE at R CMD check
                 Cstat.name <- paste("stat", as.character(stat.indices[s]), sep = "")
-                alter.true <- .C(dontCheck(Cstat.name), as.double(0.0), 1L, 0.05, 1L, rep(" ", 50), 1L, 0.0, 0L, 0.0, 0.0,
+               # statsym <- getNativeSymbolInfo(Cstat.name, PACKAGE = "PoweR")
+mydotC <- get(".PoweR_stat_dispatch", envir = asNamespace("PoweR"))[[Cstat.name]]; if (is.null(mydotC)) stop("Unknown stat function: ", Cstat.name)
+
+                alter.true <- #.C(statsym, 
+                mydotC(as.double(0.0), 1L, 0.05, 1L, rep(" ", 50), 1L, 0.0, 0L, 0.0, 0.0,
                                  0.0, 0L, alter = as.integer(alter[s]), 0L, rep(0.0, 4), 0L, PACKAGE = "PoweR")$alter
                 if (alter[[s]] != alter.true) {
                     warning(paste("'alter'[[", s, "]] should be set to ", alter.true, ". We have done this for you!"), sep = "")
@@ -48,7 +51,7 @@ many.crit <- function(law.index, stat.indices, M = 10 ^ 3, vectn = c(20, 50, 100
         names(alter) <- paste("stat", stat.indices, sep = "")
     }
     
- 
+# browser()
 # Management of parstats
     nbparstats <- rep(NA, length(stat.indices))
     nbparstats[stat.indices != 0] <- getnbparstats(stat.indices[stat.indices != 0])
@@ -62,7 +65,11 @@ many.crit <- function(law.index, stat.indices, M = 10 ^ 3, vectn = c(20, 50, 100
             if (stat.indices[s] != 0) {
                 if (names(parstats)[s] != paste("stat", stat.indices[s], sep = "")) stop(paste("Name of 'parstats'[[", s, "]] should be equal to 'stat", stat.indices[s], sep = ""))
                 if (!is.na(parstats[[s]]) && (nbparstats[s] == 0)) stop(paste("'parstats[['", s, "]] should be equal to NA", sep = ""))
+                if (any(is.na(parstats[[s]]))) parstats[[s]] <- stat.cstr(stat.indices[s])$stat.pars
                 if ((nbparstats[s] != 0) && (length(parstats[[s]]) != nbparstats[s])) stop(paste("The length of parstats[[", s, "]] should be ", nbparstats[s], sep = ""))
+                if (is.na(parstats[[s]]) && (nbparstats[s] != 0)) {
+                  stop(paste("stat", stat.indices[s], " value(s) is set NA. Please provide these values. Note: default values are : ", stat.cstr(stat.indices[s])$stat.pars, sep = ""))
+                }
                 parstatstmp <- c(parstatstmp, parstats[[s]])
             }
         }
@@ -71,11 +78,15 @@ many.crit <- function(law.index, stat.indices, M = 10 ^ 3, vectn = c(20, 50, 100
             if (stat.indices[s] != 0) {parstatstmp <- c(parstatstmp, stat.cstr(stat.indices[s])$stat.pars)}
         }
     }
-#  parstats <- parstatstmp
-#  parstats[is.na(parstats)] <- 0
-    parstatstmp <- parstatstmp[!is.na(parstatstmp)]
-  
 
+#  browser()
+  parstats <- parstatstmp
+#  parstats[is.na(parstats)] <- 0
+#    parstatstmp <- parstatstmp[!is.na(parstatstmp)]
+
+    parstats <- parstats[!is.na(parstats)]
+
+#browser()
  
     nblevels <- length(levels)
     vectn.len <- length(vectn)
@@ -89,7 +100,7 @@ many.crit <- function(law.index, stat.indices, M = 10 ^ 3, vectn = c(20, 50, 100
     critvalR <- critvalL <- rep(0.0, M * vectn.len * stats.len)
     nbparlaws <- length(law.pars)
     
-    if (is.null(law.pars)) {
+    if (is.null(law.pars) && law.index != 0) {
         tmp2 <- law.cstr(law.index)$law.pars
         law.pars <- c(tmp2, rep(0.0, 4 - length(tmp2)))
     }
@@ -104,17 +115,23 @@ many.crit <- function(law.index, stat.indices, M = 10 ^ 3, vectn = c(20, 50, 100
         out <- .Call("powcompfastRcpp", M = as.integer(M), law.index = as.integer(law.index), laws.len = 1L, vectn = as.integer(vectn), vectn.len = as.integer(vectn.len),
                      stat.indices = as.integer(stat.indices), stats.len = as.integer(stats.len), decision = as.integer(decision), decision.len = as.integer(decision.len),
                      levels = as.double(levels), nblevels = as.integer(nblevels), cL = as.double(critvalL), cR = as.double(critvalR), usecrit = rep(0L, stats.len * vectn.len), alter = as.integer(alter),
-                     nbparlaws = as.integer(nbparlaws), parlaws = as.double(law.pars), nbparstats = as.integer(nbparstats), parstats = as.double(parstatstmp),
+                     nbparlaws = as.integer(nbparlaws), parlaws = as.double(law.pars), nbparstats = as.integer(nbparstats), parstats = as.double(parstats),
                      modelnum = 1L, funclist = list(function(){}), as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np),
-                     as.list(Rlaw), Rstats, as.integer(center), as.integer(scale), compquant = 1L, PACKAGE="PoweR", NAOK = TRUE)$cL
+                     as.list(Rlaw), Rstats, as.integer(center), as.integer(scale), compquant = 1L, pvalcomp = 0L, NAOK = TRUE, PACKAGE="PoweR")$cL
     } else {
-        
-        out <- .C("powcompfast", M = as.integer(M), law.index = as.integer(law.index), laws.len = 1L, vectn = as.integer(vectn), vectn.len = as.integer(vectn.len),
-                  stat.indices = as.integer(stat.indices), stats.len = as.integer(stats.len), decision = as.integer(decision), decision.len = as.integer(decision.len),
-                  levels = as.double(levels), nblevels = as.integer(nblevels), cL = as.double(critvalL), cR = as.double(critvalR), usecrit = rep(0L, stats.len * vectn.len), alter = as.integer(alter),
-                  nbparlaws = as.integer(nbparlaws), parlaws = as.double(law.pars), nbparstats = as.integer(nbparstats), parstats = as.double(parstatstmp),
-                  modelnum = 1L, funclist = list(function(){}), as.double(thetavec), as.double(xvec), as.integer(p), as.integer(np),
-                  as.integer(center), as.integer(scale), compquant= 1L, PACKAGE = "PoweR", NAOK = TRUE)$cL
+#browser()
+      out <- .C("powcompfast", M = as.integer(M), law.index = as.integer(law.index),
+                laws.len = 1L, vectn = as.integer(vectn), vectn.len = as.integer(vectn.len),
+                stat.indices = as.integer(stat.indices), stats.len = as.integer(stats.len),
+                decision = as.integer(decision), decision.len = as.integer(decision.len),
+                levels = as.double(levels), nblevels = as.integer(nblevels),
+                cL = as.double(critvalL), cR = as.double(critvalR),
+                usecrit = rep(0L, stats.len * vectn.len), alter = as.integer(alter),
+                nbparlaws = as.integer(nbparlaws), parlaws = as.double(law.pars),
+                nbparstats = as.integer(nbparstats), parstats = as.double(parstats),
+                modelnum = 1L, funclist = list(function(){}), as.double(thetavec),
+                as.double(xvec), as.integer(p), as.integer(np),
+                  as.integer(center), as.integer(scale), compquant= 1L, pvalcomp = 0L, NAOK = TRUE, PACKAGE = "PoweR")$cL
         
     }
 #####################################
@@ -153,16 +170,18 @@ many.crit <- function(law.index, stat.indices, M = 10 ^ 3, vectn = c(20, 50, 100
         }
         
    # add a new column named "param" to distinguish the critical values from the same statistic with different parameters
-   # if parstats is NULL, "param" will appear as NA
-        mat <- expand.grid(vectn, levels, paste(parstats[[s]], collapse = " "))
+      # if parstats is NULL, "param" will appear as NA
+
+            # mat <- expand.grid(vectn, levels, paste(parstats[[s]], collapse = " "))
+        mat <- expand.grid(vectn, levels, paste(if (nbparstats[s] != 0) parstats[(sum(nbparstats[1:s]) - nbparstats[s] + 1):(sum(nbparstats[1:s]))] else "", collapse = " "))
         colnames(mat) <- c("n", "level", "param")
         mylist[[s]] <- cbind(mat, mylist[[s]])
         
         names(mylist)[s] <- statname
         
     }
-    
-    list.names.replicated <- names(mylist)[table(names(mylist)) > 1]
+    #browser()
+    list.names.replicated <- sort(unique(names(mylist)))[table(names(mylist)) > 1]
     
     for (name in list.names.replicated) {
         

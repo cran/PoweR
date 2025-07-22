@@ -1,5 +1,5 @@
 // Title: GEP(t1,t2,t3)
-// Ref. (book or article): Alain Desgagné , Pierre Lafaye de Micheaux & Alexandre Leblanc (2013): Test of Normality Against
+// Ref. (book or article): Alain Desgagne , Pierre Lafaye de Micheaux & Alexandre Leblanc (2013): Test of Normality Against
 //             Generalized Exponential Power Alternatives, Communications in Statistics - Theory and Methods, 42:1, 164-190
 
 #include <R.h>
@@ -75,7 +75,7 @@ extern "C" {
       t3 = params[2];
       crit = params[3];
     } else {
-      error("Number of parameters should be at most: 4");
+      Rf_error("Number of parameters should be at most: 4");
     }
 
 // If necessary, we check if some parameter values are out of parameter space

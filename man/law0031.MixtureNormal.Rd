@@ -10,8 +10,8 @@ This generator is called by function \code{\link{gensample}} to create random va
 \details{If \code{p}, \code{m} and \code{d} are not specified they assume the default values of 0.5, 0 and 1, respectively.
 
 The Mixture Normal distribution has density:
-\deqn{ \frac{1}{\sqrt{2\pi}}\left[pe^{-\frac{(x-m)^2}{2d^2}}+(1-p)e^{-\frac{x^2}{2}}\right] }{ 
-       f(x) = 1/(\sqrt(2\pi)) (p e^-((x - m)^2)/(2 d^2) + (1 - p) e^-(x^2/2)) }
+\deqn{ p\frac{1}{d\sqrt{2\pi}}e^{-\frac{(x-m)^2}{2d^2}}+(1-p)\frac{1}{d\sqrt{2\pi}}e^{-\frac{x^2}{2}} }{ 
+       f(x) = 1/(d\sqrt(2\pi)) p e^-((x - m)^2)/(2 d^2) + 1/(\sqrt(2\pi))(1 - p) e^-(x^2/2) }
 }
 \references{
 Pierre Lafaye de Micheaux, Viet Anh Tran (2016). PoweR: A
@@ -30,4 +30,6 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Normal, Mixture Normal}
+\keyword{law}
+\keyword{Normal}
+\keyword{Mixture Normal}

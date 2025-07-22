@@ -27,4 +27,7 @@ Springer Series in Statistics. Springer-Verlag, New York.
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Uniformity.tests}} for other goodness-of-fit tests for uniformity.
 }
-\keyword{statistic, test, uniformity, Read-Cressie}
+\keyword{statistic}
+\keyword{test}
+\keyword{uniformity}
+\keyword{Read-Cressie}

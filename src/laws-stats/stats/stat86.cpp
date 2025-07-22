@@ -1,4 +1,4 @@
-// Title: Statistique de test de Epps-Pulley modifiée avec notre poids volcano
+// Title: Statistique de test de Epps-Pulley modifiee avec notre poids volcano
 // Ref. (book or article): Epps, T.W. and Pulley, L.B. (1983), A test of normality based on empirical characteristic function, 
 //						   Biometrika, Vol. 70, No. 3, pp. 723-726.
 
@@ -30,7 +30,7 @@ extern "C" {
 	name[j][0] = nom[j];
 	j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50; i++) name[i][0] = space[0];
       return;
     }
 	
@@ -43,6 +43,13 @@ extern "C" {
     } else if (nbparamstat[0] == 1) {
       alpha1 = paramstat[0];
     } else {
+      Rf_error("Number of parameters should be at most: 1");
+    }
+
+    // If necessary, we check if some parameter values are out of parameter space
+    if (alpha1 <= 0.0) {
+      Rf_warning("alpha should be > 0 in stat86!\n");
+      for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }
 
@@ -74,7 +81,7 @@ extern "C" {
 	    alpha12p1S2 = alpha12p1 * S2;
 	    alpha12p152 = R_pow(alpha12p1, 2.5);
 
-	    for (l2=24;l2<=124;l1++) {
+	    for (l2=24;l2<=124;l2++) {
 	      alpha2 = ((double)l2) * 0.0080808;
 		      //	    alpha2 = alpha1;
 

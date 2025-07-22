@@ -26,4 +26,7 @@ Gel, Y. and Gastwirth, J.L. (2008), The Robust Jarque-Bera Test of Normality,
 \seealso{See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
 
-\keyword{statistic, test, normality, Gel-Gastwirth}
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{Gel-Gastwirth}

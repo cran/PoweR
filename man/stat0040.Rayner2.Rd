@@ -25,4 +25,7 @@ Oxford University Press, New York.
 \seealso{See \code{\link{Laplace.tests}} for other goodness-of-fit tests
   for the Laplace distribution.
 }
-\keyword{statistic, test, Laplace}
+
+\keyword{statistic}
+\keyword{test}
+\keyword{Laplace}

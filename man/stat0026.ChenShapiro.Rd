@@ -25,4 +25,8 @@ Chen, L. and Shapiro, S.S (1995), An alternative test for normality based on nor
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
-\keyword{statistic, test, normality, Chen-Shapiro}
+
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{Chen-Shapiro}

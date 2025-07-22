@@ -61,12 +61,12 @@ extern "C" {
       sigma = params[1];
       alpha = params[2];
     } else {
-      error("Number of parameters should be at most: 3");
+      Rf_error("Number of parameters should be at most: 3");
     }
 
 // If necessary, we check if some parameter values are out of parameter space
     if (sigma <= 0.0 || alpha <= 0.0) {
-      warning("sigma and alpha should be > 0 in law27!\n");
+      Rf_warning("sigma and alpha should be > 0 in law27!\n");
       for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }

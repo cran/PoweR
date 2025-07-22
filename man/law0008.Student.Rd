@@ -33,4 +33,5 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Student}
+\keyword{law}
+\keyword{Student}

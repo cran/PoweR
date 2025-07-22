@@ -37,12 +37,12 @@ extern "C" {
     } else if (nbparams[0] == 1) {
       power = params[0] + 1.0;
     } else {
-      error("Number of parameters should be at most: 1");
+      Rf_error("Number of parameters should be at most: 1");
     }
 
 // If necessary, we check if some parameter values are out of parameter space
     if (power < 0.0) {
-      warning("power should not be < 0 in law13!\n");
+      Rf_warning("power should not be < 0 in law13!\n");
       for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }

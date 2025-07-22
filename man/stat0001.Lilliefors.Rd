@@ -25,4 +25,7 @@ _Journal of the American Statistical Association_, *62*, 399-402.
 
 \seealso{See package \code{nortest}. See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.}
 
-\keyword{statistic, test, normality, Lilliefors}
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{Lilliefors}

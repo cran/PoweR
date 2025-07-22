@@ -36,4 +36,5 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Generalized Exponential Power}
+\keyword{law}
+\keyword{Generalized Exponential Power}

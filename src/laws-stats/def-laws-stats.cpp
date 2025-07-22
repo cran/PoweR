@@ -40,18 +40,22 @@
 #include "laws/law38.cpp"
 #include "laws/law39.cpp"
 #include "laws/law40.cpp"
+#include "laws/law41.cpp"
+#include "laws/law42.cpp"
+#include "laws/law43.cpp"
 
 // Modify also below.
 // Change:
-//   40 to 41 
+//   43 to 44
 // and add:
-//  ,law41
+//  ,law43
 
-void (*lawfunc[40])(int *xlen, double *x, char **name, int *trtname, double *params, int *nbparams, int *setseed) = {
-  law1,law2,law3,law4,law5,law6,law7,law8,law9,law10,
-  law11,law12,law13,law14,law15,law16,law17,law18,law19,law20,
-  law21,law22,law23,law24,law25,law26,law27,law28,law29,law30,
-  law31,law32,law33,law34,law35,law36,law37,law38,law39,law40
+void (*lawfunc[43])(int *xlen, double *x, char **name, int *trtname, double *params, int *nbparams, int *setseed) = {
+  law1, law2, law3, law4, law5, law6, law7, law8, law9, law10,
+  law11, law12, law13, law14, law15, law16, law17, law18, law19, law20,
+  law21, law22, law23, law24, law25, law26, law27, law28, law29, law30,
+  law31, law32, law33, law34, law35, law36, law37, law38, law39, law40,
+  law41, law42, law43
 };
 
 
@@ -143,7 +147,7 @@ Note: stat84 are available and can be used to incorporate new tests
 #include "stats/stat81.cpp"
 #include "stats/stat82.cpp"
 #include "stats/stat83.cpp"
-// #include "stats/stat84.cpp"
+#include "stats/stat84.cpp"
 #include "stats/stat85.cpp"
 #include "stats/stat86.cpp"
 #include "stats/stat87.cpp"
@@ -157,6 +161,17 @@ Note: stat84 are available and can be used to incorporate new tests
 #include "stats/stat95.cpp"
 #include "stats/stat96.cpp"
 #include "stats/stat97.cpp"
+#include "stats/stat98.cpp"
+#include "stats/stat99.cpp"
+#include "stats/stat100.cpp"
+#include "stats/stat101.cpp"
+#include "stats/stat102.cpp"
+#include "stats/stat103.cpp"
+#include "stats/stat104.cpp"
+#include "stats/stat105.cpp"
+#include "stats/stat106.cpp"
+#include "stats/stat107.cpp"
+#include "stats/stat108.cpp"
 
 
 // I added this to correct a bug that occured when calling (*statfunc[statindex-1]) from calcpuiss.cpp. This bug arrived when I removed stat84, etc below
@@ -166,20 +181,20 @@ void nothing(double *x, int *xlen, double *level, int *nblevel, char **name, int
 
 // Modify also below.
 // Change:
-//   97 to 98
+//   108 to 109
 // and add:
-//  ,stat98
+//  ,stat109
 
-void (*statfunc[97])(double *x, int *xlen, double *level, int *nblevel, char **name, int *getname, double *statistic, int *pvalcomp, double *pvalue, double *critvalL, double *critvalR, int *usecrit, int *alter, int *decision, double *paramstat, int *nbparamstat) = {
-  stat1,stat2,stat3,stat4,stat5,stat6,stat7,stat8,stat9,stat10,
-  stat11,stat12,stat13,stat14,stat15,stat16,stat17,stat18,stat19,stat20,
-  stat21,stat22,stat23,stat24,stat25,stat26,stat27,stat28,stat29,stat30,
-    stat31,stat32,stat33,stat34,stat35,stat36,stat37,stat38,stat39,stat40,
-  stat41,stat42,stat43,stat44,stat45,stat46,stat47,stat48,stat49,stat50,
-  stat51,stat52,stat53,stat54,stat55,stat56,stat57,stat58,stat59,stat60,
-  stat61,stat62,stat63,stat64,stat65,stat66,stat67,stat68,stat69,stat70,
-  stat71,stat72,stat73,stat74,stat75,stat76,stat77,stat78,stat79,stat80,
-    stat81,stat82,stat83,nothing,//stat84,
-    stat85,stat86,stat87,stat88,stat89,stat90,
-    stat91,stat92,stat93,stat94,stat95,stat96,stat97
+void (*statfunc[108])(double *x, int *xlen, double *level, int *nblevel, char **name, int *getname, double *statistic, int *pvalcomp, double *pvalue, double *critvalL, double *critvalR, int *usecrit, int *alter, int *decision, double *paramstat, int *nbparamstat) = {
+  stat1, stat2, stat3, stat4, stat5, stat6, stat7, stat8, stat9, stat10,
+  stat11, stat12, stat13, stat14, stat15, stat16, stat17, stat18, stat19, stat20,
+  stat21, stat22, stat23, stat24, stat25, stat26, stat27, stat28, stat29, stat30,
+  stat31, stat32, stat33, stat34, stat35, stat36, stat37, stat38, stat39, stat40,
+  stat41, stat42, stat43, stat44, stat45, stat46, stat47, stat48, stat49, stat50,
+  stat51, stat52, stat53, stat54, stat55, stat56, stat57, stat58, stat59, stat60,
+  stat61, stat62, stat63, stat64, stat65, stat66, stat67, stat68, stat69, stat70,
+  stat71, stat72, stat73, stat74, stat75, stat76, stat77, stat78, stat79, stat80,
+  stat81, stat82, stat83, stat84, stat85, stat86, stat87, stat88, stat89, stat90,//nothing,
+  stat91, stat92, stat93, stat94, stat95, stat96, stat97, stat98, stat99, stat100,
+  stat101, stat102, stat103, stat104, stat105, stat106, stat107, stat108
 };

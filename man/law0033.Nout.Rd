@@ -37,4 +37,6 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Normal, Normal with outliers}
+\keyword{law}
+\keyword{Normal}
+\keyword{Normal with outliers}

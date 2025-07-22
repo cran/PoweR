@@ -28,4 +28,8 @@ Meintanis, S.G. (2004), A Class of Omnibus Tests for the Laplace Distribution Ba
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Laplace.tests}} for other goodness-of-fit tests for the Laplace distribution.
 }
-\keyword{statistic, test, Laplace, Meintanis}
+
+\keyword{statistic}
+\keyword{test}
+\keyword{Laplace}
+\keyword{Meintanis}

@@ -27,4 +27,7 @@ Kolmogorov, A. N. (1933), Sulla determinazione empirica di una legge di distibuz
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Uniformity.tests}} for other goodness-of-fit tests for uniformity.
 }
-\keyword{statistic, test, uniformity, Kolmogorov}
+\keyword{statistic}
+\keyword{test}
+\keyword{uniformity}
+\keyword{Kolmogorov}

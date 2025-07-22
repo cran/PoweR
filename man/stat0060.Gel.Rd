@@ -25,4 +25,7 @@ Gel, Yulia R. (2010), Test of fit for a Laplace distribution against heavier tai
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Laplace.tests}} for other goodness-of-fit tests for the Laplace distribution.
 }
-\keyword{statistic, test, Laplace, Gel}
+\keyword{statistic}
+\keyword{test}
+\keyword{Laplace}
+\keyword{Gel}

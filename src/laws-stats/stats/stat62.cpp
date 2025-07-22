@@ -1,5 +1,5 @@
-// Title: The Desgagné-Micheaux-Leblanc statistic for the Laplace distribution
-// Ref. (book or article): Desgagné, A., Lafaye de Micheaux, P. and Leblanc, A., - unpublished document. 
+// Title: The Desgagne-Micheaux-Leblanc statistic for the Laplace distribution
+// Ref. (book or article): Desgagne, A., Lafaye de Micheaux, P. and Leblanc, A., - unpublished document. 
 
 #include <R.h>
 #include "Rmath.h"
@@ -11,7 +11,7 @@ extern "C" {
 // If the test statistic can only be in category 3 or 4 (see just below), INDICATE the following line accordingly. Else, leave it commented.
 // 0: two.sided=bilateral, 1: less=unilateral, 2: greater=unilateral, 3: bilateral test that rejects H0 only for large values of the test statistic, 
 // 4: bilateral test that rejects H0 only for small values of the test statistic
-    if (alter[0] != 0 && alter[0] != 1 && alter[0] != 2) error("alter should be in {0,1,2}");
+    if (alter[0] != 0 && alter[0] != 1 && alter[0] != 2) Rf_error("alter should be in {0,1,2}");
 
     int i, j=0, n=xlen[0];
     if (getname[0] == 1) {    

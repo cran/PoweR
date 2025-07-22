@@ -25,4 +25,8 @@ Puig, P. and Stephens, M. A. (2000), Tests of fit for the Laplace distribution, 
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See package \code{lawstat}. See \code{\link{Laplace.tests}} for other goodness-of-fit tests for the Laplace distribution.
 }
-\keyword{statistic, test, Laplace, Kolmogorov-Smirnov}
+
+\keyword{statistic}
+\keyword{test}
+\keyword{Laplace}
+\keyword{Kolmogorov-Smirnov}

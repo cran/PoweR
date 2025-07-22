@@ -30,4 +30,5 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Scale Contaminated}
+\keyword{law}
+\keyword{Scale Contaminated}

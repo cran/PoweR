@@ -14,7 +14,7 @@ extern "C" {
 // 4: bilateral test that rejects H0 only for small values of the test statistic
     alter[0] = 3;
 
-    int i, j=0, n=xlen[0];
+    int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {    
 // Here, INDICATE the name of your statistic
       const char *nom = "$T^{LS}(\\alpha)$";
@@ -30,7 +30,7 @@ extern "C" {
 	name[j][0] = nom[j];
 	j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50; i++) name[i][0] = space[0];
       return;
     }
 	
@@ -43,9 +43,15 @@ extern "C" {
     } else if (nbparamstat[0] == 1) {
       alpha = paramstat[0];
     } else {
-      return;
+      Rf_error("Number of parameters should be at most: 1");
     }
 
+    // If necessary, we check if some parameter values are out of parameter space
+    if (alpha <= 0.0) {
+      Rf_warning("alpha should be > 0 in stat88!\n");
+      for (i = 0; i < n; i++) x[i] = R_NaN;
+      return;
+    }
 	
     if (n>3) {
 // Computation of the value of the test statistic

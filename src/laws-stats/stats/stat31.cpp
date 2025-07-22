@@ -14,7 +14,7 @@ extern "C" {
 // 4: bilateral test that rejects H0 only for small values of the test statistic
     alter[0] = 1;
 
-    int i, j=0, n=xlen[0];
+    int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {    
 // Here, INDICATE the name of your statistic
       const char *nom = "$T^*(\\alpha)$";
@@ -30,7 +30,7 @@ extern "C" {
 	name[j][0] = nom[j];
 	j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50; i++) name[i][0] = space[0];
       return;
     }
 	
@@ -43,11 +43,18 @@ extern "C" {
     } else if (nbparamstat[0] == 1) {
       alpha = paramstat[0];
     } else {
+      Rf_error("Number of parameters should be at most: 1");
+    }
+
+// If necessary, we check if some parameter values are out of parameter space
+    if (alpha <= 0.0) {
+      Rf_warning("alpha should be > 0 in stat31!\n");
+      for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }
 
 	
-    if (n>3) {
+    if (n > 3) {
 // Computation of the value of the test statistic
       double statTEP, term1 = 0.0, term2 = 0.0, xbar = 0.0, S2 = 0.0;
 
@@ -88,7 +95,7 @@ extern "C" {
       }
 
 // We take the decision to reject or not to reject the null hypothesis H0
-      for (i=0;i<=(nblevel[0]-1);i++) {
+      for (i = 0; i <= (nblevel[0] - 1); i++) {
 	if (usecrit[0] == 1) { // We use the provided critical values
 	  if (statistic[0] < critvalL[i]) decision[i] = 1; else decision[i] = 0;   // less
 	} else {

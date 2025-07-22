@@ -32,4 +32,6 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Normal, Gaussian}
+\keyword{law}
+\keyword{Normal}
+\keyword{Gaussian}

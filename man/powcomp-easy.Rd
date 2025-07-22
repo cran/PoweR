@@ -26,7 +26,7 @@ powcomp.easy(params,M=10^5,model=NULL,Rlaws=NULL,Rstats=NULL,center=FALSE, scale
     
     \code{cR} : right critical value (can be NA);
     
-    \code{alter} : type of test (integer value in {0,1,2,3,4});
+    \code{alter} : type of test (integer value in \{0,1,2,3,4\});
     
     \code{par}j: values of the parameters of the distribution specified by
     \code{law} (can be \code{NA}).

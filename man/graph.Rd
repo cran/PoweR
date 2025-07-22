@@ -27,6 +27,7 @@ character. Indicate the type of plot desired.
   \item{center}{Logical. Should we center the data generated}
   \item{scale}{Logical. Should we center the data generated}
 }
+\value{No return value. Displays a graph.}
 \details{
 See Section 2.3 in Lafaye de Micheaux, P. and Tran, V. A. (2014).
 }
@@ -41,13 +42,13 @@ Software}, \bold{69(3)}, 1--42. doi:10.18637/jss.v069.i03
 See \code{\link{plot.pvalue}}, \code{\link{plot.discrepancy}}, \code{\link{plot.sizepower}}.
 }
 \examples{
-stind <- c(43,44,42)   # Indices of test statistics.
-alter <-list(stat43=3,stat44=3,stat42=3) # Type for each test.
+stind <- c(43, 44, 42)   # Indices of test statistics.
+alter <-list(stat43 = 3, stat44 = 3, stat42 = 3) # Type for each test.
 # Several p-values computed under the null.
 # You can increase the values of M and N for better results.
-matrix.pval <- many.pval(stat.indices=stind,law.index=1,
-                        n=100,M=10,N=10,alter=alter,null.dist=1,
-                        method="direct")
+matrix.pval <- many.pval(stat.indices = stind, law.index = 1,
+                         n = 100, M = 10, N = 10, alter = alter, null.dist = 1,
+                        method = "direct")
 graph(matrix.pval)
 }
 \keyword{dplot}

@@ -35,4 +35,5 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Normal-inverse Gaussian}
+\keyword{law}
+\keyword{Normal-inverse Gaussian}

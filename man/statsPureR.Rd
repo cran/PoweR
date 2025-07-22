@@ -89,6 +89,24 @@
 \alias{stat88}
 \alias{stat89}
 \alias{stat90}
+\alias{stat91}
+\alias{stat92}
+\alias{stat93}
+\alias{stat94}
+\alias{stat95}
+\alias{stat96}
+\alias{stat97}
+\alias{stat98}
+\alias{stat99}
+\alias{stat100}
+\alias{stat101}
+\alias{stat102}
+\alias{stat103}
+\alias{stat104}
+\alias{stat105}
+\alias{stat106}
+\alias{stat107}
+\alias{stat108}
 
 \title{Computation of test statistic values in pure R.}
 

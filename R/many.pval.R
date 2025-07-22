@@ -17,13 +17,20 @@ many.pval <- function(stat.indices, law.index, n = 100, M = 10^5, N = 100, alter
 
 
 
-    if(getRversion() < "3.1.0") dontCheck <- identity
     
     method <- match.arg(method)
     nbstats <- length(stat.indices)
     
     if (!is.null(parstats)) {
         if (!is.list(parstats)) stop("'parstats' should be a named list")
+    } else {
+      parstats <- vector("list", length(stat.indices))
+      for (i in 1:length(stat.indices)) {
+#        nbparstat <- getnbparstats(stat.indices[i])
+        parstats[[i]] <- stat.cstr(stat.indices[i])$stat.pars
+        if (any(is.na(parstats[[i]]))) parstats[[i]] <- character(0)
+      }
+      names(parstats) <- paste("stat", stat.indices, sep = "")
     }
     
     if (!is.list(alter)) stop("'alter' should be a named list")
@@ -54,11 +61,16 @@ many.pval <- function(stat.indices, law.index, n = 100, M = 10^5, N = 100, alter
             if (stat.indices[i] != 0) {
               # call .C function to obtain a p-value
                 Cstat.name <- "tmp" # To remove a NOTE at R CMD check
-                Cstat.name <- paste("stat", stat.indices[i], sep = "")
-                pvaluetmp <- (.C(dontCheck(Cstat.name), as.double(xtmp), as.integer(length(xtmp)),0.05,
+              Cstat.name <- paste("stat", stat.indices[i], sep = "")
+              nbparamstat <- getnbparstats(stat.indices[i])
+             # statsym <- getNativeSymbolInfo(Cstat.name, PACKAGE = "PoweR")
+mydotC <- get(".PoweR_stat_dispatch", envir = asNamespace("PoweR"))[[Cstat.name]]; if (is.null(mydotC)) stop("Unknown stat function: ", Cstat.name)
+
+                pvaluetmp <- (#.C(statsym, 
+                mydotC(as.double(xtmp), as.integer(length(xtmp)),0.05,
                                  1L, rep(" ", 50), 0L, statistic = 0.0, pvalcomp = 1L, pvalue = 0.0, cL = 0.0,
                                  cR = 0.0, 0L, alter = 3L, decision = 0L,
-                                 paramstat = 0.0, nbparamstat = 0L, PACKAGE = "PoweR"))$pvalue
+                                 paramstat = rep(0.0, nbparamstat), nbparamstat = 0L, PACKAGE = "PoweR"))$pvalue
             } else {
                 pvaluetmp <- .Call("statcomputeRcpp", as.function(Rstats[[i]]), as.double(xtmp), as.double(0.05), PACKAGE = "PoweR")$pvalcomp
             }

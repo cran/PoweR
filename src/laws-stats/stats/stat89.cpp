@@ -18,7 +18,7 @@ extern "C" {
 // 4: bilateral test that rejects H0 only for small values of the test statistic
     alter[0] = 3;
 
-    int i, j=0, n=xlen[0];
+    int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {    
 // Here, INDICATE the name of your statistic
       const char *nom = "$T^{LS}_3(\\mu,\\alpha)$";
@@ -35,7 +35,7 @@ extern "C" {
 	name[j][0] = nom[j];
 	j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50; i++) name[i][0] = space[0];
       return;
     }
 	
@@ -56,11 +56,17 @@ extern "C" {
       mu = paramstat[0];
       alpha = paramstat[1];
     } else {
-      return;
+      Rf_error("Number of parameters should be at most: 2");
     }
 
+// If necessary, we check if some parameter values are out of parameter space
+    if (alpha <= 0.0) {
+      Rf_warning("alpha should be > 0 in stat89!\n");
+      for (i = 0; i < n; i++) x[i] = R_NaN;
+      return;
+    }
 	
-    if (n>3) {
+    if (n > 3) {
 // Computation of the value of the test statistic
 
 /*
@@ -154,7 +160,7 @@ extern "C" {
       double statTEP, term2 = 0.0, term3, xbar = 0.0, S2 = 0.0, S, alpha2, mu2, xx, xx2, mux;
       double y, y2, calphamu;
       int k;
-      cmplx z;
+    //  cmplx z = C(0.0, 0.0);
       cmplx term1 = C(0.0, 0.0);
 
 	  // calculate xbar

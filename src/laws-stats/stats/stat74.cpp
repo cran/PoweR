@@ -14,7 +14,7 @@ extern "C" {
 // 4: bilateral test that rejects H0 only for small values of the test statistic
     alter[0] = 4;
 
-    int i, j=0, n=xlen[0];
+    int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {    
 // Here, INDICATE the name of your statistic
       const char *nom = "$L_{n}^{(m)}$";
@@ -30,54 +30,58 @@ extern "C" {
 	name[j][0] = nom[j];
 	j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50; i++) name[i][0] = space[0];
       return;
     }
 
 // Initialization of the parameters
-	double par;
+    int m;
     if (nbparamstat[0] == 0) {
       nbparamstat[0] = 1;
-      par = 2.0;
+      m = 2;
       paramstat[0] = 2.0;
     } else if (nbparamstat[0] == 1) {
-      par = paramstat[0];
+      m = (int)paramstat[0];
     } else {
-      return;
+      Rf_error("Number of parameters should be at most: 1");
     }
 	
+// If necessary, we check if some parameter values are out of parameter space
+    if (m > (n + 1)) {
+      Rf_warning("m should be <= n+1 in stat74!\n");
+      for (i = 0; i < n; i++) x[i] = R_NaN;
+      return;
+    }
 	
     if (n>3) {
 // Computation of the value of the test statistic
     void R_rsort (double* x, int n);
     double punif(double q, double min, double max, int lower_tail, int log_p);
     double *U;
-	double *G;
+    double *Gnm;
     U = new double[n];
-	G = new double[n+2-(int)par];
-	double statLn, sumLn=0.0;
+    Gnm = new double[n + 2 - m];
+    double statLn;
 	
-
-	// generate vector U
-	for (i=0;i<n;i++) {
-	  U[i] = punif(x[i],0.0,1.0,1,0);
-	}
-    R_rsort(U,n); // We sort the data
+    // generate vector U
+    for (i = 0; i < n; i++) {
+      U[i] = punif(x[i], 0.0, 1.0, 1, 0);
+    }
+    R_rsort(U, n); // We sort the data
 	
-	// generate vector G
-	G[0] = U[(int)par-1] - 0.0;
-    G[n+1-(int)par] = 1.0 - U[n-(int)par];	
-    for (i=1;i<(n+1-(int)par);i++) {
-      G[i] = U[i+(int)par-1] - U[i-1];
+    // generate vector Gnm
+    Gnm[0] = U[m - 1];
+    Gnm[n + 1 - m] = 1.0 - U[n - m];	
+    for (i = 1; i < (n + 1 - m); i++) {
+      Gnm[i] = U[i + m - 1] - U[i - 1];
     }
     
-	// calculate statLn
-	for (i=0;i<=(n+1-(int)par);i++) {
-	  sumLn = sumLn + log(G[i]);
-	}
+    // calculate statLn
+    statLn = 0.0;
+    for (i = 0; i <= (n + 1 - m); i++) {
+      statLn = statLn + log(Gnm[i]);
+    }
     
-	statLn = sumLn;
-
     statistic[0] = statLn; // Here is the test statistic value
 	
 
@@ -97,7 +101,7 @@ if (pvalcomp[0] == 1) {
     
 // If applicable, we free the unused array of pointers
     delete[] U;
-	delete[] G;
+    delete[] Gnm;
 
 }
 

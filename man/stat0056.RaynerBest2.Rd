@@ -25,4 +25,7 @@ Oxford University Press, New York.
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Laplace.tests}} for other goodness-of-fit tests for the Laplace distribution.
 }
-\keyword{statistic, test, Laplace, Rayner-Best}
+\keyword{statistic}
+\keyword{test}
+\keyword{Laplace}
+\keyword{Rayner-Best}

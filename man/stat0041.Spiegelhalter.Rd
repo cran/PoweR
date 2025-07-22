@@ -26,4 +26,7 @@ Spiegelhalter, D.J. (1977), A test for normality against symmetric alternatives,
 \seealso{See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
 
-\keyword{statistic, test, normality, Spiegelhalter}
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{Spiegelhalter}

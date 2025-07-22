@@ -1,3 +1,42 @@
+See the file Letter.docx
+
+###########################
+
+Hi Pierre,
+
+ 
+
+I tested the GOF test statistics in PoweR further using additional generated samples, and found that for a subset of generated samples, the following GOF tests in PoweR gives “Inf” value:
+
+Anderson Darling Normality Test
+1st and 2nd Zhang-Wu test
+Glen Leemis Barr test for normality
+Brys-Hubert-Struyf & Bonett-Seier test for normality
+ 
+
+See ../simonho.png and ../data.csv
+
+ 
+
+This happens for a subset of generated sample, but I just chose one sample vector and attached it to this e-mail for illustration (see attached).
+
+ 
+
+As shown in pic above, I used Anderson-darling test from library(nortest) as illustration on the sample vector, and it indeed produces a value (34.543). Otherwise, when PoweR’s Anderson darling test doesn’t give “Inf” value, it produces the exact same result as nortest’s ad.test’s value.
+
+ 
+
+Do you know what the issue could be?
+
+ 
+
+ 
+
+Kind regards,
+Simon Ho
+
+######################################################################################
+
 - voir comment verifier que mpi est installe (notamment sous windows) avec des configure
 - simplifier le code
 - commenter le code
@@ -9,7 +48,137 @@
 - possibilité d'utiliser un cluster pour la fonction many.pval qui est très longue.
 - offrir la possibilité de tester du multivarie
 
+######################################################################################
 
-
+   Message from Kurt. But if I run his suggestion several times, then
+   my current approach is not so bad ...
+   
    Check here:
    https://cran.r-project.org/web/checks/check_results_PoweR.html
+
+Sure.  Apparently Uwe had one of his incoming check flags set
+differently, hence the Windows vs Linux discrepancy.
+
+These days the recommended procedure for foreign function calls is to
+create namespace bindings for the used entry points when the package
+gets installed, so that the cost of looking up the (address of) the
+entry points in each foreign function call can be avoided.  (So in a
+way, the trick is to do a variant of getDLLRegisteredRoutines() once at
+install time, instead of every time at run time.)  I understand that in
+your case you need to construct the symbols at run time: the list lookup
+I had mentioned seems simplest, and should be rather fast.
+
+I did a quick experiment based on what you sent, using
+
+*************************************************************************
+statname <- "stat1"
+
+system.time(replicate(100000, {
+                          out <- .C(dontCheck(statname), 0, 0L, 0,0L,
+                                    name = c("1", rep(" ", 49)), 1L, 0, 0L, 0, 0, 0, 0L,0L, 0L, 0.0, 0, PACKAGE = "PoweR")}))
+
+statsym <- getNativeSymbolInfo("stat1")
+
+system.time(replicate(100000, {
+                          out <- .C(statsym, 0, 0L, 0,0L,
+                                    name = c("1", rep(" ", 49)), 1L, 0, 0L, 0, 0, 0, 0L,0L, 0L, 0.0, 0)}))
+
+db <- list("stat1" = statsym)
+system.time(replicate(100000, {
+                          out <- .C(db[[statname]], 0, 0L, 0,0L,
+                                    name = c("1", rep(" ", 49)), 1L, 0, 0L, 0, 0, 0, 0L,0L, 0L, 0.0, 0)}))
+*************************************************************************
+
+The first is what you currently do (without checking), the second in
+essence what you would get by creating a binding at install time and
+calling the binding, the third by calling the binding via a lookup
+table.  On my system, I get
+
+R> statname <- "stat1"
+R> 
+R> system.time(replicate(100000, {
++                           out <- .C(dontCheck(statname), 0, 0L, 0,0L,
++                                     name = c("1", rep(" ", 49)), 1L, 0, 0L, 0, 0, 0, 0L,0L, 0L, 0.0, 0, PACKAGE = "PoweR")}))
+   user  system elapsed 
+  1.638   0.076   1.714 
+R> statsym <- getNativeSymbolInfo("stat1")
+R> 
+R> system.time(replicate(100000, {
++                           out <- .C(statsym, 0, 0L, 0,0L,
++                                     name = c("1", rep(" ", 49)), 1L, 0, 0L, 0, 0, 0, 0L,0L, 0L, 0.0, 0)}))
+   user  system elapsed 
+  0.905   0.012   0.918 
+R> db <- list("stat1" = statsym)
+R> system.time(replicate(100000, {
++                           out <- .C(db[[statname]], 0, 0L, 0,0L,
++                                     name = c("1", rep(" ", 49)), 1L, 0, 0L, 0, 0, 0, 0L,0L, 0L, 0.0, 0)}))
+   user  system elapsed 
+  1.068   0.004   1.071 
+
+so both the direct and indirect variants substantially outperform
+approaches based on run-time symbol search.
+
+
+   Second message from Kurt:
+
+   Pierre,
+
+If you look at the C code for foreign function calls you will see that
+passing a character string will need extra lookups, so it "cannot" be
+faster than giving a symbol directly giving the address.  But then there
+is also some caching involved ...
+
+To do "honest" timings, it is generally preferable to avoid replicate()
+and use for() loops directly.  A modified version of the prev code would
+then be something like
+
+B <- 1000000
+
+statname <- "stat1"
+
+system.time(for(i in seq_len(B)) {
+                out <- .C(dontCheck(statname), 0, 0L, 0,0L,
+                          name = c("1", rep(" ", 49)), 1L, 0, 0L, 0, 0, 0, 0L,0L, 0L, 0.0, 0, PACKAGE = "PoweR")})
+
+statsym <- getNativeSymbolInfo("stat1")
+
+system.time(for(i in seq_len(B)) {
+                out <- .C(statsym, 0, 0L, 0,0L,
+                          name = c("1", rep(" ", 49)), 1L, 0, 0L, 0, 0, 0, 0L,0L, 0L, 0.0, 0)})
+
+db <- list("stat1" = statsym)
+system.time(for(i in seq_len(B)) {
+                          out <- .C(db[[statname]], 0, 0L, 0,0L,
+                                    name = c("1", rep(" ", 49)), 1L, 0, 0L, 0, 0, 0, 0L,0L, 0L, 0.0, 0)})
+
+For me, this consistently gives timings like
+
+R> system.time(for(i in seq_len(B)) {
++                 out <- .C(dontCheck(statname), 0, 0L, 0,0L,
++                           name = c("1", rep(" ", 49)), 1L, 0, 0L, 0, 0, 0, 0L,0L, 0L, 0.0, 0, PACKAGE = "PoweR")})
+   user  system elapsed 
+  6.112   0.000   6.112 
+R> 
+R> statsym <- getNativeSymbolInfo("stat1")
+R> 
+R> system.time(for(i in seq_len(B)) {
++                 out <- .C(statsym, 0, 0L, 0,0L,
++                           name = c("1", rep(" ", 49)), 1L, 0, 0L, 0, 0, 0, 0L,0L, 0L, 0.0, 0)})
+   user  system elapsed 
+  5.420   0.000   5.421 
+R> 
+R> db <- list("stat1" = statsym)
+R> system.time(for(i in seq_len(B)) {
++                           out <- .C(db[[statname]], 0, 0L, 0,0L,
++                                     name = c("1", rep(" ", 49)), 1L, 0, 0L, 0, 0, 0, 0L,0L, 0L, 0.0, 0)})
+   user  system elapsed 
+  5.695   0.000   5.695 
+
+suggesting a clear performance ordering: but as I wrote, caching might
+get in the way ...
+
+Best
+-k
+
+
+

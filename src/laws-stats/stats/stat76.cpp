@@ -14,7 +14,7 @@ extern "C" {
 // 4: bilateral test that rejects H0 only for small values of the test statistic
     alter[0] = 4;
 
-    int i, j=0, n=xlen[0];
+    int i, j = 0, n = xlen[0];
     if (getname[0] == 1) {    
 // Here, INDICATE the name of your statistic
       const char *nom = "$H(m,n)$";
@@ -30,18 +30,18 @@ extern "C" {
 	name[j][0] = nom[j];
 	j++;
       }
-      for (i=j;i<50;i++) name[i][0] = space[0];
+      for (i = j; i < 50; i++) name[i][0] = space[0];
       return;
     }
 
 // Initialization of the parameters
-	double par;
+    int m;
     if (nbparamstat[0] == 0) {
       nbparamstat[0] = 1;
-      par = 2.0;
+      m = 2;
       paramstat[0] = 2.0;
     } else if (nbparamstat[0] == 1) {
-      par = paramstat[0];
+      m = (int)paramstat[0];
     } else {
       return;
     }
@@ -52,35 +52,24 @@ extern "C" {
     void R_rsort (double* x, int n);
     double punif(double q, double min, double max, int lower_tail, int log_p);
     double *U;
-	double *Z1;
-    double *Z2;
-	U = new double[n];
-	Z1 = new double[n];
-	Z2 = new double[n];
-	double statHn, sumHn=0.0;
+    U = new double[n];
+    double temp1, temp2, statHn;
 	
-
-	// generate vector U
-	for (i=0;i<n;i++) {
-	  U[i] = punif(x[i],0.0,1.0,1,0);
-	}
+    // generate vector U
+    for (i = 0; i < n; i++) {
+      U[i] = punif(x[i], 0.0, 1.0, 1, 0);
+    }
     R_rsort(U,n); // We sort the data
-	
 	    
-	// calculate statHn
-	for (i=0; i<n; i++) {
-	  if (i < (int)par) { 
-	    Z2[i] = U[0];
-	  } else Z2[i] = U[i-(int)par];
-	  if (i > (n-(int)par-1)) {
-	    Z1[i] = U[n-1];
-	  } else Z1[i] = U[i+(int)par];
-	  
-	  sumHn = sumHn + log((double)n*(Z1[i] - Z2[i])/(2.0*par));
-    
-	}
+    // calculate statHn
+    statHn = 0.0;
+    for (i = 0; i < n; i++) {
+      if (i < m) temp2 = U[0]; else temp2 = U[i - m];
+      if (i > (n - m - 1)) temp1 = U[n - 1]; else temp1 = U[i + m];
+      statHn = statHn + log((double)n * (temp1 - temp2) / (2.0 * m));  
+    }
 
-	statHn = sumHn/(double)n;
+    statHn = statHn / (double)n;
 	
     statistic[0] = statHn; // Here is the test statistic value
 	
@@ -101,8 +90,6 @@ if (pvalcomp[0] == 1) {
     
 // If applicable, we free the unused array of pointers
     delete[] U;
-	delete[] Z1;
-	delete[] Z2;
 
 }
 

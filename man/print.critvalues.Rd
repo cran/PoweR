@@ -22,6 +22,11 @@ into a LaTeX code for creating the table of critical values.}
   \item{... }{further arguments passed to or from other methods.}
 }
 
+\value{
+No return value. The function prints a formatted representation of critical values, optionally in 'LaTeX' format. The object printed is of class \code{"critvaluesX"}, where \code{X} is the template number.
+}
+
+
 \references{
 Pierre Lafaye de Micheaux, Viet Anh Tran (2016). PoweR: A
 Reproducible Research Tool to Ease Monte Carlo Power Simulation

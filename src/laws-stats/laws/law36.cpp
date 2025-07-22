@@ -1,7 +1,7 @@
 // Title: Asymmetric Laplace(mu,b,k)
-// Ref. (book or article): Kotz, Samuel, Kozubowski, Tomasz J. and Podgórski, Krzysztof (2001),
+// Ref. (book or article): Kotz, Samuel, Kozubowski, Tomasz J. and Podgorski, Krzysztof (2001),
 // 	                       "The Laplace distribution and generalizations. A revisit with applications to communications, economics, engineering, and finance." 
-//						   Birkhäuser Boston, Inc., Boston, MA, 2001. xviii+349 pp. ISBN: 0-8176-4166-1, see Equation (3.0.8) page 134
+//						   Birkhauser Boston, Inc., Boston, MA, 2001. xviii+349 pp. ISBN: 0-8176-4166-1, see Equation (3.0.8) page 134
 //			   See also function ralap() from package VGAM.
 //                         Note that this is a reparameterization: \sigma --> \sigma/\sqrt{2}
 
@@ -62,12 +62,12 @@ extern "C" {
       b = params[1];
       k = params[2];
     } else {
-      error("Number of parameters should be at most: 3");
+      Rf_error("Number of parameters should be at most: 3");
     }
 
 // If necessary, we check if some parameter values are out of parameter space
     if (b < 0.0 || k <= 0.0) {
-      warning("b should be >=0 and k should be >0 in law36!\n");
+      Rf_warning("b should be >=0 and k should be >0 in law36!\n");
       for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }

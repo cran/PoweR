@@ -46,12 +46,12 @@ extern "C" {
       shape = params[0];
       rate = params[1];
     } else {
-      error("Number of parameters should be at most: 2");
+      Rf_error("Number of parameters should be at most: 2");
     }
 
 // If necessary, we check if some parameter values are out of parameter space
     if (rate <= 0.0) {
-      warning("rate should not be <= 0 in law5!\n");
+      Rf_warning("rate should not be <= 0 in law5!\n");
       for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }

@@ -32,4 +32,5 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Generalized Arcsine}
+\keyword{law}
+\keyword{Generalized Arcsine}

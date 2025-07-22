@@ -1,6 +1,5 @@
 getindex <- function(law.indices = NULL, stat.indices = NULL) {
   
-    if (getRversion() < "3.1.0") dontCheck <- identity
     Cstat.name <- "tmp" # To remove a NOTE at R CMD check
   
     tmp <- names(getDLLRegisteredRoutines("PoweR")[[".C"]])
@@ -16,8 +15,12 @@ getindex <- function(law.indices = NULL, stat.indices = NULL) {
     getname <- TRUE # to retrieve (or not) the law name. It takes some time to retrieve the law name ...
 
     for (i in 1:nb.laws) {
-        Claw.name <- tmp[ind.laws][i]
-        out <- .C(dontCheck(Claw.name), xlen = 0L, x = 0.0, name = c("1", rep(" ", 49)), as.integer(getname), params = rep(0.0, 4), nbparams = 0L, setseed = 0L, PACKAGE = "PoweR")
+      Claw.name <- tmp[ind.laws][i]
+      #lawsym <- getNativeSymbolInfo(Claw.name, PACKAGE = "PoweR")
+mydotC <- get(".PoweR_law_dispatch", envir = asNamespace("PoweR"))[[Claw.name]]; if (is.null(mydotC)) stop("Unknown law function: ", Claw.name)
+
+        out <- #.C(lawsym, 
+        mydotC(xlen = 0L, x = 0.0, name = c("1", rep(" ", 49)), as.integer(getname), params = rep(0.0, 4), nbparams = 0L, setseed = 0L, PACKAGE = "PoweR")
         nbparams <- out$nbparams
         if (nbparams == 0) params <- rep(NA, 4)
         if (nbparams == 1) params <- c(out$params[1], rep(NA, 3))
@@ -35,7 +38,7 @@ getindex <- function(law.indices = NULL, stat.indices = NULL) {
 
 ## We deal with the informations on the stats.
   
-    ind.stats <- grep("stat", tmp)
+    ind.stats <- grep("stat[1-9]", tmp)
     nb.stats <- length(ind.stats)
     
     mat.stats <- as.data.frame(matrix(NA, nrow = nb.stats, ncol = 4))
@@ -43,8 +46,12 @@ getindex <- function(law.indices = NULL, stat.indices = NULL) {
     mat.stats[, 4] <- rep(NA, nb.stats)
     
     for (i in 1:nb.stats) {
-        Cstat.name <- tmp[ind.stats][i]
-        out <- .C(dontCheck(Cstat.name), 0.0, 0L, 0.0, 0L, statname = rep(" ", 50), 1L, 0.0, 0L, 0.0, 0.0, 0.0, 0L, alter = 0L, 0L, rep(0.0, 4), 1L, PACKAGE = "PoweR")
+      Cstat.name <- tmp[ind.stats][i]
+      #statsym <- getNativeSymbolInfo(Cstat.name, PACKAGE = "PoweR")
+mydotC <- get(".PoweR_stat_dispatch", envir = asNamespace("PoweR"))[[Cstat.name]]; if (is.null(mydotC)) stop("Unknown stat function: ", Cstat.name)
+
+      out <- #.C(statsym, 
+      mydotC(0.0, 0L, 0.0, 0L, statname = rep(" ", 50), 1L, 0.0, 0L, 0.0, 0.0, 0.0, 0L, alter = 0L, 0L, rep(0.0, 4), 1L, PACKAGE = "PoweR")
         mat.stats[i, 1:3] <- c(as.numeric(substring(Cstat.name, 5)), sub(' +$', '', paste(out$statname, collapse = "")), out$alter)
         mat.stats[i, 2] <- gsub('\\', '',gsub('$', '', sub(' +$', '', paste(mat.stats[i, 2], collapse = "")),
                                               fixed = TRUE), fixed = TRUE) # Remove $ and backlash signs

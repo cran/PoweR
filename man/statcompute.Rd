@@ -4,7 +4,8 @@
 \description{Performs the hypothesis test for those added in the package.}
 \usage{
 statcompute(stat.index, data, levels = c(0.05,0.1), critvalL = NULL,
-            critvalR = NULL, alter = 0, stat.pars = NULL, check = TRUE)
+            critvalR = NULL, alter = 0, stat.pars = NULL, pvalcomp = 1L,
+            check = TRUE)
 }
 \arguments{
   \item{stat.index }{one statistic index as given by function
@@ -20,6 +21,7 @@ statcompute(stat.index, data, levels = c(0.05,0.1), critvalL = NULL,
   \item{stat.pars }{a vector of parameters. 
     If \code{NULL}, the default parameter values for this statistic will
     be used.}
+  \item{pvalcomp }{\code{1L} to compute the p-value, \code{0L} otherwise.}
   \item{check }{Logical. If \code{FALSE} it will execute much faster,
     but in this case be sure to give a value to the
     'stat.pars' argument; if you don't know what value to give, use \code{rep(0.0,
@@ -36,7 +38,7 @@ statcompute(stat.index, data, levels = c(0.05,0.1), critvalL = NULL,
  \details{
 The function statcompute() should not be used in simulations since it is
 NOT fast. Consider instead using \code{powcomp.easy} or
-\code{powcomp.fast}. Se also in the Example section below for a fast
+\code{powcomp.fast}. See also in the Example section below for a fast
 approach using the \code{.C} function (but be warned that giving wrong
 values of arguments can crash your session!).
 
@@ -64,5 +66,9 @@ rep(" ", 50), getname = 0L, statistic = 0, pvalcomp = 1L, pvalue = 0, cL = 0.0,
 cR = 0.0, usecrit = 0L, alter = 4L, decision = 0L, stat.pars = 0.0, 
 nbparstat = 0L)
 
+# Another option is to use the 'pvalcomp' and 'check' arguments as
+#  follows which can be much faster (when computing the p-value takes time) 
+statcompute(21, data, levels = c(0.05, 0.1), critvalL = NULL, critvalR = NULL,
+            alter = 0, stat.pars = NULL, pvalcomp = 0L, check = FALSE)
 }
 \keyword{htest}

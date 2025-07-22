@@ -28,4 +28,9 @@ Bonett, D.G. and Seier, E. (2002), A test of normality with high uniform power,
   Brys-Hubert-Struyf test. See \code{\link{stat0017.BonettSeier}} for
   the Bonett-Seier test. See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
-\keyword{statistic, test, normality, Brys-Hubert-Struyf, Bonett-Seier}
+
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{Brys-Hubert-Struyf}
+\keyword{Bonett-Seier}

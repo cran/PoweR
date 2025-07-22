@@ -1,5 +1,6 @@
-// Title: The Desgagné-Micheaux-Leblanc statistic for the Laplace distribution
-// Ref. (book or article): Desgagné, A., Lafaye de Micheaux, P. and Leblanc, A., - unpublished document. 
+// Title: The Desgagne-Micheaux-Leblanc statistic for the Laplace distribution
+// Ref. (book or article): Desgagne, A., Lafaye de Micheaux, P. and Leblanc, A., - unpublished document. 
+// See page 313 in my book on the R software (English Edition) the "Do it yourself", in Chapter 8 "Basic Mathematics: matrix operations, integration, optimization", Section 8.2 "Basic mathematical functions"
 
 #include <R.h>
 #include "Rmath.h"

@@ -290,6 +290,29 @@ moments40 <- function(alpha, mu = 0, sigma = 1, logd = FALSE) {
     return(list(expectation = expectation, variance = variance))
 }
 
+moments41 <- function(xi = 0, omega = 1, alpha = 0, nu = Inf) {
+  ## Skew-t
+  if(nu == Inf) return(moments21(xi, omega, alpha))
+  delta <- alpha / sqrt(1 + alpha ^ 2)
+  beta <- NA
+  if (nu > 10 ^ 4) {
+    beta <- sqrt(2 / pi) * (1 + 0.75 / nu + 0.78125 / nu ^ 2)
+  } else if ((nu > 1) & (!is.na(nu))) {
+    beta <- sqrt(nu / pi) * exp(lgamma((nu - 1) / 2) - lgamma(nu / 2))
+  }
+  expectation <- beta * delta * omega + xi
+  variance <- NA
+  if (nu > 2) variance <- (1 / (1 - 2 / nu) - (beta * delta) ^ 2) * omega ^ 2
+  return(list(expectation = expectation, variance = variance))
+}
+
+moments42 <- function(mu = 1, lambda = 1) {
+  ## Inverse Gaussian
+  expectation <- mu
+  variance <- mu ^ 3 / lambda
+  return(list(expectation = expectation, variance = variance))
+}
+
 
   
 

@@ -1,4 +1,4 @@
-plot.pvalue <- function(x,legend.pos=NULL,...) {
+plot.pvalue <- function(x,legend.pos = NULL, ...) {
 
     Fx <- x
 	

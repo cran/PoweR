@@ -19,7 +19,7 @@ pvalueMC(data, stat.index, null.law.index, M = 10^5, alter, null.law.pars = NULL
     null hypothesis distribution), 
     as given by function \code{\link{getindex}}.}
   \item{M }{number of Monte-Carlo repetitions to use.}
-  \item{alter }{value (in {0,1,2,3,4}) giving the the type of test (See Section 3.3 in Lafaye de Micheaux, P. and Tran, V. A. (2014)). }
+  \item{alter }{value (in \{0,1,2,3,4\}) giving the the type of test (See Section 3.3 in Lafaye de Micheaux, P. and Tran, V. A. (2014)). }
   \item{null.law.pars }{vector of parameters for the law. The length of this
     parameter should not exceed 4. If not provided, the default values
     are taken using \code{\link{getindex}} function.}

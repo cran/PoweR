@@ -42,8 +42,8 @@ extern "C" {
       double *W;
       W = new double[n];
       double *U;
-      U = new double[n-1];
-      double statZ, muhat, bhat, tmp = 0.0, tn = 0.0, ubar, tmp2 = 0.0, tmp3 = 0.0, Z1square, Z2square, tmp4 = 0.0;
+      U = new double[n - 1];
+      double statZ, muhat, bhat, tmp, tn, ubar, tmp2, tmp3, Z1square, Z2square, tmp4;
       
       // calculate mu^ and b^ by using the maximum likelihood estimators 
       // mu^ = the sample median
@@ -56,41 +56,46 @@ extern "C" {
       } else {
 	muhat = x[n / 2];
       }
-      
+
       // calculate b^
+      tmp = 0.0;
       for (i = 0; i < n; i++) {
 	tmp = tmp + fabs(x[i] - muhat);
       }
       bhat = tmp / (double)n;
-	
+
       // generate vector Y
       for (i = 0; i < n; i++) {
 	Y[i] = fabs(x[i] - muhat) / bhat;
       }
-      R_rsort(Y, n); 			// we sort the data 
-      
+      R_rsort(Y, n);
+
       // generate vector W
-      W[0] = (double)n *(Y[0] - 0.0);
+      W[0] = (double)(n) * Y[0];
       tn = W[0];
       for (i = 1; i < n; i++) {
-	W[i] = ((double)n - (double)i) * (Y[i] - Y[i - 1]);
-	tn = tn + W[i];
+	W[i] = (double)(n - i) * (Y[i] - Y[i - 1]);
+	tn = tn + W[i]; // sum(W)
       }
-      
+
+
+      tmp2 = 0.0;
+      tmp3 = 0.0;
       for (i = 0; i < (n - 1); i++) {
-	tmp2 = tmp2 + W[i];
+	tmp2 = tmp2 + W[i]; // cumsum
 	U[i] = tmp2 / tn;
 	tmp3 = tmp3 + U[i];
       }
       ubar = tmp3 / (double)(n - 1);
-	
+
       // calculate statZ
       Z1square = (double)(12 * (n - 1)) * R_pow(ubar - 0.5, 2.0);
-      
-      for (i = 0; i < (n-1); i++) {
-	tmp4 = tmp4 + (double)(i + 1) * U[i];
+
+      tmp4 = 0.0;
+      for (i = 1; i < n; i++) {
+	tmp4 = tmp4 + (double)i * U[i - 1];
       }
-      Z2square = ((double)(5 * (n - 1)) / (double)((n + 1) * (n - 2))) * R_pow((double)n - 2.0 + 6.0 * (double)n * ubar - 12.0 * tmp4 / (double)(n - 1), 2.0);
+      Z2square = (double)(5 * (n - 1)) * R_pow((double)(n - 2) + 6.0 * (double)n * ubar - 12.0 * tmp4 / (double)(n - 1), 2.0) / (double)((n + 2) * (n - 2));
       
       statZ = Z1square + Z2square;
       

@@ -37,12 +37,12 @@ extern "C" {
     } else if (nbparams[0] == 1) {
       df = params[0];
     } else {
-      error("Number of parameters should be at most: 1");
+      Rf_error("Number of parameters should be at most: 1");
     }
 
 // If necessary, we check if some parameter values are out of parameter space
     if (df <= 0.0) {
-      warning("df should not be <= 0 in law8!\n");
+      Rf_warning("df should not be <= 0 in law8!\n");
       for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }

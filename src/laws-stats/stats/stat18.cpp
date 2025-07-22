@@ -58,7 +58,7 @@ extern "C" {
       char **name1;
       name1 = new char*[50];
       for (i=0;i<=49;i++) name1[i] =  new char[1];
-      double pval1, pval2, stat;
+      double logpval1, logpval2, stat;
       int *getname16, *getname17, *nbparamstat16, *nbparamstat17;
       getname16 = new int[1];
       getname16[0] = 0;
@@ -75,13 +75,13 @@ extern "C" {
 
       stat16(x,xlen,level,nblevel,name1,getname16,statistic16,pvalcomp16,pvalue16,critvalL,critvalR,usecrit,alter,decision16,paramstat16,nbparamstat16); // stat T_{MC-LR}
 
-      if (pvalue16[0] > 0.5) pval1 = 1.0 - pvalue16[0]; else pval1 = pvalue16[0];
+      logpval1 = pchisq(statistic16[0], 3.0, 0, 1);
 
       stat17(x,xlen,level,nblevel,name1,getname17,statistic17,pvalcomp17,pvalue17,critvalL,critvalR,usecrit,alter17,decision17,paramstat17,nbparamstat17); // stat T_w
 
-      if (pvalue17[0] > 0.5) pval2 = 1.0 - pvalue17[0]; else pval2 = pvalue17[0];
-
-      stat = -2.0 * (log(pval1) + log(pval2)); // Combinaison des valeurs-p (Fisher, 1932)
+      logpval2 = log(2.0) + Rf_pnorm5(fabs(statistic17[0]), 0.0, 1.0, 0, 1);
+      
+      stat = -2.0 * (logpval1 + logpval2); // Combinaison des valeurs-p (Fisher, 1932)
 
       statistic[0] = stat; // Here is the test statistic value
 

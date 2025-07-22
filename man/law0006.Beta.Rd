@@ -32,4 +32,5 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Beta}
+\keyword{law}
+\keyword{Beta}

@@ -1,5 +1,5 @@
 // Title: Nout(a)
-// Ref. (book or article): Romão, Xavier, Delgado, Raimundo and Costa, Aníbal, 
+// Ref. (book or article): Romao, Xavier, Delgado, Raimundo and Costa, Anibal, 
 //			   "An empirical power comparison of univariate goodness-of-fit tests for normality",
 //	                   J. Stat. Comput. Simul. 80 (2010), no. 5-6, 545--591.
 
@@ -39,12 +39,12 @@ extern "C" {
     } else if (nbparams[0] == 1) {
       a = params[0];
     } else {
-      error("Number of parameters should be at most: 1");
+      Rf_error("Number of parameters should be at most: 1");
     }
 
 // If necessary, we check if some parameter values are out of parameter space
     if (a != 1.0 && a != 2.0 && a != 3.0 && a != 4.0 && a != 5.0) {
-      warning("a should be a value in {1,2,3,4,5} in law33!\n");
+      Rf_warning("a should be a value in {1,2,3,4,5} in law33!\n");
       for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }

@@ -1,4 +1,5 @@
 \name{powcomp.fast}
+\alias{powcomp.fastR}
 \alias{powcomp.fast}
 \title{Computation of power and level tables for hypothesis tests.}
 \description{Functions for the computation of power and level tables for
@@ -7,7 +8,7 @@
 powcomp.fast(law.indices,stat.indices,vectn = c(20,50,100),M = 10^3,levels = c(0.05,0.1),
          critval = NULL,alter = create.alter(stat.indices),parlaws = NULL, 
          parstats = NULL,nbclus = 1,model = NULL,null.law.index = 2,null.law.pars = NULL,
-         Rlaws=NULL, Rstats = NULL, center=FALSE, scale=FALSE)
+         Rlaws=NULL, Rstats = NULL, center=FALSE, scale=FALSE, pvalcomp = 1L)
 }
 \arguments{
   \item{law.indices }{vector of law indices as given by function \code{\link{getindex}}.}
@@ -66,6 +67,8 @@ powcomp.fast(law.indices,stat.indices,vectn = c(20,50,100),M = 10^3,levels = c(0
   then the corresponding component of 'Rstats' should be set to 'NULL'.}
   \item{center}{Logical. Should we center the data generated}
   \item{scale}{Logical. Should we center the data generated}
+  \item{pvalcomp}{Integer. \code{1L} to compute p-values, \code{0L} not
+    to compute them.}
 }
 \value{A list of class \code{power} whose components are described below:
   \item{M }{number of Monte Carlo repetitions.}

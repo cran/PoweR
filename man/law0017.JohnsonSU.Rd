@@ -36,4 +36,5 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Johnson SU}
+\keyword{law}
+\keyword{Johnson SU}

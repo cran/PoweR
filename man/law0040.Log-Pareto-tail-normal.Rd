@@ -66,4 +66,5 @@ res$law
 res$law.pars
 }
 
-\keyword{law, Log-Pareto-tail-normal}
+\keyword{law}
+\keyword{Log-Pareto-tail-normal}

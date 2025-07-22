@@ -26,4 +26,7 @@ Glen, A.G., Leemis, L.M. and Barr, D.R. (2001), Order Statistics in Goodness-Of-
 \seealso{See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
 
-\keyword{statistic, test, normality, Glen-Leemis-Barr}
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{Glen-Leemis-Barr}

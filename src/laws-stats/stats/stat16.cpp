@@ -193,7 +193,7 @@ double mc_C_d(double *z, int n, double *eps, int *iter)
     int trace_lev = iter[1], it = 0;
     // Rboolean converged = TRUE;
 	bool converged = TRUE;
-    double medc; // "the" result
+    double medc =0.0; // "the" result
     static const double Large = DBL_MAX / 4.;
 
     if (n < 3) {
@@ -428,7 +428,7 @@ double mc_C_d(double *z, int n, double *eps, int *iter)
 
     converged = IsFound || (nr-nl+neq <= n);
     if(!converged) {
-	warning("maximal number of iterations (%d =? %d) reached prematurely\n",
+	Rf_warning("maximal number of iterations (%d =? %d) reached prematurely\n",
 		 iter[0], it);
 	/* still: */
 	medc = trial;
@@ -445,9 +445,9 @@ double mc_C_d(double *z, int n, double *eps, int *iter)
 	    }
 	}
 	if(trace_lev)
-	    Rprintf("  not found [it=%d,  (nr,nl) = (%d,%d)],"
-		    " -> (knew-nl, j) = (%d,%d)\n",
-		    it, nr, nl, knew-nl, j);
+	  Rprintf("  not found [it=%d,  (nr,nl) = (%" PRId64 ",%d)],"
+        " -> (knew-nl, j) = (%" PRId64 ",%d)\n",
+        it, nr, nl, knew - nl, j);
 	/* using rPsort(work, n,k), since we don't need work[] anymore:*/
 	rPsort(work, /* n = */ j, /* k = */ knew-nl-1);
 	medc = - work[knew-nl-1];

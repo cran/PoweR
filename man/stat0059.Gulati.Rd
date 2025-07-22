@@ -25,4 +25,7 @@ Gulati, Sneh (2011), Goodness of fit test for the Rayleigh and the Laplace distr
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Laplace.tests}} for other goodness-of-fit tests for the Laplace distribution.
 }
-\keyword{statistic, test, Laplace, Gulati}
+\keyword{statistic}
+\keyword{test}
+\keyword{Laplace}
+\keyword{Gulati}

@@ -26,4 +26,8 @@ Robust directed tests of normality against heavy-tailed alternatives,
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
-\keyword{statistic, test, normality, Gel-Miao-Gastwirth}
+
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{Gel-Miao-Gastwirth}

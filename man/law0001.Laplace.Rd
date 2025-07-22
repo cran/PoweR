@@ -34,4 +34,5 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Laplace}
+\keyword{law}
+\keyword{Laplace}

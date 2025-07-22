@@ -24,4 +24,7 @@ Zhang, J. (2002), Powerful goodness-of-fit tests based on the likelihood ratio,
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Uniformity.tests}} for other goodness-of-fit tests for uniformity.
 }
-\keyword{statistic, test, uniformity, Zhang}
+\keyword{statistic}
+\keyword{test}
+\keyword{uniformity}
+\keyword{Zhang}

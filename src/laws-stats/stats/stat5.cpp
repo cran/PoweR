@@ -39,20 +39,32 @@ extern "C" {
       void R_rsort (double* x, int n);
       //    double pnorm(double q, double mean, double sd, int lower_tail, int log_p);
       double pbeta(double x, double pin, double qin, int lower_tail, int log_p);
-      double *Phiz;
+      double *Phiz, *logp1, *logp2;
       Phiz = new double[n];
-      double varX = 0.0, meanX = 0.0, sdX, statPS = 0.0;
+      logp1 = new double[n];
+      logp2 = new double[n];
+      double varX, meanX, sdX, statPS;
 
+      // Two-pass algorithm algorithm is less prone to numerical errors than the naive approach
+      // https://en.wikipedia.org/wiki/Algorithms_for_calculating_variance
+      meanX = 0.0;
       for (i = 0; i < n; i++) meanX = meanX + x[i];
       meanX = meanX / (double)n;
-      for (i = 0; i < n; i++) varX = varX + R_pow(x[i], 2.0);
-      varX = ((double)n) * (varX / (double)n - R_pow(meanX, 2.0)) / (double)(n - 1); 
+      varX = 0.0;
+      for (i = 0; i < n; i++) varX = varX + R_pow(x[i] - meanX, 2.0);
+      varX = varX / (double)(n - 1); 
       sdX = sqrt(varX);
-      for (i = 0; i < n; i++) Phiz[i] = Rf_pnorm5((x[i] - meanX) / sdX, 0.0, 1.0, 1,0);
+
+      for (i = 0; i < n; i++) Phiz[i] = Rf_pnorm5((x[i] - meanX) / sdX, 0.0, 1.0, 1, 0);
       R_rsort(Phiz, n); // We sort the data
-      for (i = 1; i <= n; i++) Phiz[i - 1] = pbeta(Phiz[i - 1], (double)i, (double)(n - i + 1), 1, 0);
-      R_rsort(Phiz, n); // We sort the data
-      for (i = 1; i <= n; i++) statPS = statPS + (double)(2 * n + 1 - 2 * i) * log(Phiz[i - 1]) + (double)(2 * i - 1) * log(1.0 - Phiz[i - 1]);
+      for (i = 1; i <= n; i++) {
+	logp1[i - 1] = pbeta(Phiz[i - 1], (double)i, (double)(n - i + 1), 1, 1);
+	logp2[i - 1] = pbeta(Phiz[i - 1], (double)i, (double)(n - i + 1), 0, 1);
+      }
+      R_rsort(logp1, n); // We sort the data
+      R_rsort(logp2, n); // We sort the data
+      statPS = 0.0;
+      for (i = 1; i <= n; i++) statPS = statPS + (double)(2 * n - 2 * i + 1) * (logp1[i - 1] + logp2[i - 1]);
       statistic[0] = -(double)n - statPS / (double)n; // Here is the test statistic value
       
       if (pvalcomp[0] == 1) {
@@ -71,6 +83,8 @@ extern "C" {
       
       // If applicable, we free the unused array of pointers
       delete[] Phiz;
+      delete[] logp1;
+      delete[] logp2;
       
     }
     

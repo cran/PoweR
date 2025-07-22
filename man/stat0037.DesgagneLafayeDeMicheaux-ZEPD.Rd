@@ -26,4 +26,8 @@ family, \emph{Journal of Applied Statistics}, .
 \author{P. Lafaye de Micheaux, V. A. Tran}
 \seealso{See \code{\link{Normality.tests}} for other goodness-of-fit tests for normality.
 }
-\keyword{statistic, test, normality, Desgagne-LafayeDeMicheaux-ZEPD}
+
+\keyword{statistic}
+\keyword{test}
+\keyword{normality}
+\keyword{Desgagne-LafayeDeMicheaux-ZEPD}

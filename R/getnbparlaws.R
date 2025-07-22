@@ -1,6 +1,5 @@
 getnbparlaws <- function(law.indices = NULL) {
   
-    if (getRversion() < "3.1.0") dontCheck <- identity
   
     tmp <- names(getDLLRegisteredRoutines("PoweR")[[".C"]])
     ind.laws <- grep("law", tmp[grep("law",tmp)])
@@ -13,8 +12,12 @@ getnbparlaws <- function(law.indices = NULL) {
     nbparlaws.list <- as.vector(rep(0, lst))
     
     for (i in 1:lst) {
-        Claw.name <- paste("law", law.indices[i], sep = "")
-        nbparlaws.list[i] <- (.C(dontCheck(Claw.name), 1L, 0.0, rep(" ", 50), 1L, rep(0.0, 4),
+      Claw.name <- paste("law", law.indices[i], sep = "")
+      #lawsym <- getNativeSymbolInfo(Claw.name, PACKAGE = "PoweR")
+mydotC <- get(".PoweR_law_dispatch", envir = asNamespace("PoweR"))[[Claw.name]]; if (is.null(mydotC)) stop("Unknown law function: ", Claw.name)
+
+        nbparlaws.list[i] <- (#.C(lawsym, 
+        mydotC(1L, 0.0, rep(" ", 50), 1L, rep(0.0, 4),
                                  nbparamlaw = 1L, 1L, PACKAGE = "PoweR"))$nbparamlaw
     }
     

@@ -78,12 +78,12 @@ extern "C" {
       c = params[2];
       mu = params[3];
     } else {
-      error("Number of parameters should be at most: 4");
+      Rf_error("Number of parameters should be at most: 4");
     }
 
 // If necessary, we check if some parameter values are out of parameter space
     if (alpha <= 0.0 || alpha > 2.0 || beta < -1.0 || beta > 1.0 || c <= 0.0) {
-      warning("Some parameter(s) value(s) are out of parameter space in in law25!\nCorrect values are: alpha>0.0 && alpha<=2.0 && beta>=-1.0 && beta<=1.0 && c>0.0\n");
+      Rf_warning("Some parameter(s) value(s) are out of parameter space in in law25!\nCorrect values are: alpha>0.0 && alpha<=2.0 && beta>=-1.0 && beta<=1.0 && c>0.0\n");
       for (i = 0; i < n; i++) x[i] = R_NaN;
       return;
     }

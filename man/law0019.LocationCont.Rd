@@ -33,4 +33,5 @@ mean(res$sample)
 sd(res$sample)
 }
 
-\keyword{law, Location Contaminated}
+\keyword{law}
+\keyword{Location Contaminated}
